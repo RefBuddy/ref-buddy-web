@@ -1,7 +1,6 @@
-# Clever LO Portal
+# Refbuddy.ca
 
-The Clever LO Portal is a gatsby project its the bees knees.
-It uses Tailwindcss, TypeScript and React at its core.
+Refbuddy.ca Admin Portal
 
 ## Get Started
 
@@ -12,7 +11,7 @@ yarn install
 
 Get the party started:
 ```bash
-yarn start
+yarn develop
 ```
 
 ## Usage
