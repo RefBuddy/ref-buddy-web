@@ -1,0 +1,108 @@
+{
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "babel",
+    "import",
+    "react",
+    "react-hooks",
+    "jsx-a11y",
+    "compat",
+    "promise",
+    "prettier",
+    "@typescript-eslint"
+  ],
+  "env": {
+    "jest": true,
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
+    "jsx": true
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "16.8"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".d.ts", ".tsx"],
+        "paths": ["app", "internals", "server"]
+      }
+    }
+  },
+  "rules": {
+    "curly": [2, "all"],
+    "arrow-body-style": ["error", "as-needed"],
+    "arrow-parens": 0,
+    "no-underscore-dangle": 0,
+    "no-use-before-define": "error",
+    "no-console": "error",
+    "no-plusplus": 0,
+    "no-minusminus": 0,
+    "no-shadow": "off",
+    "no-unused-expressions": 0,
+    "no-unused-vars": 0,
+    "no-undef": 0,
+    "object-curly-newline": 0,
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.ts", "**/*.test.tsx"]}],
+    "import/prefer-default-export": 0,
+    "function-paren-newline": 0,
+    "no-return-await": 0,
+    "max-params": ["error", 5],
+    "max-depth": ["error", 3],
+    "promise/always-return": "error",
+    "promise/catch-or-return": "error",
+    "promise/param-names": "error",
+    "react/no-array-index-key": 1,
+    "promise/no-return-wrap": "error",
+    "react/function-component-definition": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "react/jsx-props-no-spreading": 1,
+    "react/no-array-index-key": 1,
+    "react/prop-types": 0,
+    "react/require-default-props": 0,
+    "@typescript-eslint/ban-ts-ignore": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-non-null-assertion": 0,
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "ignoreRestSiblings": true }
+    ],
+    "prettier/prettier": ["error"],
+    "jsx-a11y/label-has-associated-control": 0,
+    "jsx-a11y/label-has-for": 0,
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+   ]
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": {
+        "import/no-extraneous-dependencies": 0,
+        "@typescript-eslint/no-var-requires": 0
+      }
+    }
+  ]
+}

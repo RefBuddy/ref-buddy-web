@@ -1,0 +1,73 @@
+.button {
+  @apply relative inline-flex items-center justify-center px-4 py-2 gap-2 text-sm font-semibold transition-colors duration-75 bg-transparent border border-transparent rounded cursor-pointer font-body outline-none;
+
+  &.button--loading {
+    &::before {
+      @apply absolute inset-0 content-none rounded;
+
+      content: '';
+    }
+
+    &::after {
+      @apply absolute w-6 h-6 -mt-3 -ml-3 rounded-full;
+
+      content: '';
+      top: 50%;
+      left: 50%;
+      border-right: 2px solid transparent;
+      animation: spinner 0.6s linear infinite;
+    }
+  }
+
+  &.button--primary {
+    @apply bg-primary-700 text-white;
+
+    &.button--disabled {
+      @apply bg-gray-300 cursor-not-allowed;
+    }
+
+    &:not(.button--disabled):not(.button--loading):hover {
+      @apply bg-primary-500 text-white;
+    }
+
+    &:not(.button--disabled):not(.button--loading):active {
+      @apply bg-primary-900;
+    }
+
+    &.button--loading {
+      &::before {
+        @apply bg-primary-700;
+      }
+
+      &::after {
+        @apply border-t-white border-t-2;
+      }
+    }
+  }
+
+  &.button--secondary {
+    @apply text-primary-700 bg-white border-primary-700;
+
+    &.button--disabled {
+      @apply bg-gray-200 cursor-not-allowed;
+    }
+
+    &:not(.button--disabled):not(.button--loading):hover {
+      @apply border-primary-500 text-primary-500;
+    }
+
+    &:not(.button--disabled):not(.button--loading):active {
+      @apply border-primary-900 text-primary-900;
+    }
+
+    &.button--loading {
+      &::before {
+        @apply bg-white;
+      }
+
+      &::after {
+        @apply border-t-primary-700 border-t-2;
+      }
+    }
+  }
+}
