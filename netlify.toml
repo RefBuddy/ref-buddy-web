@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/portal/:id/dashboard/"
+  to = "/portal/index.html"
+  status = 200
+  force = true
