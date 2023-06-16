@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# ref-buddy-web
-=======
 # Refbuddy.ca
 
 Refbuddy.ca Admin Portal
