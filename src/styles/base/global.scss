@@ -1,0 +1,15 @@
+a {
+  @apply text-primary-700 transition-colors duration-150 no-underline;
+
+  &:hover {
+    @apply text-primary-700;
+  }
+}
+
+ul {
+  @apply list-disc pl-5;
+}
+
+li {
+  @apply text-base;
+}

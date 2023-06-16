@@ -1,0 +1,27 @@
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+
+  75% {
+    transform: translateY(0) scaleX(1.25) scaleY(0.8);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  40% {
+    transform: translateY(-25px) scale(1);
+  }
+
+  60% {
+    transform: translateY(-12px) scale(1);
+  }
+}
