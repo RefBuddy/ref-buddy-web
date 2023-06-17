@@ -46,19 +46,19 @@ const Login: React.FC<any> = () => {
         label="Email"
         placeholder="Email"
         value={email}
-        setValue={setEmail}
+        setValue={(value) => setEmail(value)}
       />
       <TextInput
         className="mt-4 w-full"
         label="Password"
         placeholder="Password"
         value={password}
-        setValue={setPassword}
+        setValue={(value) => setPassword(value)}
         type="password"
       />
       <Button
         className="mt-4 w-full"
-        onClick={handleLogin}
+        onClick={() => handleLogin()}
       >
         Login
       </Button>
