@@ -1,5 +1,5 @@
 .button {
-  @apply relative inline-flex items-center justify-center px-4 py-2 gap-2 text-sm font-semibold transition-colors duration-75 bg-transparent border border-transparent rounded cursor-pointer font-body outline-none;
+  @apply relative inline-flex items-center justify-center px-4 py-2 gap-2 text-sm font-semibold transition-colors duration-75 bg-transparent border border-transparent rounded-full cursor-pointer font-body outline-none;
 
   &.button--loading {
     &::before {
@@ -20,7 +20,7 @@
   }
 
   &.button--primary {
-    @apply bg-primary-700 text-white;
+    @apply bg-black text-white;
 
     &.button--disabled {
       @apply bg-gray-300 cursor-not-allowed;
