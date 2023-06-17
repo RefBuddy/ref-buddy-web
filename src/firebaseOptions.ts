@@ -1,5 +1,6 @@
 import { FirebaseApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFunctions } from "firebase/functions";
 
 interface Config {
   apiKey: string | undefined;
@@ -26,5 +27,6 @@ if (!getApps().length) {
   app = initializeApp(firebaseConfig);
 }
 const auth = getAuth(app);
+const functions = getFunctions(app);
 
-export { auth };
+export { auth, functions };
