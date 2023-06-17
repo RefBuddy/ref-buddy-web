@@ -67,3 +67,5 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+GATSBY_FIREBASE_options.env
+firebase_options.env
