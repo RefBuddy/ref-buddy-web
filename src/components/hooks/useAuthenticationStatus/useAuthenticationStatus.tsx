@@ -1,5 +1,6 @@
 /* eslint-disable max-depth */
 import { useState, useEffect } from 'react';
+import { auth } from '../../../firebaseOptions';
 
 export default function useAuthenticationStatus(): [boolean, boolean] {
   // Set default to true until we can check if they are authenticated
@@ -8,7 +9,15 @@ export default function useAuthenticationStatus(): [boolean, boolean] {
   useEffect(() => {
     (async () => {
       try {
-        // check authentication status if they are logged in setIsAuthenticated(true) and setLoading(false)
+        // check if user is authenticated
+        console.log(auth.currentUser);
+        if (auth.currentUser) {
+          setIsAuthenticated(true);
+          setLoading(false);
+        } else {
+          setIsAuthenticated(false);
+          setLoading(false);
+        }
         return;
       } catch (error) {
         // if at any point this fails then we are not authenticated
@@ -17,6 +26,16 @@ export default function useAuthenticationStatus(): [boolean, boolean] {
       }
     })();
   }, []);
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      setIsAuthenticated(true);
+      setLoading(false);
+    } else {
+      setIsAuthenticated(false);
+      setLoading(false);
+    }
+  });
 
   return [isAuthenticated, loading];
 }

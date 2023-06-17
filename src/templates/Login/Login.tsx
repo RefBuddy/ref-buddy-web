@@ -1,19 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth } from '../../firebaseOptions';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Logo from '../../images/favicon.png';
 import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
+import { navigate } from 'gatsby';
+import { useAuthenticationStatus } from '../../components/hooks';
 
-const Login: React.FC<any> = ({ data }) => {
+const Login: React.FC<any> = () => {
+  const [isAuthenticated, loading] = useAuthenticationStatus();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  console.log(data);
+
+  useEffect(() => {
+    console.log(isAuthenticated);
+    if (isAuthenticated && !loading) {
+      console.log(isAuthenticated, loading);
+      const id = auth.currentUser?.uid;
+      console.log(id);
+      if (id) {
+        navigate(`/portal/${id}/dashboard`);
+      }
+    }
+  }, [isAuthenticated, loading])
+
   const handleLogin = async () => {
 
     try {
-      await signInWithEmailAndPassword(auth, email, password); // Change this line
+      const response = await signInWithEmailAndPassword(auth, email, password); // Change this line
       // Redirect to your desired page after successful login
+      const id = response.user.uid;
+      // send them to the portal with their id.
+      navigate(`/portal/${id}/dashboard`);
     } catch (error) {
       console.error(error);
     }
