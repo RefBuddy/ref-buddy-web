@@ -1,9 +1,11 @@
 import React from 'react';
+import Navbar from '../../components/Navbar';
 
 const Dashboard: React.FC<any> = () => {
   console.log('Dashboard')
   return (
     <div>
+      <Navbar />
       <h1>Dashboard</h1>
     </div>
   );
