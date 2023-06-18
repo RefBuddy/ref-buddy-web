@@ -41,19 +41,35 @@ interface CustomToolbarProps {
     </div>
   );
 
-const league = 'bchl'; // replace with actual value
-const season = '2022-2023'; // replace with actual value
+const league = 'bchl'; 
+const season = '2022-2023'; 
 
 async function getGamesForMonth(date, league, season) {
-    const getAdminMonth = httpsCallable(functions, 'getAdminMonth');
+    const url = "https://us-central1-ref-buddy-d7be3.cloudfunctions.net/getAdminMonth"; 
+    const data = {
+      data: {
+        Date: date.toISOString().substring(0, 10),
+        league: league,
+        season: season
+      }
+    };
   
-      const events = await (getAdminMonth({
-            date: date.toISOString().substring(0, 10),
-            league: league,
-            season: season
-          }));
-      return events.data;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+  
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  
+    const events = await response.json();
+    return events.data;
   }
+  
 
 const MyCalendar: FC = () => {
   const [isAuthenticated, loading] = useAuthenticationStatus(); // use the hook
