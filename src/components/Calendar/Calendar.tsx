@@ -1,11 +1,9 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Calendar, momentLocalizer, Event, Navigate } from 'react-big-calendar';
 import moment from 'moment';
-import { httpsCallable } from "firebase/functions";
-import { functions, auth } from '../../firebaseOptions';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useAuthenticationStatus } from '../../components/hooks'; // import the hook
+import { useAuthenticationStatus } from '../../components/hooks';
 
 const localizer = momentLocalizer(moment);
 
@@ -14,69 +12,81 @@ interface MyEvent extends Event {
 }
 
 interface CustomToolbarProps {
-    onNavigate: (action: Navigate.ACTION) => void;
-    label: string;
-  }
-  
-  const toolbarStyle = {
-    display: 'flex',
-    justifyContent: 'center',
+  onNavigate: (action: Navigate.ACTION) => void;
+  label: string;
+}
+
+const toolbarStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+};
+
+const buttonStyle = {
+  margin: '10px 30px 0',
+};
+
+const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
+  const handleNavigate = (action: Navigate.ACTION) => {
+    onNavigate(action);
+    const date = moment(label, 'MMMM YYYY').add(action === Navigate.PREVIOUS ? -1 : 1, 'month').toDate();
+    getGamesForMonth(date, league, season)
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
-  
-  const buttonStyle = {
-    margin: '10px 30px 0',
-  };
-  
-  const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => (
+
+  return (
     <div className="rbc-toolbar" style={toolbarStyle}>
       <span className="rbc-btn-group">
-        <button style={buttonStyle} type="button" onClick={() => onNavigate(Navigate.PREVIOUS)}>
+        <button style={buttonStyle} type="button" onClick={() => handleNavigate(Navigate.PREVIOUS)}>
           {"<"}
         </button>
         <span className="rbc-toolbar-label">{label}</span>
-        <button style={buttonStyle} type="button" onClick={() => onNavigate(Navigate.NEXT)}>
+        <button style={buttonStyle} type="button" onClick={() => handleNavigate(Navigate.NEXT)}>
           {">"}
         </button>
       </span>
     </div>
   );
+};
 
 const league = 'bchl'; 
 const season = '2022-2023'; 
 
 async function getGamesForMonth(date, league, season) {
-    const url = "https://us-central1-ref-buddy-d7be3.cloudfunctions.net/getAdminMonth"; 
-    const data = {
-      data: {
-        Date: date.toISOString().substring(0, 10),
-        league: league,
-        season: season
-      }
-    };
-  
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-  
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+  const url = "https://us-central1-ref-buddy-d7be3.cloudfunctions.net/getAdminMonth"; 
+  const data = {
+    data: {
+      Date: date.toISOString().substring(0, 10),
+      league: league,
+      season: season
     }
-  
-    const events = await response.json();
-    return events.data;
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-  
+
+  const events = await response.json();
+  return events.data;
+}
 
 const MyCalendar: FC = () => {
-  const [isAuthenticated, loading] = useAuthenticationStatus(); // use the hook
+  const [isAuthenticated, loading] = useAuthenticationStatus();
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
-      // Call the function when the component mounts and the user is authenticated
       getGamesForMonth(new Date(), league, season)
         .then(data => {
           console.log(data);
@@ -89,7 +99,7 @@ const MyCalendar: FC = () => {
 
   return (
     <div>
-      {isAuthenticated ? ( // check if the user is authenticated
+      {isAuthenticated ? (
         <Calendar
           localizer={localizer}
           defaultDate={new Date()}
@@ -103,7 +113,7 @@ const MyCalendar: FC = () => {
           }}
         />
       ) : (
-        <p>Please log in to view the calendar</p> // if not authenticated, prompt the user to log in
+        <p>Please log in to view the calendar</p>
       )}
     </div>
   );
