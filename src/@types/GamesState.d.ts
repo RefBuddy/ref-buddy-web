@@ -5,4 +5,5 @@ interface GamesState {
   currentDate: Date;
   currentLeague: string;
   currentSeason: string;
+  selectedEvent?: GameData;
 }

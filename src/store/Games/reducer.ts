@@ -11,12 +11,16 @@ const initialState = {
   currentDate: new Date(),
   currentLeague: league,
   currentSeason: season,
+  selectedEvent: undefined,
 } as GamesState;
 
 const gamesSlice = createSlice({
   name: 'games',
   initialState,
   reducers: {
+    setSelectedEvent: (state, { payload }) => {
+      state.selectedEvent = payload;
+    },
     setCurrentDate: (state, { payload }) => {
       state.currentDate = payload;
     },
@@ -48,6 +52,7 @@ export const {
   setCurrentDate,
   setCurrentSeason,
   setCurrentLeague,
+  setSelectedEvent
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;

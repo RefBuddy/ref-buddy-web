@@ -17,7 +17,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAuthenticationStatus } from '../../components/hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchGamesByMonth } from '../../store/Games/actions';
-import { setCurrentDate } from '../../store/Games/reducer';
+import { setCurrentDate, setSelectedEvent } from '../../store/Games/reducer';
+import { setModalState } from '../../store/Modal/reducer';
 
 
 const locales = {
@@ -31,11 +32,6 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 });
-
-
-interface MyEvent extends Event {
-  title: string;
-}
 
 interface CustomToolbarProps {
   onNavigate: (action: Navigate.ACTION) => void;
@@ -91,6 +87,7 @@ const convertEvents = (events: MonthGameData[]) => {
         title: event.homeTeam.abbreviation + " vs " + event.visitingTeam.abbreviation,
         start: new Date(event.time),
         end: new Date(event.time),
+        id: event.id,
       };
       convertedEvents.push(convertedEvent);
     });
@@ -111,7 +108,18 @@ const MyCalendar: FC = () => {
     // Listen to changes on isAuthenticated, loading and currentDate.
   }, [isAuthenticated, loading, currentDate]);
 
+  const selectEvent = (event: Event) => {
+    console.log(event);
+    const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
+    const gamesOnDate = events[eventDateKey] as GameData[];
+    const selectedGame = gamesOnDate.find(game => game.id === event.id);
+    console.log(selectedGame);
+    dispatch(setSelectedEvent(selectedGame));
+    dispatch(setModalState({ modalOpen: true, modalType: 'event' }))
+  }
+
   const convertedEvents = convertEvents(events || []);
+
   return (
     <div>
       {isAuthenticated ? (
@@ -122,6 +130,8 @@ const MyCalendar: FC = () => {
           events={convertedEvents}
           style={{ height: "91vh" }}
           selectable
+          onSelectEvent={event => selectEvent(event)}
+          onSelectSlot={slotInfo => console.log(slotInfo)}
           views={["month"]}
           components={{
             toolbar: CustomToolbar,
@@ -130,6 +140,7 @@ const MyCalendar: FC = () => {
       ) : (
         <p>Please log in to view the calendar</p>
       )}
+      
     </div>
   );
 };

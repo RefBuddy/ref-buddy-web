@@ -3,11 +3,13 @@ import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
 import { combineReducers } from 'redux';
 import userReducer from './User/reducer';
 import gamesReducer from './Games/reducer';
+import modalReducer from './Modal/reducer';
 
 export const rootReducer = combineReducers({
   // Add reducers here
   user: userReducer,
-  games: gamesReducer
+  games: gamesReducer,
+  modal: modalReducer,
 });
 
 const store = configureStore({
