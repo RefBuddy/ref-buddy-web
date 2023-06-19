@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchGamesByMonth } from '../../store/Games/actions';
 import { setCurrentDate, setSelectedEvent, setSelectedGames } from '../../store/Games/reducer';
 import { setModalState } from '../../store/Modal/reducer';
+import { formatDate } from '../../utils/helpers';
 
 
 const locales = {
@@ -53,11 +54,14 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
 
   const handleNavigate = (action: Navigate.ACTION) => {
     if (action === Navigate.PREVIOUS) {
-      const previousMonth = subMonths(currentDate, 1);
-      dispatch(setCurrentDate(previousMonth));
+
+      const previousMonth = subMonths(new Date(currentDate), 1);
+      const dateString = formatDate(previousMonth)
+      dispatch(setCurrentDate(dateString));
     } else if (action === Navigate.NEXT) {
-      const nextMonth = addMonths(currentDate, 1);
-      dispatch(setCurrentDate(nextMonth));
+      const nextMonth = addMonths(new Date(currentDate), 1);
+      const dateString = formatDate(nextMonth)
+      dispatch(setCurrentDate(dateString));
     }
 
     onNavigate(action);

@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { formatDate } from '../../utils/helpers';
 
 const URL = process.env.GATSBY_API_URL;
 // _ signifies just a void value, we don't need to pass anything in
@@ -7,14 +6,10 @@ export const fetchGamesByMonth = createAsyncThunk('games/fetchGamesByMonth', asy
   // get games state from our global redux store
   const { games } = getState() as { games: GamesState };
   // set the default
-  let currentDate = new Date();
-  if (games.currentDate) {
-    currentDate = games.currentDate;
-  }
   try {
     const data = {
       data: {
-        Date: formatDate(currentDate),
+        Date: games.currentDate,
         league: games.currentLeague,
         season: games.currentSeason,
       }

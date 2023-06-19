@@ -1,8 +1,8 @@
 interface GamesState {
-  monthGameData?: any;
+  monthGameData?: MonthGameData;
   loading: boolean;
   error?: SerializedError;
-  currentDate: Date;
+  currentDate: string;
   currentLeague: string;
   currentSeason: string;
   selectedEvent?: GameData;

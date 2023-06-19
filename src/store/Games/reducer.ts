@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchGamesByMonth } from './actions';
+import { formatDate } from '../../utils/helpers';
 
 const league = 'bchl'; 
 const season = '2022-2023';
@@ -8,7 +9,7 @@ const initialState = {
   monthGameData: undefined,
   loading: false,
   error: undefined,
-  currentDate: new Date(),
+  currentDate: formatDate(new Date()),
   currentLeague: league,
   currentSeason: season,
   selectedEvent: undefined,

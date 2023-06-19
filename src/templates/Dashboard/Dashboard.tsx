@@ -6,16 +6,18 @@ import Modal from '../../components/Modal/Modal';
 import { useAppSelector } from '../../store';
 import { EventModal } from '../../components/Calendar/EventModal';
 import { SelectedGames } from '../../components/Calendar/SelectedGames';
+import { Loading } from '../../components/Loading';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
   const modalType = useAppSelector(state => state.modal.modalType);
   const selectedEvent = useAppSelector(state => state.games.selectedEvent);
   const selectedGames = useAppSelector(state => state.games.selectedGames);
-
+  const loading = useAppSelector(state => state.games.loading);
   return (
     <main>
       <Navbar />
+      {loading ? <Loading /> : <></>}
       {selectedGames && selectedGames.length === 0 ? <MyCalendar /> : <></>}
       {selectedGames && selectedGames.length > 1 ? <SelectedGames /> : <></>}
       {openModal && modalType === 'event' && selectedEvent && (
