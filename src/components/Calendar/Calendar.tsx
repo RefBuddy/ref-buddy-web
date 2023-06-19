@@ -57,7 +57,8 @@ const league = 'bchl';
 const season = '2022-2023'; 
 
 async function getGamesForMonth(date, league, season) {
-  const url = "https://us-central1-ref-buddy-d7be3.cloudfunctions.net/getAdminMonth"; 
+  const url = process.env.GATSBY_GCP_GET_ADMIN_MONTH; 
+
   const data = {
     data: {
       Date: date.toISOString().substring(0, 10),
@@ -66,7 +67,7 @@ async function getGamesForMonth(date, league, season) {
     }
   };
 
-  const response = await fetch(url, {
+  const response = await fetch(url!, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -105,7 +106,7 @@ const MyCalendar: FC = () => {
           defaultDate={new Date()}
           defaultView="month"
           events={[] as MyEvent[]}
-          style={{ height: "100vh" }}
+          style={{ height: "91vh" }}
           selectable
           views={["month"]}
           components={{
