@@ -1,11 +1,37 @@
 import React, { FC, useEffect } from 'react';
-import { Calendar, momentLocalizer, Event, Navigate } from 'react-big-calendar';
-import moment from 'moment';
-
+import {
+  Calendar,
+  Event,
+  Navigate,
+  dateFnsLocalizer,
+} from 'react-big-calendar';
+import {
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  addMonths,
+  subMonths,
+} from "date-fns";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAuthenticationStatus } from '../../components/hooks';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { fetchGamesByMonth } from '../../store/Games/actions';
+import { setCurrentDate } from '../../store/Games/reducer';
 
-const localizer = momentLocalizer(moment);
+
+const locales = {
+	"en-US": require("date-fns")
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
+
 
 interface MyEvent extends Event {
   title: string;
@@ -26,16 +52,19 @@ const buttonStyle = {
 };
 
 const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
+  const dispatch = useAppDispatch();
+  const currentDate = useAppSelector(state => state.games.currentDate);
+
   const handleNavigate = (action: Navigate.ACTION) => {
+    if (action === Navigate.PREVIOUS) {
+      const previousMonth = subMonths(currentDate, 1);
+      dispatch(setCurrentDate(previousMonth));
+    } else if (action === Navigate.NEXT) {
+      const nextMonth = addMonths(currentDate, 1);
+      dispatch(setCurrentDate(nextMonth));
+    }
+
     onNavigate(action);
-    const date = moment(label, 'MMMM YYYY').add(action === Navigate.PREVIOUS ? -1 : 1, 'month').toDate();
-    getGamesForMonth(date, league, season)
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
   };
 
   return (
@@ -53,51 +82,36 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
   );
 };
 
-const league = 'bchl'; 
-const season = '2022-2023'; 
-
-async function getGamesForMonth(date, league, season) {
-  const url = process.env.GATSBY_GCP_GET_ADMIN_MONTH; 
-
-  const data = {
-    data: {
-      Date: date.toISOString().substring(0, 10),
-      league: league,
-      season: season
-    }
-  };
-
-  const response = await fetch(url!, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
+const convertEvents = (events: MonthGameData[]) => {
+  const convertedEvents: Event[] = [];
+  Object.keys(events).forEach(key => {
+    const eventsOnDate = events[key] as GameData[];
+    eventsOnDate.forEach(event => {
+      const convertedEvent: Event = {
+        title: event.homeTeam.abbreviation + " vs " + event.visitingTeam.abbreviation,
+        start: new Date(event.time),
+        end: new Date(event.time),
+      };
+      convertedEvents.push(convertedEvent);
+    });
   });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const events = await response.json();
-  return events.data;
+  return convertedEvents;
 }
 
 const MyCalendar: FC = () => {
+  const dispatch = useAppDispatch();
   const [isAuthenticated, loading] = useAuthenticationStatus();
+  const events = useAppSelector(state => state.games.monthGameData);
+  const currentDate = useAppSelector(state => state.games.currentDate);
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
-      getGamesForMonth(new Date(), league, season)
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      dispatch(fetchGamesByMonth());
     }
-  }, [isAuthenticated, loading]);
+    // Listen to changes on isAuthenticated, loading and currentDate.
+  }, [isAuthenticated, loading, currentDate]);
 
+  const convertedEvents = convertEvents(events || []);
   return (
     <div>
       {isAuthenticated ? (
@@ -105,7 +119,7 @@ const MyCalendar: FC = () => {
           localizer={localizer}
           defaultDate={new Date()}
           defaultView="month"
-          events={[] as MyEvent[]}
+          events={convertedEvents}
           style={{ height: "91vh" }}
           selectable
           views={["month"]}

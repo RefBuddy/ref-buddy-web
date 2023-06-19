@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
 import { combineReducers } from 'redux';
 import userReducer from './User/reducer';
+import gamesReducer from './Games/reducer';
 
 export const rootReducer = combineReducers({
   // Add reducers here
   user: userReducer,
+  games: gamesReducer
 });
 
 const store = configureStore({
