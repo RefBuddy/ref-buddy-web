@@ -17,7 +17,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAuthenticationStatus } from '../../components/hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchGamesByMonth } from '../../store/Games/actions';
-import { setCurrentDate, setSelectedEvent } from '../../store/Games/reducer';
+import { setCurrentDate, setSelectedEvent, setSelectedGames } from '../../store/Games/reducer';
 import { setModalState } from '../../store/Modal/reducer';
 
 
@@ -109,13 +109,46 @@ const MyCalendar: FC = () => {
   }, [isAuthenticated, loading, currentDate]);
 
   const selectEvent = (event: Event) => {
-    console.log(event);
     const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
     const gamesOnDate = events[eventDateKey] as GameData[];
     const selectedGame = gamesOnDate.find(game => game.id === event.id);
-    console.log(selectedGame);
+
     dispatch(setSelectedEvent(selectedGame));
     dispatch(setModalState({ modalOpen: true, modalType: 'event' }))
+  }
+
+  const selectSlot = (slotInfo: any) => {
+    console.log(slotInfo);
+    // get array of slot selections
+    const slots = slotInfo.slots;
+    // get start and end times of first slot
+    const startTime = slots[0];
+    const endTime = slots[slots.length - 1];
+    // get date of first slot
+    const startKey = format(new Date(startTime), "yyyy-MM-dd");
+    // get games on date of first slot
+    const endKey = format(new Date(endTime), "yyyy-MM-dd");
+    console.log(endKey);
+    const allEventsDuringSlots = Object.keys(events).filter(key => {
+      // check if key which is a date string is in between startKey and endKey
+      const keyDate = new Date(key);
+      if (keyDate >= new Date(startKey) && keyDate <= new Date(endKey)) {
+        return true;
+      }
+      return false;
+    })
+
+    console.log(allEventsDuringSlots);
+
+    const gamesDuringSlots: GameData[] = [];
+    // Unsure on how you want your grouping. I just put all games in an array.
+    allEventsDuringSlots.forEach(key => {
+      const gamesOnDate = events[key] as GameData[];
+      gamesOnDate.forEach(game => {
+        gamesDuringSlots.push(game);
+      })
+    });
+    dispatch(setSelectedGames(gamesDuringSlots));
   }
 
   const convertedEvents = convertEvents(events || []);
@@ -131,7 +164,7 @@ const MyCalendar: FC = () => {
           style={{ height: "91vh" }}
           selectable
           onSelectEvent={event => selectEvent(event)}
-          onSelectSlot={slotInfo => console.log(slotInfo)}
+          onSelectSlot={slotInfo => selectSlot(slotInfo)}
           views={["month"]}
           components={{
             toolbar: CustomToolbar,
