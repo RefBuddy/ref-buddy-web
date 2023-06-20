@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles } from '../../../store/Games/actions';
+import { Loading } from '../../../components/Loading';
 
 const UserProfile = ({ userData, color }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
@@ -96,7 +97,7 @@ const SelectedGames = () => {
                   <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
                 </div>
               </div>
-              {officialsData && <GameAssignment game={game} officialsData={officialsData[game.id]} />}
+              {officialsData && officialsData[game.id] && <GameAssignment game={game} officialsData={officialsData[game.id]} />}
             </div>
           </div>        
         ))}
