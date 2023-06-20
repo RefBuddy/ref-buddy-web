@@ -2,7 +2,6 @@ import React, { FC, useEffect } from 'react';
 import {
   Calendar,
   Event,
-  Navigate,
   dateFnsLocalizer,
 } from 'react-big-calendar';
 import {
@@ -10,17 +9,14 @@ import {
   parse,
   startOfWeek,
   getDay,
-  addMonths,
-  subMonths,
 } from "date-fns";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAuthenticationStatus } from '../../components/hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchGamesByMonth } from '../../store/Games/actions';
-import { setCurrentDate, setSelectedEvent, setSelectedGames } from '../../store/Games/reducer';
+import { setSelectedEvent, setSelectedGames } from '../../store/Games/reducer';
 import { setModalState } from '../../store/Modal/reducer';
-import { formatDate } from '../../utils/helpers';
-
+import CustomToolbar from './CustomToolbar/CustomToolbar';
 
 const locales = {
 	"en-US": require("date-fns")
@@ -34,55 +30,7 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-interface CustomToolbarProps {
-  onNavigate: (action: Navigate.ACTION) => void;
-  label: string;
-}
-
-const toolbarStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-};
-
-const buttonStyle = {
-  margin: '10px 30px 0',
-};
-
-const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
-  const dispatch = useAppDispatch();
-  const currentDate = useAppSelector(state => state.games.currentDate);
-
-  const handleNavigate = (action: Navigate.ACTION) => {
-    if (action === Navigate.PREVIOUS) {
-
-      const previousMonth = subMonths(new Date(currentDate), 1);
-      const dateString = formatDate(previousMonth)
-      dispatch(setCurrentDate(dateString));
-    } else if (action === Navigate.NEXT) {
-      const nextMonth = addMonths(new Date(currentDate), 1);
-      const dateString = formatDate(nextMonth)
-      dispatch(setCurrentDate(dateString));
-    }
-
-    onNavigate(action);
-  };
-
-  return (
-    <div className="rbc-toolbar" style={toolbarStyle}>
-      <span className="rbc-btn-group">
-        <button style={buttonStyle} type="button" onClick={() => handleNavigate(Navigate.PREVIOUS)}>
-          {"<"}
-        </button>
-        <span className="rbc-toolbar-label">{label}</span>
-        <button style={buttonStyle} type="button" onClick={() => handleNavigate(Navigate.NEXT)}>
-          {">"}
-        </button>
-      </span>
-    </div>
-  );
-};
-
-const convertEvents = (events: MonthGameData[] | []) => {
+const convertEvents = (events: MonthGameData[]) => {
   const convertedEvents: Event[] = [];
   Object.keys(events).forEach(key => {
     const eventsOnDate = events[key] as GameData[];
