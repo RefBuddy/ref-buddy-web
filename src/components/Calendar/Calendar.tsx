@@ -82,7 +82,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
   );
 };
 
-const convertEvents = (events: MonthGameData[]) => {
+const convertEvents = (events: MonthGameData[] | []) => {
   const convertedEvents: Event[] = [];
   Object.keys(events).forEach(key => {
     const eventsOnDate = events[key] as GameData[];
@@ -113,6 +113,7 @@ const MyCalendar: FC = () => {
   }, [isAuthenticated, loading, currentDate]);
 
   const selectEvent = (event: Event) => {
+    if (!events) return;
     const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
     const gamesOnDate = events[eventDateKey] as GameData[];
     const selectedGame = gamesOnDate.find(game => game.id === event.id);
@@ -122,7 +123,7 @@ const MyCalendar: FC = () => {
   }
 
   const selectSlot = (slotInfo: any) => {
-    console.log(slotInfo);
+    if (!events) return;
     // get array of slot selections
     const slots = slotInfo.slots;
     // get start and end times of first slot
@@ -155,7 +156,7 @@ const MyCalendar: FC = () => {
     dispatch(setSelectedGames(gamesDuringSlots));
   }
 
-  const convertedEvents = convertEvents(events || []);
+  const convertedEvents = convertEvents(events || [] as any);
 
   return (
     <div>

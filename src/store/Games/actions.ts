@@ -40,11 +40,11 @@ export const fetchGamesByMonth = createAsyncThunk('games/fetchGamesByMonth', asy
 
 export const fetchOfficialsProfiles = createAsyncThunk(
   'games/fetchOfficialsProfiles',
-  async (officials: Official[], { rejectWithValue }) => {
+  async (officialsData: OfficialsKeyRequestData, { rejectWithValue }) => {
   try {
     const data = {
       data: {
-        officials: officials
+        officials: officialsData.officials
       }
     };
 
@@ -58,6 +58,7 @@ export const fetchOfficialsProfiles = createAsyncThunk(
 
     if (response.ok) {
       const json = await response.json();
+      console.log(json.data);
       return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`)

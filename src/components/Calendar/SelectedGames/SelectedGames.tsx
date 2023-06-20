@@ -3,18 +3,19 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles } from '../../../store/Games/actions';
 
-const UserProfile = ({ userData }) => {
+const UserProfile = ({ userData, color }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
     <div className="flex flex-col items-center justify-center">
       <img 
-        className="rounded-full"
-        style={{ width: '200px', height: '200px' }}
+        className="rounded-full max-w-[100px] max-h-[100px] object-cover h-[100px] w-[100px]"
+        width={100}
+        height={100}
         src={userData.profilePictureUrl}
         alt={name}
       />
-      <p className="text-center">{name}</p>
+      <p className={`text-center ${color === 'orange' ? 'text-black' : 'text-white' }`}>{name}</p>
     </div>
   );
 };
@@ -30,26 +31,21 @@ const OfficialBox = ({ official, label, color, officialsData }) => {
       style={{ backgroundColor: color }}
       onClick={handleClick}
     >
-      {officialsData[official.uid] ?
-        <UserProfile userData={officialsData[official.uid]} /> :
+      {official ?
+        <UserProfile userData={official} color={color} /> :
         <div>Add {label}</div>}
     </div>
   );
 };
 
 const GameAssignment = ({ game, officialsData }) => {
-  // Assume officials data structure is an array like [{role: 'referee1', uid: '1234'}, ...]
-  const officials = game.officials.reduce((acc, official) => {
-    acc[official.role] = official;
-    return acc;
-  }, {});
 
   return (
     <div className="flex">
-      <OfficialBox official={officials.referee1} label="Referee 1" color="orange" officialsData={officialsData} />
-      <OfficialBox official={officials.referee2} label="Referee 2" color="orange" officialsData={officialsData} />
-      <OfficialBox official={officials.linesman1} label="Linesman 1" color="black" officialsData={officialsData} />
-      <OfficialBox official={officials.linesman2} label="Linesman 2" color="black" officialsData={officialsData} />
+      <OfficialBox official={officialsData.official1} label="Referee 1" color="orange" officialsData={officialsData} />
+      <OfficialBox official={officialsData.official2} label="Referee 2" color="orange" officialsData={officialsData} />
+      <OfficialBox official={officialsData.official3} label="Linesman 1" color="black" officialsData={officialsData} />
+      <OfficialBox official={officialsData.official4} label="Linesman 2" color="black" officialsData={officialsData} />
     </div>
   );
 };
@@ -64,9 +60,13 @@ const SelectedGames = () => {
 
   useEffect(() => {
     // Dispatch action to fetch officials data
-    const officials = selectedGames.flatMap(game => game.officials)
-    dispatch(fetchOfficialsProfiles(officials));
-  }, [dispatch, selectedGames]);
+    selectedGames.forEach(game => {
+      const gameId = game.id
+      let officials = game.officials;
+      dispatch(fetchOfficialsProfiles({ officials, gameId }));
+    })
+
+  }, [selectedGames]);
   
   console.log(selectedGames)
   const officialsData = useAppSelector(state => state.games.officialsData);
@@ -86,17 +86,17 @@ const SelectedGames = () => {
               <div className="flex flex-row items-center gap-3">
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
-                  <p className="text-sm opacity-70 pt-2">{game.visitingTeam.city}</p>
-                  <p className="text-gray-700 text-sm opacity-50">Visiting</p>
+                  <p className="text-sm opacity-70 pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
+                  <p className="text-gray-700 text-sm opacity-50 text-center">Visiting</p>
                 </div>
                 <div style={{ minWidth: '30px' }}></div>
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.homeTeam.logo} alt="home team logo" />
-                  <p className="text-sm opacity-70 pt-2">{game.homeTeam.city}</p>
-                  <p className="text-gray-700 text-sm opacity-50">Home</p>
+                  <p className="text-sm opacity-70 pt-2 text-center min-w-24">{game.homeTeam.city}</p>
+                  <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
                 </div>
               </div>
-              <GameAssignment game={game} officialsData={officialsData} />
+              {officialsData && <GameAssignment game={game} officialsData={officialsData[game.id]} />}
             </div>
           </div>        
         ))}

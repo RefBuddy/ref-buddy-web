@@ -7,7 +7,7 @@ const season = '2022-2023';
 
 const initialState = {
   monthGameData: undefined,
-  officialsData: undefined,
+  officialsData: {},
   loading: false,
   error: undefined,
   currentDate: formatDate(new Date()),
@@ -55,8 +55,11 @@ const gamesSlice = createSlice({
     builder.addCase(fetchOfficialsProfiles.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchOfficialsProfiles.fulfilled, (state, { payload }) => {
-      state.officialsData = payload;
+    builder.addCase(fetchOfficialsProfiles.fulfilled, (state, { payload, meta }) => {
+      state.officialsData = {
+        ...state.officialsData,
+        [meta.arg.gameId]: payload,
+      };
       state.error = null;
       state.loading = false;
     });
