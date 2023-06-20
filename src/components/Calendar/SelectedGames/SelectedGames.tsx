@@ -15,7 +15,7 @@ const UserProfile = ({ userData, color }) => {
         src={userData.profilePictureUrl}
         alt={name}
       />
-      <p className={`text-center ${color === 'orange' ? 'text-black' : 'text-white' }`}>{name}</p>
+      <p className={`text-center pt-3`}>{name}</p>
     </div>
   );
 };
@@ -27,8 +27,8 @@ const OfficialBox = ({ official, label, color }) => {
 
   return (
     <div 
-      className="flex flex-col items-center justify-center border p-2 mx-1 cursor-pointer"
-      style={{ backgroundColor: color }}
+      className="flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer"
+      style={{ borderColor: color, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)' }}
       onClick={handleClick}
     >
       {official ?
