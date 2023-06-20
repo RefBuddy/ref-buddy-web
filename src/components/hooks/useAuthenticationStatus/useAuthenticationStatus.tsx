@@ -10,8 +10,19 @@ export default function useAuthenticationStatus(): [boolean, boolean] {
     (async () => {
       try {
         // check if user is authenticated
-        console.log(auth.currentUser);
-        if (auth.currentUser) {
+
+        if (auth) {
+          auth.onAuthStateChanged((user) => {
+            if (user) {
+              setIsAuthenticated(true);
+              setLoading(false);
+            } else {
+              setIsAuthenticated(false);
+              setLoading(false);
+            }
+          });
+        }
+        if (auth && auth.currentUser) {
           setIsAuthenticated(true);
           setLoading(false);
         } else {
@@ -27,15 +38,7 @@ export default function useAuthenticationStatus(): [boolean, boolean] {
     })();
   }, []);
 
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      setIsAuthenticated(true);
-      setLoading(false);
-    } else {
-      setIsAuthenticated(false);
-      setLoading(false);
-    }
-  });
+  
 
   return [isAuthenticated, loading];
 }
