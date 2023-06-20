@@ -3,15 +3,15 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles } from '../../../store/Games/actions';
 
-const UserProfile = ({ userData, color }) => {
+const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
     <div className="flex flex-col items-center justify-center">
       <img 
-        className="rounded-full max-w-[100px] max-h-[100px] object-cover h-[100px] w-[100px]"
-        width={100}
-        height={100}
+        className="rounded-full max-w-[80px] max-h-[80px] object-cover h-[80px] w-[80px]"
+        width={80}
+        height={80}
         src={userData.profilePictureUrl}
         alt={name}
       />
@@ -28,11 +28,11 @@ const OfficialBox = ({ official, label, color }) => {
   return (
     <div 
       className="flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer"
-      style={{ borderColor: color, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)' }}
+      style={{ borderColor: color, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)', minWidth: '130px', minHeight: '160px' }}
       onClick={handleClick}
     >
       {official ?
-        <UserProfile userData={official} color={color} /> :
+        <UserProfile userData={official}/> :
         <div>Add {label}</div>}
     </div>
   );
