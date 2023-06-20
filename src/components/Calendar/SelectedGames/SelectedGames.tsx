@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles } from '../../../store/Games/actions';
-import { Loading } from '../../../components/Loading';
 
 const UserProfile = ({ userData, color }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
@@ -21,7 +20,7 @@ const UserProfile = ({ userData, color }) => {
   );
 };
 
-const OfficialBox = ({ official, label, color, officialsData }) => {
+const OfficialBox = ({ official, label, color }) => {
   const handleClick = () => {
     // ... handle click on box
   };
@@ -39,14 +38,14 @@ const OfficialBox = ({ official, label, color, officialsData }) => {
   );
 };
 
-const GameAssignment = ({ game, officialsData }) => {
+const GameAssignment = ({ officialsData }) => {
 
   return (
     <div className="flex">
-      <OfficialBox official={officialsData.official1} label="Referee 1" color="orange" officialsData={officialsData} />
-      <OfficialBox official={officialsData.official2} label="Referee 2" color="orange" officialsData={officialsData} />
-      <OfficialBox official={officialsData.official3} label="Linesman 1" color="black" officialsData={officialsData} />
-      <OfficialBox official={officialsData.official4} label="Linesman 2" color="black" officialsData={officialsData} />
+      <OfficialBox official={officialsData.official1} label="Referee 1" color="orange" />
+      <OfficialBox official={officialsData.official2} label="Referee 2" color="orange" />
+      <OfficialBox official={officialsData.official3} label="Linesman 1" color="black" />
+      <OfficialBox official={officialsData.official4} label="Linesman 2" color="black" />
     </div>
   );
 };
@@ -97,7 +96,7 @@ const SelectedGames = () => {
                   <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
                 </div>
               </div>
-              {officialsData && officialsData[game.id] && <GameAssignment game={game} officialsData={officialsData[game.id]} />}
+              {officialsData && officialsData[game.id] && <GameAssignment officialsData={officialsData[game.id]} />}
             </div>
           </div>        
         ))}
