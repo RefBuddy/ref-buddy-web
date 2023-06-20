@@ -37,3 +37,35 @@ export const fetchGamesByMonth = createAsyncThunk('games/fetchGamesByMonth', asy
   }
   
 });
+
+export const fetchOfficialsProfiles = createAsyncThunk(
+  'games/fetchOfficialsProfiles',
+  async (officials: Official[], { rejectWithValue }) => {
+  try {
+    const data = {
+      data: {
+        officials: officials
+      }
+    };
+
+    const response = await fetch(`${URL}/getOfficialsProfiles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (response.ok) {
+      const json = await response.json();
+      return json.data;
+    } else {
+      return rejectWithValue(`HTTP error! Status: ${response.status}`)
+    }
+  } catch (err) {
+    const typedErr: any = err;
+    if (typedErr.response.status !== 401) {
+      return rejectWithValue(`HTTP Error! Status: ${typedErr.response.status}`)
+    }
+  }
+});
