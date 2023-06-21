@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles } from '../../../store/Games/actions';
+import { formatTime } from '../../../utils/helpers';
 
 const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
@@ -42,10 +43,10 @@ const GameAssignment = ({ officialsData }) => {
 
   return (
     <div className="flex">
-      <OfficialBox official={officialsData.official1} label="Referee 1" color="orange" />
-      <OfficialBox official={officialsData.official2} label="Referee 2" color="orange" />
-      <OfficialBox official={officialsData.official3} label="Linesman 1" color="black" />
-      <OfficialBox official={officialsData.official4} label="Linesman 2" color="black" />
+      <OfficialBox official={officialsData.official1} label="Referee" color="orange" />
+      <OfficialBox official={officialsData.official2} label="Referee" color="orange" />
+      <OfficialBox official={officialsData.official3} label="Linesman" color="black" />
+      <OfficialBox official={officialsData.official4} label="Linesman" color="black" />
     </div>
   );
 };
@@ -80,9 +81,10 @@ const SelectedGames = () => {
         <button onClick={() => clear()}>Clear</button>
       </div>
       <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
-      {selectedGames.map(game => (
-          <div key={game.id} className="w-full flex flex-col items-start justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4 cursor-pointer">
-            <div className={`flex flex-row items-start justify-between gap-3 w-full`}>
+        {selectedGames.map(game => (
+          <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
+            <div className="flex flex-1 flex-col items-start justify-center gap-3">
+              <p className="font-bold" style={{ marginBottom: '5px', marginTop: '-5px' }}>{game.date.slice(0, -6)} @ {formatTime(game.time)}</p>
               <div className="flex flex-row items-center gap-3">
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
@@ -96,9 +98,11 @@ const SelectedGames = () => {
                   <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
                 </div>
               </div>
+            </div>
+            <div className="flex-none">
               {officialsData && officialsData[game.id] && <GameAssignment officialsData={officialsData[game.id]} />}
             </div>
-          </div>        
+          </div>
         ))}
       </div>
     </div>
