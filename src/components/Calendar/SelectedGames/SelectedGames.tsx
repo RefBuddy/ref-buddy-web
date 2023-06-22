@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
-import { fetchOfficialsProfiles } from '../../../store/Games/actions';
+import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
+import DateTimePicker from 'react-datetime-picker';
 import { formatTime } from '../../../utils/helpers';
 
 const UserProfile = ({ userData }) => {
@@ -73,6 +74,36 @@ const SelectedGames = () => {
   const officialsData = useAppSelector(state => state.games.officialsData);
 
   console.log("officialsData", officialsData);
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [editingGame, setEditingGame] = useState<any | null>(null);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  }
+
+  const handleEditClick = (game) => {
+    setEditingGame(game);
+    setSelectedDate(new Date(game.date));
+  }
+
+  const handleSaveClick = (game) => {
+    if (selectedDate && editingGame) {
+      console.log("Game", game);
+      const gameData: GameDateRequestData = {
+        league: 'bchl',
+        season: '2022-2023',
+        date: game.time.slice(0, 10),
+        gameNumber: game.gameNumber,
+        newDate: selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        newISO: (selectedDate as Date).toISOString().slice(0, -1) 
+      };
+      dispatch(editGameDate(gameData));
+      setEditingGame(null);
+      setSelectedDate(null);
+    }
+  }
+  
   
   return (
     <div>
@@ -81,10 +112,21 @@ const SelectedGames = () => {
         <button onClick={() => clear()}>Clear</button>
       </div>
       <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
-        {selectedGames.map(game => (
+      {selectedGames.map(game => (
           <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
             <div className="flex flex-1 flex-col items-start justify-center gap-3">
               <p className="font-bold" style={{ marginBottom: '5px', marginTop: '-5px' }}>{game.date.slice(0, -6)} @ {formatTime(game.time)}</p>
+              {editingGame && editingGame.id === game.id ? (
+                <>
+                  <DateTimePicker
+                    onChange={handleDateChange}
+                    value={selectedDate}
+                  />
+                  <button onClick={() => handleSaveClick(game)}>Save</button>
+                </>
+              ) : (
+                <button onClick={() => handleEditClick(game)}>Edit</button>
+              )}
               <div className="flex flex-row items-center gap-3">
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />

@@ -29,14 +29,24 @@ const gamesSlice = createSlice({
     },
     setCurrentSeason: (state, { payload }) => {
       state.currentSeason = payload;
-
     },
     setCurrentLeague: (state, { payload }) => {
       state.currentLeague = payload;
     },
     setSelectedGames: (state, { payload }) => {
       state.selectedGames = payload;
-    }
+    },
+    editGameDate: (state, { payload }) => {
+      const { gameId, date } = payload;
+      const gameIndex = state.selectedGames.findIndex(game => game.id === gameId);
+      if (gameIndex !== -1) {
+        const updatedGame: Game = {
+          ...state.selectedGames[gameIndex],
+          date,
+        };
+        state.selectedGames[gameIndex] = updatedGame;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchGamesByMonth.pending, (state) => {
@@ -75,7 +85,8 @@ export const {
   setCurrentSeason,
   setCurrentLeague,
   setSelectedEvent,
-  setSelectedGames
+  setSelectedGames,
+  editGameDate,
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;
