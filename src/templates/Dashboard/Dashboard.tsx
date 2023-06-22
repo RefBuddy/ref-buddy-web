@@ -19,7 +19,7 @@ const Dashboard: React.FC<any> = () => {
       <Navbar />
       {loading ? <Loading /> : <></>}
       {selectedGames && selectedGames.length === 0 ? <MyCalendar /> : <></>}
-      {selectedGames && selectedGames.length > 1 ? <SelectedGames /> : <></>}
+      {selectedGames && selectedGames.length > 0 ? <SelectedGames /> : <></>}
       {openModal && modalType === 'event' && selectedEvent && (
         createPortal(
           <Modal>
