@@ -7,7 +7,7 @@ import { useAppSelector } from '../../store';
 import { EventModal } from '../../components/Calendar/EventModal';
 import { SelectedGames } from '../../components/Calendar/SelectedGames';
 import { Loading } from '../../components/Loading';
-import { OverviewBudget } from '../../components/OverviewBudget'; // Import the component here
+import { OverviewBudget } from '../../components/OverviewBudget';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
@@ -17,23 +17,25 @@ const Dashboard: React.FC<any> = () => {
   const loading = useAppSelector(state => state.games.loading);
 
   return (
-    <main>
+    <div style={{ display: 'flex' }}>
       <Navbar />
-      {loading ? <Loading /> : <></>}
-      <div className="flex flex-row justify-between items-center p-5"> {/* Start of top row */}
-        <OverviewBudget value="$10,000" positive={true} difference={10} /> {/* Add as many similar components here as you like */}
-      </div> {/* End of top row */}
-      {selectedGames && selectedGames.length === 0 ? <MyCalendar /> : <></>}
-      {selectedGames && selectedGames.length > 0 ? <SelectedGames /> : <></>}
-      {openModal && modalType === 'event' && selectedEvent && (
-        createPortal(
-          <Modal>
-            <EventModal />
-          </Modal>,
-          document.body
-        )
-      )}
-    </main>
+      <main style={{ flex: 1 }}>
+        {loading ? <Loading /> : <></>}
+        <div className="flex flex-row justify-between items-center p-5">
+          <OverviewBudget value="$10,000" positive={true} difference={10} />
+        </div>
+        {selectedGames && selectedGames.length === 0 ? <MyCalendar /> : <></>}
+        {selectedGames && selectedGames.length > 0 ? <SelectedGames /> : <></>}
+        {openModal && modalType === 'event' && selectedEvent && (
+          createPortal(
+            <Modal>
+              <EventModal />
+            </Modal>,
+            document.body
+          )
+        )}
+      </main>
+    </div>
   );
 }
 
