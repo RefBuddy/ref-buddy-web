@@ -7,7 +7,7 @@ import { useAppSelector } from '../../store';
 import { EventModal } from '../../components/Calendar/EventModal';
 import { SelectedGames } from '../../components/Calendar/SelectedGames';
 import { Loading } from '../../components/Loading';
-import { OverviewBudget } from '../../components/OverviewBudget';
+import { OverviewExpenses } from '../../components/OverviewExpenses';
 import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
 
@@ -29,7 +29,7 @@ const Dashboard: React.FC<any> = () => {
       <main style={{ flex: 1 }}>
         {loading ? <Loading /> : <></>}
         <div className="flex items-center p-5">
-          <OverviewBudget value="$10,000" positive={true} difference={10} />
+          <OverviewExpenses value="$10,000" positive={true} difference={10} />
           <OverviewGameReports progress={44} value="4 / 9" />
         </div>
         <div className="flex items-center p-5 justify-between">

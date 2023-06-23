@@ -2,13 +2,13 @@ import React, { FC } from 'react';
 import { ArrowDownIcon, ArrowUpIcon, CurrencyDollarIcon } from '@heroicons/react/24/solid';
 import { Typography } from '@mui/material';
 
-interface OverviewBudgetProps {
+interface OverviewExpensesProps {
   difference?: number;
   positive?: boolean;
   value: string;
 }
 
-const OverviewBudget: FC<OverviewBudgetProps> = ({ difference, positive = false, value }) => {
+const OverviewExpenses: FC<OverviewExpensesProps> = ({ difference, positive = false, value }) => {
   return (
     <div className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4" style={{ height: '180px', width: '215px' }}>
       <div className="flex flex-1 flex-col items-start justify-center gap-3">
@@ -17,7 +17,7 @@ const OverviewBudget: FC<OverviewBudgetProps> = ({ difference, positive = false,
             color="text.secondary"
             variant="overline"
           >
-            Budget
+            Expenses
           </Typography>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <CurrencyDollarIcon className="w-14 h-14 text-green-500" />
@@ -50,4 +50,4 @@ const OverviewBudget: FC<OverviewBudgetProps> = ({ difference, positive = false,
   );
 };
 
-export default OverviewBudget;
+export default OverviewExpenses;
