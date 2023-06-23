@@ -10,6 +10,7 @@ import { Loading } from '../../components/Loading';
 import { OverviewExpenses } from '../../components/OverviewExpenses';
 import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
+import { AssigningStatus } from '../../components/AssigningStatus';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
@@ -31,6 +32,7 @@ const Dashboard: React.FC<any> = () => {
         <div className="flex items-center p-5">
           <OverviewExpenses value="$10,000" positive={true} difference={10} />
           <OverviewGameReports progress={44} value="4 / 9" />
+          <AssigningStatus />
         </div>
         <div className="flex items-center p-5 justify-between">
           <div className="flex-1">
