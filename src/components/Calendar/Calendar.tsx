@@ -114,7 +114,7 @@ const MyCalendar: FC = () => {
           defaultDate={new Date()}
           defaultView="month"
           events={convertedEvents}
-          style={{ height: "91vh" }}
+          style={{ height: "50vh", width: "55%", margin: "0 auto 2rem" }}
           selectable
           onSelectEvent={event => selectEvent(event)}
           onSelectSlot={slotInfo => selectSlot(slotInfo)}
