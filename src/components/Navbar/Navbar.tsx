@@ -15,7 +15,7 @@ const Navbar: React.FC<any> = () => {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      <nav style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'black', width: '20vw', minWidth: '200px' }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'black', width: '18vw', minWidth: '200px' }}>
         <h1 style={{ color: 'white' }}>Ref Buddy</h1>
         <button onClick={handleLogout} style={{ border: '1px solid white', backgroundColor: 'white', color: 'black', cursor: 'pointer', padding: '3px 6px' }}>
           Logout
