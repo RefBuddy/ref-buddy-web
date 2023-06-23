@@ -64,7 +64,7 @@ const OverviewTravel: FC<OverviewTravelProps> = ({ chartSeries, labels, sx }) =>
         <Typography
           color="text.secondary"
           variant="overline"
-          style={{ alignSelf: 'flex-start', paddingTop: '1rem' }}
+          style={{ alignSelf: 'flex-start', paddingTop: '1rem', paddingBottom: '1rem' }}
         >
           Travel
         </Typography>
