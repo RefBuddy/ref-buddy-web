@@ -1,52 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
-import { fetchOfficialsProfiles } from '../../../store/Games/actions';
-import { Loading } from '../../../components/Loading';
+import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
+import DateTimePicker from 'react-datetime-picker';
+import { formatTime } from '../../../utils/helpers';
 
-const UserProfile = ({ userData, color }) => {
+const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
     <div className="flex flex-col items-center justify-center">
       <img 
-        className="rounded-full max-w-[100px] max-h-[100px] object-cover h-[100px] w-[100px]"
-        width={100}
-        height={100}
+        className="rounded-full max-w-[80px] max-h-[80px] object-cover h-[80px] w-[80px]"
+        width={80}
+        height={80}
         src={userData.profilePictureUrl}
         alt={name}
       />
-      <p className={`text-center ${color === 'orange' ? 'text-black' : 'text-white' }`}>{name}</p>
+      <p className={`text-center pt-3`}>{name}</p>
     </div>
   );
 };
 
-const OfficialBox = ({ official, label, color, officialsData }) => {
+const OfficialBox = ({ official, label, color }) => {
   const handleClick = () => {
     // ... handle click on box
   };
 
   return (
     <div 
-      className="flex flex-col items-center justify-center border p-2 mx-1 cursor-pointer"
-      style={{ backgroundColor: color }}
+      className="flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer"
+      style={{ borderColor: color, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)', minWidth: '130px', minHeight: '160px' }}
       onClick={handleClick}
     >
       {official ?
-        <UserProfile userData={official} color={color} /> :
+        <UserProfile userData={official}/> :
         <div>Add {label}</div>}
     </div>
   );
 };
 
-const GameAssignment = ({ game, officialsData }) => {
+const GameAssignment = ({ officialsData }) => {
 
   return (
     <div className="flex">
-      <OfficialBox official={officialsData.official1} label="Referee 1" color="orange" officialsData={officialsData} />
-      <OfficialBox official={officialsData.official2} label="Referee 2" color="orange" officialsData={officialsData} />
-      <OfficialBox official={officialsData.official3} label="Linesman 1" color="black" officialsData={officialsData} />
-      <OfficialBox official={officialsData.official4} label="Linesman 2" color="black" officialsData={officialsData} />
+      <OfficialBox official={officialsData.official1} label="Referee" color="orange" />
+      <OfficialBox official={officialsData.official2} label="Referee" color="orange" />
+      <OfficialBox official={officialsData.official3} label="Linesman" color="black" />
+      <OfficialBox official={officialsData.official4} label="Linesman" color="black" />
     </div>
   );
 };
@@ -54,10 +55,6 @@ const GameAssignment = ({ game, officialsData }) => {
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector(state => state.games.selectedGames)
-
-  const clear = () => {
-    dispatch(setSelectedGames([]));
-  }
 
   useEffect(() => {
     // Dispatch action to fetch officials data
@@ -73,17 +70,55 @@ const SelectedGames = () => {
   const officialsData = useAppSelector(state => state.games.officialsData);
 
   console.log("officialsData", officialsData);
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [editingGame, setEditingGame] = useState<any | null>(null);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  }
+
+  const handleEditClick = (game) => {
+    setEditingGame(game);
+    setSelectedDate(new Date(game.date));
+  }
+
+  const handleSaveClick = (game) => {
+    if (selectedDate && editingGame) {
+      console.log("Game", game);
+      const gameData: GameDateRequestData = {
+        league: 'bchl',
+        season: '2022-2023',
+        date: game.time.slice(0, 10),
+        gameNumber: game.gameNumber,
+        newDate: selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        newISO: (selectedDate as Date).toISOString().slice(0, -1) 
+      };
+      dispatch(editGameDate(gameData));
+      setEditingGame(null);
+      setSelectedDate(null);
+    }
+  }
+  
   
   return (
-    <div>
-      <div className="flex flex-row justify-between items-center p-5">
-        <h1>Selected Games</h1>
-        <button onClick={() => clear()}>Clear</button>
-      </div>
+    <div className='mt-6'>
       <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
       {selectedGames.map(game => (
-          <div key={game.id} className="w-full flex flex-col items-start justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4 cursor-pointer">
-            <div className={`flex flex-row items-start justify-between gap-3 w-full`}>
+          <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
+            <div className="flex flex-1 flex-col items-start justify-center gap-3">
+              <p className="font-bold" style={{ marginBottom: '5px', marginTop: '-5px' }}>{game.date.slice(0, -6)} @ {formatTime(game.time)}</p>
+              {editingGame && editingGame.id === game.id ? (
+                <>
+                  <DateTimePicker
+                    onChange={handleDateChange}
+                    value={selectedDate}
+                  />
+                  <button onClick={() => handleSaveClick(game)}>Save</button>
+                </>
+              ) : (
+                <button onClick={() => handleEditClick(game)}>Edit</button>
+              )}
               <div className="flex flex-row items-center gap-3">
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
@@ -97,9 +132,11 @@ const SelectedGames = () => {
                   <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
                 </div>
               </div>
-              {officialsData && officialsData[game.id] && <GameAssignment game={game} officialsData={officialsData[game.id]} />}
             </div>
-          </div>        
+            <div className="flex-none">
+              {officialsData && officialsData[game.id] && <GameAssignment officialsData={officialsData[game.id]} />}
+            </div>
+          </div>
         ))}
       </div>
     </div>
