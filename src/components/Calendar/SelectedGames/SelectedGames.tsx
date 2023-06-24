@@ -102,10 +102,7 @@ const SelectedGames = () => {
   
   
   return (
-    <div>
-      <div className="flex flex-row justify-between items-center p-5">
-        <h1>Selected Games</h1>
-      </div>
+    <div className='mt-6'>
       <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
       {selectedGames.map(game => (
           <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">

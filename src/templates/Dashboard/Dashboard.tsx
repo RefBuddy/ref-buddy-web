@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Navbar from '../../components/Navbar';
 import MyCalendar from '../../components/Calendar';
@@ -18,9 +18,17 @@ const Dashboard: React.FC<any> = () => {
   const selectedEvent = useAppSelector(state => state.games.selectedEvent);
   const selectedGames = useAppSelector(state => state.games.selectedGames);
   const loading = useAppSelector(state => state.games.loading);
+  const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
 
-  // Here's an example of data that you might pass to the OverviewTravel component.
-  // You'll want to replace this with actual data.
+  useEffect(() => {
+    if (selectedGames && selectedGames.length > 0 && openModal && modalType === 'games') {
+      setIsGamesModalOpen(true);
+    } else {
+      setIsGamesModalOpen(false);
+    }
+  }, [selectedGames, openModal, modalType]);
+
+  // OverviewTravel component data
   const chartSeries = [3, 6];
   const labels = ['Hotel', 'Home'];
 
@@ -36,13 +44,13 @@ const Dashboard: React.FC<any> = () => {
         </div>
         <div className="flex items-center p-5 justify-between">
           <div className="flex-1">
-            {selectedGames && selectedGames.length === 0 && <MyCalendar />}
+            <MyCalendar />
           </div>
           <OverviewTravel chartSeries={chartSeries} labels={labels} />
         </div>
-        {selectedGames && selectedGames.length > 0 && openModal && modalType === 'games' && (
+        {openModal && modalType === 'games' && (
           createPortal(
-            <Modal>
+            <Modal onClose={() => setIsGamesModalOpen(false)}>
               <SelectedGames />
             </Modal>,
             document.body

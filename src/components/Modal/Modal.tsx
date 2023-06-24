@@ -2,10 +2,11 @@ import React, { PropsWithChildren } from 'react';
 import { useAppDispatch } from '../../store';
 import { setModalState } from '../../store/Modal/reducer';
 
-const Modal: React.FC<PropsWithChildren<any>> = ({ children }) => {
+const Modal: React.FC<PropsWithChildren<any>> = ({ children, onClose }) => {
   const dispatch = useAppDispatch();
-  const onClose = () => {
-    dispatch(setModalState({ open: false, modalType: '' }))
+  const handleClose = () => {
+    dispatch(setModalState({ open: false, modalType: '' }));
+    if(onClose) onClose();
   }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 z-10 flex items-center justify-center">
@@ -19,7 +20,7 @@ const Modal: React.FC<PropsWithChildren<any>> = ({ children }) => {
             maxWidth: '1100px',
         }}
       >
-        <button onClick={onClose} className="absolute top-2 right-2">
+        <button onClick={handleClose} className="absolute top-2 right-2">
           Close
         </button>
         {children}
