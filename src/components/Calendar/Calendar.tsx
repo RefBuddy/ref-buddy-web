@@ -102,20 +102,22 @@ const MyCalendar: FC = () => {
   return (
     <div>
       {isAuthenticated ? (
-        <Calendar
-          localizer={localizer}
-          defaultDate={new Date()}
-          defaultView="month"
-          events={convertedEvents}
-          style={{ height: "60vh", width: "50vw", margin: "0 auto 2rem" }}
-          selectable
-          onSelectEvent={event => selectEvent(event)}
-          onSelectSlot={slotInfo => selectSlot(slotInfo)}
-          views={["month"]}
-          components={{
-            toolbar: CustomToolbar,
-          }}
-        />
+        <div className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4" >
+          <Calendar
+            localizer={localizer}
+            defaultDate={new Date()}
+            defaultView="month"
+            events={convertedEvents}
+            style={{ height: "60vh", width: "50vw", margin: "0 auto 2rem" }}
+            selectable
+            onSelectEvent={event => selectEvent(event)}
+            onSelectSlot={slotInfo => selectSlot(slotInfo)}
+            views={["month"]}
+            components={{
+              toolbar: CustomToolbar,
+            }}
+          />
+        </div>
       ) : (
         <p>Please log in to view the calendar</p>
       )}
