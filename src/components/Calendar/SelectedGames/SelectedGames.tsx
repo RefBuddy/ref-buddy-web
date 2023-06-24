@@ -56,10 +56,6 @@ const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector(state => state.games.selectedGames)
 
-  const clear = () => {
-    dispatch(setSelectedGames([]));
-  }
-
   useEffect(() => {
     // Dispatch action to fetch officials data
     selectedGames.forEach(game => {
@@ -109,7 +105,6 @@ const SelectedGames = () => {
     <div>
       <div className="flex flex-row justify-between items-center p-5">
         <h1>Selected Games</h1>
-        <button onClick={() => clear()}>Clear</button>
       </div>
       <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
       {selectedGames.map(game => (

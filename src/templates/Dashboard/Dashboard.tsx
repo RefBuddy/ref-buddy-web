@@ -40,7 +40,14 @@ const Dashboard: React.FC<any> = () => {
           </div>
           <OverviewTravel chartSeries={chartSeries} labels={labels} />
         </div>
-        {selectedGames && selectedGames.length > 0 ? <SelectedGames /> : <></>}
+        {selectedGames && selectedGames.length > 0 && openModal && modalType === 'games' && (
+          createPortal(
+            <Modal>
+              <SelectedGames />
+            </Modal>,
+            document.body
+          )
+        )}
         {openModal && modalType === 'event' && selectedEvent && (
           createPortal(
             <Modal>

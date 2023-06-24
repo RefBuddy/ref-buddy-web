@@ -57,7 +57,6 @@ const MyCalendar: FC = () => {
     if (isAuthenticated && !loading) {
       dispatch(fetchGamesByMonth());
     }
-    // Listen to changes on isAuthenticated, loading and currentDate.
   }, [isAuthenticated, loading, currentDate]);
 
   const selectEvent = (event: Event) => {
@@ -72,18 +71,13 @@ const MyCalendar: FC = () => {
 
   const selectSlot = (slotInfo: any) => {
     if (!events) return;
-    // get array of slot selections
     const slots = slotInfo.slots;
-    // get start and end times of first slot
     const startTime = slots[0];
     const endTime = slots[slots.length - 1];
-    // get date of first slot
     const startKey = format(new Date(startTime), "yyyy-MM-dd");
-    // get games on date of first slot
     const endKey = format(new Date(endTime), "yyyy-MM-dd");
-    console.log(endKey);
+
     const allEventsDuringSlots = Object.keys(events).filter(key => {
-      // check if key which is a date string is in between startKey and endKey
       const keyDate = new Date(key);
       if (keyDate >= new Date(startKey) && keyDate <= new Date(endKey)) {
         return true;
@@ -91,17 +85,16 @@ const MyCalendar: FC = () => {
       return false;
     })
 
-    console.log(allEventsDuringSlots);
-
     const gamesDuringSlots: GameData[] = [];
-    // Unsure on how you want your grouping. I just put all games in an array.
     allEventsDuringSlots.forEach(key => {
       const gamesOnDate = events[key] as GameData[];
       gamesOnDate.forEach(game => {
         gamesDuringSlots.push(game);
       })
     });
+
     dispatch(setSelectedGames(gamesDuringSlots));
+    dispatch(setModalState({ modalOpen: true, modalType: 'games' }));
   }
 
   const convertedEvents = convertEvents(events || [] as any);
