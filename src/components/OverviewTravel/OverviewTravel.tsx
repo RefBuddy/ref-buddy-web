@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { Typography, Box, SvgIcon, useTheme } from '@mui/material';
 import { Chart } from '../Chart';
 
 interface OverviewTravelProps {
@@ -9,8 +8,6 @@ interface OverviewTravelProps {
 }
 
 const useChartOptions = (labels: string[]) => {
-  const theme = useTheme();
-
   return {
     chart: {
       background: 'transparent'
@@ -47,7 +44,7 @@ const useChartOptions = (labels: string[]) => {
       width: 0
     },
     theme: {
-      mode: theme.palette.mode
+      mode: 'light' // set it manually as light or dark
     },
     tooltip: {
       fillSeriesColor: false
@@ -59,15 +56,11 @@ const OverviewTravel: FC<OverviewTravelProps> = ({ chartSeries, labels, sx }) =>
   const chartOptions = useChartOptions(labels);
 
   return (
-    <div className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4" style={{ width: '300px' }}>
+    <div className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 w-80">
       <div className="flex flex-1 flex-col items-center justify-center gap-3">
-        <Typography
-          color="text.secondary"
-          variant="overline"
-          style={{ alignSelf: 'flex-start', paddingTop: '1rem', paddingBottom: '1rem' }}
-        >
+        <h6 className="text-gray-700 text-sm font-medium uppercase self-start pt-4 pb-4">
           Travel
-        </Typography>
+        </h6>
         <div className="flex items-center justify-center w-full">
           <Chart
             height={250}
@@ -77,45 +70,22 @@ const OverviewTravel: FC<OverviewTravelProps> = ({ chartSeries, labels, sx }) =>
             width="80%"
           />
         </div>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 2,
-            mt: 2
-          }}
-        >
+        <div className="flex flex-row justify-center items-center gap-2 mt-2">
           {chartSeries.map((item, index) => {
             const label = labels[index];
 
             return (
-              <Box
-                key={label}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center'
-                }}
-              >
-                <Typography
-                  sx={{ my: 1 }}
-                  variant="h6"
-                >
+              <div key={label} className="flex flex-col items-center">
+                <h6 className="my-1 text-lg font-semibold">
                   {label}
-                </Typography>
-                <Typography
-                  color="text.secondary"
-                  variant="subtitle2"
-                  style={{ paddingBottom: '1rem' }}
-                >
+                </h6>
+                <span className="text-gray-700 text-sm pb-4">
                   {item}
-                </Typography>
-              </Box>
+                </span>
+              </div>
             );
           })}
-        </Box>
+        </div>
       </div>
     </div>
   );

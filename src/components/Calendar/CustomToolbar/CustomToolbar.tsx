@@ -1,29 +1,16 @@
 import React, { FC } from 'react';
-import {
-  Navigate,
-} from 'react-big-calendar';
-import {
-  addMonths,
-  subMonths,
-} from "date-fns";
+import { Navigate } from 'react-big-calendar';
+import { addMonths, subMonths } from "date-fns";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setCurrentDate } from '../../../store/Games/reducer';
 import { formatDate } from '../../../utils/helpers';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 interface CustomToolbarProps {
   onNavigate: (action: Navigate.ACTION) => void;
   label: string;
 }
-
-const toolbarStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-  };
-  
-  const buttonStyle = {
-    margin: '10px 30px 0',
-  };
 
 const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
   const dispatch = useAppDispatch();
@@ -31,7 +18,6 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
 
   const handleNavigate = (action: Navigate.ACTION) => {
     if (action === Navigate.PREVIOUS) {
-
       const previousMonth = subMonths(new Date(currentDate), 1);
       const dateString = formatDate(previousMonth)
       dispatch(setCurrentDate(dateString));
@@ -45,16 +31,14 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
   };
 
   return (
-    <div className="rbc-toolbar" style={toolbarStyle}>
-      <span className="rbc-btn-group">
-        <button style={buttonStyle} type="button" onClick={() => handleNavigate(Navigate.PREVIOUS)}>
-          {"<"}
-        </button>
-        <span className="rbc-toolbar-label">{label}</span>
-        <button style={buttonStyle} type="button" onClick={() => handleNavigate(Navigate.NEXT)}>
-          {">"}
-        </button>
-      </span>
+    <div className="rbc-toolbar flex justify-center items-center pt-4">
+      <button type="button" onClick={() => handleNavigate(Navigate.PREVIOUS)}>
+        <ChevronLeftIcon className="h-6 w-6"/>
+      </button>
+      <span className="rbc-toolbar-label text-center mt-1 font-bold">{label}</span>
+      <button type="button" onClick={() => handleNavigate(Navigate.NEXT)}>
+        <ChevronRightIcon className="h-6 w-6"/>
+      </button>
     </div>
   );
 };

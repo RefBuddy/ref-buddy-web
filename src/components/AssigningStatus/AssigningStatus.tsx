@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import { Typography } from '@mui/material';
 
 const AssigningStatus = () => {
   const [isActive, setIsActive] = useState(false);
@@ -12,26 +11,21 @@ const AssigningStatus = () => {
   return (
     <div 
       onClick={handleClick} 
-      className="flex flex-col justify-between border-gray-200 border-solid border rounded-lg shadow-sm px-4 py-2 mx-4 cursor-pointer" 
-      style={{ height: '180px', width: '215px' }}
+      className="flex flex-col justify-between border border-gray-200 rounded-lg shadow-sm px-4 py-2 mx-4 cursor-pointer h-48 w-56" 
     >
       <div className="flex justify-between items-center">
-        <Typography
-          color="textSecondary"
-          variant="overline"
-          className='pt-3'
-        >
+        <h6 className="text-gray-700 text-sm font-medium pt-2 uppercase">
           Assigning Status
-        </Typography>
+        </h6>
       </div>
       <div className="flex justify-between items-center">
-        <Typography variant="h6">
+        <h6 className="text-lg font-semibold">
           {isActive ? 'Active' : 'Disabled'}
-        </Typography>
+        </h6>
         {isActive 
-            ? <CheckCircleIcon style={{width: "60px", height: "60px", color: "green"}} />
-            : <XCircleIcon style={{width: "60px", height: "60px", color: "red"}} />
-            }
+            ? <CheckCircleIcon className="w-16 h-16 text-green-500" fill="currentColor" />
+            : <XCircleIcon className="w-16 h-16 text-red-500" fill="currentColor" />
+        }
       </div>
     </div>
   );

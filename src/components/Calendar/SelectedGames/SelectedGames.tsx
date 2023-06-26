@@ -102,33 +102,34 @@ const SelectedGames = () => {
   
   
   return (
-    <div className='mt-6'>
+    <div className="mt-6">
       <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
       {selectedGames.map(game => (
           <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
             <div className="flex flex-1 flex-col items-start justify-center gap-3">
-              <p className="font-bold" style={{ marginBottom: '5px', marginTop: '-5px' }}>{game.date.slice(0, -6)} @ {formatTime(game.time)}</p>
+              <p className="font-bold mb-1 mt-[-5px]">{game.date.slice(0, -6)} @ {formatTime(game.time)}</p>
               {editingGame && editingGame.id === game.id ? (
                 <>
                   <DateTimePicker
                     onChange={handleDateChange}
                     value={selectedDate}
+                    className="..."
                   />
-                  <button onClick={() => handleSaveClick(game)}>Save</button>
+                  <button className="..." onClick={() => handleSaveClick(game)}>Save</button>
                 </>
               ) : (
-                <button onClick={() => handleEditClick(game)}>Edit</button>
+                <button className="..." onClick={() => handleEditClick(game)}>Edit</button>
               )}
               <div className="flex flex-row items-center gap-3">
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
-                  <p className="text-sm opacity-70 pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
+                  <p className="text-sm text-gray-500 pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
                   <p className="text-gray-700 text-sm opacity-50 text-center">Visiting</p>
                 </div>
-                <div style={{ minWidth: '30px' }}></div>
+                <div className="min-w-[30px]"></div>
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.homeTeam.logo} alt="home team logo" />
-                  <p className="text-sm opacity-70 pt-2 text-center min-w-24">{game.homeTeam.city}</p>
+                  <p className="text-sm text-gray-500 pt-2 text-center min-w-24">{game.homeTeam.city}</p>
                   <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
                 </div>
               </div>
