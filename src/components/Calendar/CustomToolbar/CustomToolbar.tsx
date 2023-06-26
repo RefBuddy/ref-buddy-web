@@ -35,7 +35,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
       <button type="button" onClick={() => handleNavigate(Navigate.PREVIOUS)}>
         <ChevronLeftIcon className="h-6 w-6"/>
       </button>
-      <span className="rbc-toolbar-label text-center mt-1 font-bold">{label}</span>
+      <span className="rbc-toolbar-label text-center font-bold">{label}</span>
       <button type="button" onClick={() => handleNavigate(Navigate.NEXT)}>
         <ChevronRightIcon className="h-6 w-6"/>
       </button>
