@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Chart } from '../Chart';
+import { Chart } from './Chart';
 
 interface OverviewTravelProps {
   chartSeries: number[];
