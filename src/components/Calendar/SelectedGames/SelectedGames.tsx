@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
-import DateTimePicker from 'react-datetime-picker';
+import Datepicker from "tailwind-datepicker-react"
 import { formatTime } from '../../../utils/helpers';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
@@ -86,13 +87,15 @@ const SelectedGames = () => {
   const handleSaveClick = (game) => {
     if (selectedDate && editingGame) {
       console.log("Game", game);
+      const timezone = editingGame.homeTeam.abbreviation === 'CRA' ? '-07:00' : '-08:00';
+
       const gameData: GameDateRequestData = {
         league: 'bchl',
         season: '2022-2023',
         date: game.time.slice(0, 10),
         gameNumber: game.gameNumber,
         newDate: selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-        newISO: (selectedDate as Date).toISOString().slice(0, -1) 
+        newISO: (selectedDate as Date).toISOString().slice(0, -5) + timezone
       };
       dispatch(editGameDate(gameData));
       setEditingGame(null);
@@ -100,6 +103,39 @@ const SelectedGames = () => {
     }
   }
   
+  const [show, setShow] = useState(false)
+	const handleClose = (state: boolean) => {
+		setShow(state)
+	}
+
+  const options = {
+    title: "",
+    autoHide: true,
+    todayBtn: false,
+    clearBtn: false,
+    maxDate: new Date("2023-03-31"),
+    minDate: new Date("2022-09-01"),
+    theme: {
+      // background: "bg-gray-700 dark:bg-gray-800",
+      background: "bg-white",
+      todayBtn: "",
+      clearBtn: "",
+      icons: "",
+      text: "",
+      // disabledText: "bg-gray-800",
+      input: "",
+      inputIcon: "",
+      selected: "",
+    },
+    icons: {
+      // () => ReactElement | JSX.Element
+      prev: () => <ChevronLeftIcon className="h-6 w-6"/>,
+      next: () => <ChevronRightIcon className="h-6 w-6"/>,
+    },
+    datepickerClassNames: "top-12",
+    defaultDate: selectedDate,
+    language: "en",
+  };
   
   return (
     <div className="mt-6">
@@ -110,11 +146,7 @@ const SelectedGames = () => {
               <p className="font-bold mb-1 mt-[-5px]">{game.date.slice(0, -6)} @ {formatTime(game.time)}</p>
               {editingGame && editingGame.id === game.id ? (
                 <>
-                  <DateTimePicker
-                    onChange={handleDateChange}
-                    value={selectedDate}
-                    className="..."
-                  />
+                  <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
                   <button className="..." onClick={() => handleSaveClick(game)}>Save</button>
                 </>
               ) : (

@@ -2,7 +2,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  content: ['./src/**/*.ts', './src/**/*.tsx'],
+  content: ['./src/**/*.ts', './src/**/*.tsx', "./node_modules/tailwind-datepicker-react/dist/**/*.js"],
   theme: {
     inset: (theme) => theme('spacing'),
     fontFamily: {
