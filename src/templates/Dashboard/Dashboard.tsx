@@ -4,7 +4,6 @@ import Navbar from '../../components/Navbar';
 import MyCalendar from '../../components/Calendar';
 import Modal from '../../components/Modal/Modal';
 import { useAppSelector } from '../../store';
-import { EventModal } from '../../components/Calendar/EventModal';
 import { SelectedGames } from '../../components/Calendar/SelectedGames';
 import { Loading } from '../../components/Loading';
 import { OverviewExpenses } from '../../components/OverviewExpenses';
@@ -48,22 +47,14 @@ const Dashboard: React.FC<any> = () => {
           </div>
           <OverviewTravel chartSeries={chartSeries} labels={labels} />
         </div>
-        {openModal && modalType === 'games' && (
+        {(openModal && modalType === 'games') || (openModal && modalType === 'event' && selectedEvent) ? (
           createPortal(
             <Modal onClose={() => setIsGamesModalOpen(false)}>
               <SelectedGames />
             </Modal>,
             document.body
           )
-        )}
-        {openModal && modalType === 'event' && selectedEvent && (
-          createPortal(
-            <Modal>
-              <EventModal />
-            </Modal>,
-            document.body
-          )
-        )}
+        ) : null}
       </main>
     </div>
   );
