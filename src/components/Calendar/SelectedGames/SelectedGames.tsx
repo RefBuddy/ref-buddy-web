@@ -3,8 +3,12 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
 import Datepicker from "tailwind-datepicker-react"
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
+import moment from 'moment';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import { formatDate } from '../../../utils/helpers';
 
 const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
@@ -67,13 +71,18 @@ const SelectedGames = () => {
 
   }, [selectedGames]);
   
-  console.log(selectedGames)
   const officialsData = useAppSelector(state => state.games.officialsData);
-
-  console.log("officialsData", officialsData);
-
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [editingGame, setEditingGame] = useState<any | null>(null);
+  // Time picker state
+  const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+
+  // Function for handling time changes
+  const handleTimeChange = (value) => {
+    setSelectedTime(value && value.toDate());
+    console.log("selected time", selectedTime);
+  }
+
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -82,6 +91,7 @@ const SelectedGames = () => {
   const handleEditClick = (game) => {
     setEditingGame(game);
     setSelectedDate(new Date(game.date));
+    console.log("editing game", game.time.slice(11, 16));
   }
 
   const handleSaveClick = (game) => {
@@ -147,6 +157,7 @@ const SelectedGames = () => {
               {editingGame && editingGame.id === game.id ? (
                 <>
                   <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
+                  <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} defaultValue={editingGame.time.slice(11, 16)}/>
                   <button className="..." onClick={() => handleSaveClick(game)}>Save</button>
                 </>
               ) : (
