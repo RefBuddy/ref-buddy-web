@@ -123,13 +123,13 @@ const SelectedGames = () => {
               <div className="flex flex-row items-center gap-3">
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
-                  <p className="text-sm text-gray-500 pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
+                  <p className="text-sm text-black pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
                   <p className="text-gray-700 text-sm opacity-50 text-center">Visiting</p>
                 </div>
                 <div className="min-w-[30px]"></div>
                 <div className="flex flex-col items-center justify-center">
                   <img width={70} height={70} src={game.homeTeam.logo} alt="home team logo" />
-                  <p className="text-sm text-gray-500 pt-2 text-center min-w-24">{game.homeTeam.city}</p>
+                  <p className="text-sm text-black pt-2 text-center min-w-24">{game.homeTeam.city}</p>
                   <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
                 </div>
               </div>
