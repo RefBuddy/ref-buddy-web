@@ -1,6 +1,7 @@
 import React from 'react';
 import { auth } from '../../firebaseOptions';
 import { signOut } from 'firebase/auth';
+import Logo from '../../images/favicon.png';
 
 const Navbar: React.FC<any> = () => {
   const handleLogout = async () => {
@@ -14,14 +15,17 @@ const Navbar: React.FC<any> = () => {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <nav style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'black', width: '18vw', minWidth: '200px' }}>
-        <h1 style={{ color: 'white' }}>Ref Buddy</h1>
-        <button onClick={handleLogout} style={{ border: '1px solid white', backgroundColor: 'white', color: 'black', cursor: 'pointer', padding: '3px 6px' }}>
+    <div className="flex h-screen">
+      <nav className="flex flex-col justify-between items-center p-4 bg-black min-w-200px text-white">
+        <div className="flex items-center">
+          <img src={Logo} alt="logo" className="h-8 w-8 mr-2" />
+          <h1>Ref Buddy</h1>
+        </div>
+        <button onClick={handleLogout} className="border-white border bg-white text-black cursor-pointer py-1 px-2">
           Logout
         </button>
       </nav>
-      <div style={{ flex: 1, backgroundColor: 'white' }}>
+      <div className="flex-grow bg-white">
         {/* Add your content here */}
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import {
   Calendar,
-  Event,
+  Event as CalendarEvent,
   dateFnsLocalizer,
 } from 'react-big-calendar';
 import {
@@ -30,21 +30,29 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const convertEvents = (events: MonthGameData[]) => {
-  const convertedEvents: Event[] = [];
+const convertEvents = (events: MonthGameData[]): CalendarEvent[] => {
+  const groupedEvents: { [date: string]: CalendarEvent } = {};
+  
   Object.keys(events).forEach(key => {
     const eventsOnDate = events[key] as GameData[];
     eventsOnDate.forEach(event => {
-      const convertedEvent: Event = {
-        title: event.homeTeam.abbreviation + " vs " + event.visitingTeam.abbreviation,
-        start: new Date(event.time),
-        end: new Date(event.time),
-        id: event.id,
-      };
-      convertedEvents.push(convertedEvent);
+      const eventDate = format(new Date(event.time), "yyyy-MM-dd");
+      if (groupedEvents[eventDate]) {
+        groupedEvents[eventDate].allDay = true;
+        groupedEvents[eventDate].title += " ●";
+      } else {
+        groupedEvents[eventDate] = {
+          title: "●",
+          start: new Date(event.time),
+          end: new Date(event.time),
+          allDay: true,
+          resource: event.id,
+        };
+      }
     });
   });
-  return convertedEvents;
+
+  return Object.values(groupedEvents);
 }
 
 const MyCalendar: FC = () => {
@@ -59,17 +67,17 @@ const MyCalendar: FC = () => {
     }
   }, [isAuthenticated, loading, currentDate]);
 
-  const selectEvent = (event: Event) => {
+  const selectEvent = (event: CalendarEvent) => {
     if (!events) return;
     const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
     const gamesOnDate = events[eventDateKey] as GameData[];
-    const selectedGame = gamesOnDate.find(game => game.id === event.id);
+    const selectedGame = gamesOnDate.find(game => game.id === event.resource);
 
     dispatch(setSelectedEvent(selectedGame));
     dispatch(setModalState({ modalOpen: true, modalType: 'event' }))
   }
 
-  const selectSlot = (slotInfo: any) => {
+  const selectSlot = (slotInfo: { slots: Date[] }) => {
     if (!events) return;
     const slots = slotInfo.slots;
     const startTime = slots[0];
@@ -116,6 +124,21 @@ const MyCalendar: FC = () => {
             components={{
               toolbar: CustomToolbar,
             }}
+            eventPropGetter={
+              () => {
+                let newStyle = {
+                  backgroundColor: "transparent",
+                  color: "#10b981", 
+                  fontSize: ".5rem",
+                };
+          
+                return {
+                  className: "",
+                  style: newStyle
+                };
+              }
+            }
+            
           />
         </div>
       ) : (

@@ -13,6 +13,12 @@ module.exports = {
       transparent: 'transparent',
       white: '#FFFFFF',
       black: '#070A0F',
+      red: {
+        500: '#ef4444',
+      },
+      green: {
+        500: '#10b981',
+      },
       gray: {
         100: '#F0F3F6',
         200: '#E5EAF1',
