@@ -89,9 +89,16 @@ const SelectedGames = () => {
 
   const handleEditClick = (game) => {
     setEditingGame(game);
-    setSelectedDate(new Date(game.date));
-    setSelectedTime(moment(game.time) && moment(game.time).toDate());
-  }
+    if (gameData && gameData.gameNumber === game.gameNumber) {
+      // If there is gameData for this game, initialize the selectedDate and selectedTime with the new date and time
+      setSelectedDate(new Date(gameData.newDate));
+      setSelectedTime(moment(gameData.newISO) && moment(gameData.newISO).toDate());
+    } else {
+      // Otherwise, initialize with the original date and time
+      setSelectedDate(new Date(game.date));
+      setSelectedTime(moment(game.time) && moment(game.time).toDate());
+    }
+  }  
 
   const handleSaveClick = (game) => {
     if (selectedDate && editingGame) {
