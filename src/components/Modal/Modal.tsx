@@ -9,22 +9,7 @@ const Modal: React.FC<PropsWithChildren<any>> = ({ children, onClose }) => {
     dispatch(setModalState({ open: false, modalType: '' }));
     if(onClose) onClose();
   }
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      const modal = document.querySelector('.modal');
-      if (modal && !modal.contains(event.target as Node)) {
-        handleClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, [handleClose]);
-
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 z-10 flex items-center justify-center">
       <div 
