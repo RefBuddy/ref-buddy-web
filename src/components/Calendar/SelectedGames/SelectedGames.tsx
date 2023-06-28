@@ -8,7 +8,6 @@ import 'rc-time-picker/assets/index.css';
 import moment from 'moment-timezone';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
-import { formatDate } from '../../../utils/helpers';
 
 const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
