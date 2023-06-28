@@ -108,16 +108,10 @@ const SelectedGames = () => {
   
         // Create a moment object from the combined date and time and format it to an ISO string in the correct timezone
         ISO = moment(selectedDate).tz(timezone).format();
-        console.log("ISO", ISO);
       } else {
         // If selectedTime is null, just convert the selected date to an ISO string
         ISO = moment(selectedDate).tz(timezone).format();
       }
-  
-      console.log(selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-      console.log("ISO", ISO);
-      // console log the iso to date
-      console.log("ISO to date", new Date(ISO));
   
       const gameData: GameDateRequestData = {
         league: 'bchl',
