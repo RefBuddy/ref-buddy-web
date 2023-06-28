@@ -40,7 +40,7 @@ const gamesSlice = createSlice({
       const { gameId, date } = payload;
       const gameIndex = state.selectedGames.findIndex(game => game.id === gameId);
       if (gameIndex !== -1) {
-        const updatedGame: Game = {
+        const updatedGame: GameData = {
           ...state.selectedGames[gameIndex],
           date,
         };
