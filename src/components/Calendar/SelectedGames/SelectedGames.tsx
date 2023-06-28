@@ -76,6 +76,7 @@ const SelectedGames = () => {
   const [editingGame, setEditingGame] = useState<any | null>(null);
   // Time picker state
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  const [gameData, setGameData] = useState<GameDateRequestData | null>(null);
 
   // Function for handling time changes
   const handleTimeChange = (value) => {
@@ -112,8 +113,8 @@ const SelectedGames = () => {
         // If selectedTime is null, just convert the selected date to an ISO string
         ISO = moment(selectedDate).tz(timezone).format();
       }
-  
-      const gameData: GameDateRequestData = {
+
+      const updatedGameData: GameDateRequestData = {
         league: 'bchl',
         season: '2022-2023',
         date: game.time.slice(0, 10),
@@ -121,7 +122,8 @@ const SelectedGames = () => {
         newDate: selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
         newISO: ISO
       };
-      dispatch(editGameDate(gameData));
+      setGameData(updatedGameData);
+      dispatch(editGameDate(updatedGameData));
       setEditingGame(null);
       setSelectedDate(null);
       setSelectedTime(null);
@@ -166,9 +168,9 @@ const SelectedGames = () => {
     <div className="mt-6">
       <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
       {selectedGames.map(game => (
-          <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
-            <div className="flex flex-1 flex-col items-start justify-center gap-3">
-              <p className="font-bold mb-1 mt-[-5px]">{game.date.slice(0, -6)} @ {formatTime(game.time)}</p>
+        <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
+          <div className="flex flex-1 flex-col items-start justify-center gap-3">
+          <p className="font-bold mb-1 mt-[-5px]">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} @ {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)}</p>
               {editingGame && editingGame.id === game.id ? (
                 <>
                   <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
