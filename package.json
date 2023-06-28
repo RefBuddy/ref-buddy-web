@@ -45,6 +45,7 @@
     "libphonenumber-js": "^1.10.21",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "rc-time-picker": "^3.7.3",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",

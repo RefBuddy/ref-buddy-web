@@ -5,7 +5,7 @@ import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actio
 import Datepicker from "tailwind-datepicker-react"
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import { formatDate } from '../../../utils/helpers';
@@ -80,9 +80,7 @@ const SelectedGames = () => {
   // Function for handling time changes
   const handleTimeChange = (value) => {
     setSelectedTime(value && value.toDate());
-    console.log("selected time", selectedTime);
   }
-
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -91,32 +89,55 @@ const SelectedGames = () => {
   const handleEditClick = (game) => {
     setEditingGame(game);
     setSelectedDate(new Date(game.date));
-    console.log("editing game", game.time.slice(11, 16));
+    setSelectedTime(moment(game.time) && moment(game.time).toDate());
   }
 
   const handleSaveClick = (game) => {
     if (selectedDate && editingGame) {
       console.log("Game", game);
-      const timezone = editingGame.homeTeam.abbreviation === 'CRA' ? '-07:00' : '-08:00';
-
+      const timezone = editingGame.homeTeam.abbreviation === 'CRA' ? 'America/Denver' : 'America/Los_Angeles';
+      let ISO = "";
+      if (selectedTime) {
+        // Create a moment object from the selected time
+        const selectedMoment = moment(selectedTime);
+  
+        // Combine date from selectedDate and time from selectedTime
+        selectedDate.setHours(selectedMoment.hours());
+        selectedDate.setMinutes(selectedMoment.minutes());
+        selectedDate.setSeconds(selectedMoment.seconds());
+  
+        // Create a moment object from the combined date and time and format it to an ISO string in the correct timezone
+        ISO = moment(selectedDate).tz(timezone).format();
+        console.log("ISO", ISO);
+      } else {
+        // If selectedTime is null, just convert the selected date to an ISO string
+        ISO = moment(selectedDate).tz(timezone).format();
+      }
+  
+      console.log(selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+      console.log("ISO", ISO);
+      // console log the iso to date
+      console.log("ISO to date", new Date(ISO));
+  
       const gameData: GameDateRequestData = {
         league: 'bchl',
         season: '2022-2023',
         date: game.time.slice(0, 10),
         gameNumber: game.gameNumber,
         newDate: selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-        newISO: (selectedDate as Date).toISOString().slice(0, -5) + timezone
+        newISO: ISO
       };
       dispatch(editGameDate(gameData));
       setEditingGame(null);
       setSelectedDate(null);
+      setSelectedTime(null);
     }
   }
   
   const [show, setShow] = useState(false)
-	const handleClose = (state: boolean) => {
-		setShow(state)
-	}
+  const handleClose = (state: boolean) => {
+    setShow(state)
+  }
 
   const options = {
     title: "",
@@ -157,7 +178,7 @@ const SelectedGames = () => {
               {editingGame && editingGame.id === game.id ? (
                 <>
                   <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
-                  <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} defaultValue={editingGame.time.slice(11, 16)}/>
+                  <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
                   <button className="..." onClick={() => handleSaveClick(game)}>Save</button>
                 </>
               ) : (
