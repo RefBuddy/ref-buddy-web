@@ -1,68 +1,63 @@
-// import React, { useEffect, useState } from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { RootState } from './path-to-your-store'; // import your store here
-// import { getOfficialsList } from './actions';
-// import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useAppSelector } from '../../store';
 
-// type Official = {
-//   uid: string;
-//   firstName: string;
-//   lastName: string;
-//   profilePictureUrl: string;
-// };
+const OfficialsList: React.FC = () => {
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [sortedData, setSortedData] = useState<any[]>([]);
+    const officials = useAppSelector(state => state.officials.officialsList);
 
-// const OfficialsList: React.FC = () => {
-//   const dispatch = useDispatch();
-//   const history = useHistory();
-//   const { officialsList } = useSelector((state: RootState) => state.officials);
-//   const [search, setSearch] = useState('');
-//   const [filteredOfficials, setFilteredOfficials] = useState<Official[]>([]);
+    // this hook converts the officials object to an array and sorts it when the component mounts
+    useEffect(() => {
+        const officialsArray = Object.keys(officials).map(key => officials[key]);
+        const sortedOfficials = officialsArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
+        setSortedData(sortedOfficials);
+    }, []);
 
-//   useEffect(() => {
-//     dispatch(getOfficialsList({ league: 'bchl' }));
-//   }, [dispatch]);
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        const searchTermLowerCase = e.target.value.toLowerCase();
 
-//   useEffect(() => {
-//     const filtered = Object.values(officialsList).filter((official) =>
-//       `${official.firstName} ${official.lastName}`.toLowerCase().includes(search.toLowerCase())
-//     );
-//     setFilteredOfficials(filtered);
-//   }, [officialsList, search]);
+        const officialsArray = Object.keys(officials).map(key => officials[key]);
 
-//   const handleProfileClick = (uid: string) => {
-//     // Go to the profile route, passing along the UID
-//     history.push(`/profile/${uid}`);
-//   };
+        const filtered = officialsArray.filter(
+            (official: any) =>
+                official.firstName.toLowerCase().includes(searchTermLowerCase) ||
+                official.lastName.toLowerCase().includes(searchTermLowerCase)
+        );
 
-//   return (
-//     <div className="flex flex-col items-center justify-center">
-//       <input
-//         className="border-2 border-gray-300 rounded p-2 m-2 w-1/2"
-//         type="text"
-//         placeholder="Search officials"
-//         value={search}
-//         onChange={(e) => setSearch(e.target.value)}
-//       />
-//       <div className="w-1/2">
-//         {filteredOfficials.map((official) => (
-//           <div
-//             key={official.uid}
-//             className="flex items-center border-2 border-gray-300 rounded p-2 m-2 cursor-pointer"
-//             onClick={() => handleProfileClick(official.uid)}
-//           >
-//             <img
-//               className="w-12 h-12 rounded mr-2"
-//               src={official.profilePictureUrl}
-//               alt={official.firstName}
-//             />
-//             <span>
-//               {official.firstName} {official.lastName}
-//             </span>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
+        const sortedOfficials = filtered.sort((a: any, b: any) => a.lastName.localeCompare(b.lastName));
+        setSortedData(sortedOfficials);
+    };
 
-// export default OfficialsList;
+    return (
+        <div className="px-6 py-4">
+            <div className="py-4">
+                <input
+                    type="text"
+                    placeholder="Search officials..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sortedData.map((official: any) => (
+                    <div className="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+                        key={official.uid}>
+                        <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                                {official.firstName} {official.lastName}
+                            </p>
+                            <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                {official.city}
+                            </p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default OfficialsList;

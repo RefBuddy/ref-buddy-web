@@ -9,6 +9,9 @@ import moment from 'moment-timezone';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './App.css';
+import { createPortal } from 'react-dom';
+import Modal from '../../Modal/Modal';
+import OfficialsList from '../../OfficialsList/OfficialsList';
 
 const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
@@ -28,8 +31,18 @@ const UserProfile = ({ userData }) => {
 };
 
 const OfficialBox = ({ official, label, color }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false); // define modal state
+
   const handleClick = () => {
-    // ... handle click on box
+    if (!official) {
+      setIsModalOpen(true); // open modal if no official is present
+    } else {
+      // ... handle click on box when official is present
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // close modal
   };
 
   return (
@@ -41,6 +54,15 @@ const OfficialBox = ({ official, label, color }) => {
       {official ?
         <UserProfile userData={official}/> :
         <div>Add {label}</div>}
+      
+      {isModalOpen ? (
+        createPortal(
+          <Modal onClose={closeModal}>
+            <OfficialsList /> 
+          </Modal>,
+          document.body
+        )
+      ) : null}
     </div>
   );
 };

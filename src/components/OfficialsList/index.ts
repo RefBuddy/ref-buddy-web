@@ -1,1 +1,1 @@
-// export { default as OfficialsList } from './OfficialsList';
+export { default as OfficialsList } from './OfficialsList';
