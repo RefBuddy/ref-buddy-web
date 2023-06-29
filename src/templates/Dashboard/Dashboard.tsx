@@ -3,13 +3,14 @@ import { createPortal } from 'react-dom';
 import Navbar from '../../components/Navbar';
 import MyCalendar from '../../components/Calendar';
 import Modal from '../../components/Modal/Modal';
-import { useAppSelector } from '../../store';
+import { useAppSelector, useAppDispatch } from '../../store';
 import { SelectedGames } from '../../components/Calendar/SelectedGames';
 import { Loading } from '../../components/Loading';
 import { OverviewExpenses } from '../../components/OverviewExpenses';
 import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
 import { AssigningStatus } from '../../components/AssigningStatus';
+import { getListOfOfficials } from '../../store/Games/actions';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
@@ -18,6 +19,12 @@ const Dashboard: React.FC<any> = () => {
   const selectedGames = useAppSelector(state => state.games.selectedGames);
   const loading = useAppSelector(state => state.games.loading);
   const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  // store list of officials in redux
+  useEffect(() => {
+    dispatch(getListOfOfficials({ league: 'bchl' }));
+  }, [dispatch]);
 
   useEffect(() => {
     if (selectedGames && selectedGames.length > 0 && openModal && modalType === 'games') {
@@ -30,6 +37,8 @@ const Dashboard: React.FC<any> = () => {
   // OverviewTravel component data
   const chartSeries = [3, 6];
   const labels = ['Hotel', 'Home'];
+
+  console.log('list of officials', useAppSelector(state => state.games.officialsList));
 
   return (
     <div style={{ display: 'flex' }}>
