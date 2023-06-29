@@ -4,12 +4,14 @@ import { combineReducers } from 'redux';
 import userReducer from './User/reducer';
 import gamesReducer from './Games/reducer';
 import modalReducer from './Modal/reducer';
+import officialsReducer from './ListOfOfficials/reducer';
 
 export const rootReducer = combineReducers({
   // Add reducers here
   user: userReducer,
   games: gamesReducer,
   modal: modalReducer,
+  officials: officialsReducer,
 });
 
 const store = configureStore({

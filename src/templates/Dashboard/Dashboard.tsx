@@ -10,7 +10,7 @@ import { OverviewExpenses } from '../../components/OverviewExpenses';
 import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
 import { AssigningStatus } from '../../components/AssigningStatus';
-import { getListOfOfficials } from '../../store/Games/actions';
+import { getListOfOfficials } from '../../store/ListOfOfficials/actions';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
@@ -38,7 +38,7 @@ const Dashboard: React.FC<any> = () => {
   const chartSeries = [3, 6];
   const labels = ['Hotel', 'Home'];
 
-  console.log('list of officials', useAppSelector(state => state.games.officialsList));
+  console.log('list of officials', useAppSelector(state => state.officials.officialsList));
 
   return (
     <div style={{ display: 'flex' }}>

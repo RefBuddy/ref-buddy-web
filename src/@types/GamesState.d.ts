@@ -10,5 +10,4 @@ interface GamesState {
   currentSeason: string;
   selectedEvent?: GameData;
   selectedGames: GameData[];
-  officialsList: OfficialData[];
 }

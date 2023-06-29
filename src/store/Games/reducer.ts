@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchGamesByMonth, fetchOfficialsProfiles } from './actions';
 import { formatDate } from '../../utils/helpers';
-import { getListOfOfficials } from './actions';
 
 const league = 'bchl'; 
 const season = '2022-2023';
@@ -16,7 +15,6 @@ const initialState = {
   currentSeason: season,
   selectedEvent: undefined,
   selectedGames: [],
-  officialsList: []
 } as GamesState;
 
 const gamesSlice = createSlice({
@@ -78,11 +76,6 @@ const gamesSlice = createSlice({
     });
     builder.addCase(fetchOfficialsProfiles.rejected, (state, { error }) => {
       state.error = error;
-      state.loading = false;
-    });
-    builder.addCase(getListOfOfficials.fulfilled, (state, { payload }) => {
-      state.officialsList = payload;
-      state.error = null;
       state.loading = false;
     });
   },
