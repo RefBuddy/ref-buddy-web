@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import userReducer from './User/reducer';
 import gamesReducer from './Games/reducer';
 import modalReducer from './Modal/reducer';
-import officialsReducer from './ListOfOfficials/reducer';
+import officialsReducer from './OfficialsList/reducer';
 
 export const rootReducer = combineReducers({
   // Add reducers here

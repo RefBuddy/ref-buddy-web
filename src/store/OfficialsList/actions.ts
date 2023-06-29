@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const URL = process.env.GATSBY_API_URL;
 
-export const getListOfOfficials = createAsyncThunk(
-    'officials/getListOfOfficials',
+export const getOfficialsList = createAsyncThunk(
+    'officials/getOfficialsList',
     async (leagueData: {league: string}, { rejectWithValue }) => {
       try {
         const data = {
@@ -23,6 +23,7 @@ export const getListOfOfficials = createAsyncThunk(
           if (json.data['officials'] == null) {
             return {};
           }
+          console.log(json.data['officials']);
           return json.data['officials'];
         } else {
           return rejectWithValue(`HTTP error! Status: ${response.status}`);

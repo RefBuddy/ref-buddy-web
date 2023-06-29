@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getListOfOfficials } from './actions';
+import { getOfficialsList } from './actions';
 
 const initialState = {
   officialsList: [],
   loading: false,
   error: undefined
-} as ListOfOfficialsState;
+} as OfficialsListState;
 
 export const officialsSlice = createSlice({
   name: 'officials',
@@ -13,7 +13,7 @@ export const officialsSlice = createSlice({
   reducers: {
   },
   extraReducers: (builder) => {
-    builder.addCase(getListOfOfficials.fulfilled, (state, { payload }) => {
+    builder.addCase(getOfficialsList.fulfilled, (state, { payload }) => {
       state.officialsList = payload;
       state.error = null;
       state.loading = false;

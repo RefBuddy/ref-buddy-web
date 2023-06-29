@@ -10,7 +10,7 @@ import { OverviewExpenses } from '../../components/OverviewExpenses';
 import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
 import { AssigningStatus } from '../../components/AssigningStatus';
-import { getListOfOfficials } from '../../store/ListOfOfficials/actions';
+import { getOfficialsList } from '../../store/OfficialsList/actions';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
@@ -23,7 +23,7 @@ const Dashboard: React.FC<any> = () => {
 
   // store list of officials in redux
   useEffect(() => {
-    dispatch(getListOfOfficials({ league: 'bchl' }));
+    dispatch(getOfficialsList({ league: 'bchl' }));
   }, [dispatch]);
 
   useEffect(() => {
