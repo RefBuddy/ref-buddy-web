@@ -8,6 +8,7 @@ import 'rc-time-picker/assets/index.css';
 import moment from 'moment-timezone';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import './App.css';
 
 const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
@@ -156,7 +157,7 @@ const SelectedGames = () => {
       icons: "",
       text: "",
       // disabledText: "bg-gray-800",
-      input: "",
+      input: "datepicker-input",
       inputIcon: "",
       selected: "",
     },
@@ -165,7 +166,7 @@ const SelectedGames = () => {
       prev: () => <ChevronLeftIcon className="h-6 w-6"/>,
       next: () => <ChevronRightIcon className="h-6 w-6"/>,
     },
-    datepickerClassNames: "top-12",
+    datepickerClassNames: "center-datepicker",
     defaultDate: selectedDate,
     language: "en",
   };
