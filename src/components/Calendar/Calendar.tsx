@@ -60,12 +60,13 @@ const MyCalendar: FC = () => {
   const [isAuthenticated, loading] = useAuthenticationStatus();
   const events = useAppSelector(state => state.games.monthGameData);
   const currentDate = useAppSelector(state => state.games.currentDate);
+  const isModalOpen = useAppSelector(state => state.modal.modalOpen);
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
       dispatch(fetchGamesByMonth());
     }
-  }, [isAuthenticated, loading, currentDate]);
+  }, [isAuthenticated, loading, currentDate, isModalOpen]);
 
   const selectEvent = (event: CalendarEvent) => {
     if (!events) return;

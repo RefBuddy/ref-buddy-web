@@ -6,7 +6,7 @@ const league = 'bchl';
 const season = '2022-2023';
 
 const initialState = {
-  monthGameData: undefined,
+  monthGameData: {},
   officialsData: {},
   loading: false,
   error: undefined,
@@ -37,12 +37,13 @@ const gamesSlice = createSlice({
       state.selectedGames = payload;
     },
     editGameDate: (state, { payload }) => {
-      const { gameId, date } = payload;
+      const { gameId, newDate, newISO } = payload;
       const gameIndex = state.selectedGames.findIndex(game => game.id === gameId);
       if (gameIndex !== -1) {
         const updatedGame: GameData = {
           ...state.selectedGames[gameIndex],
-          date,
+          date: newDate,
+          time: newISO,
         };
         state.selectedGames[gameIndex] = updatedGame;
       }
