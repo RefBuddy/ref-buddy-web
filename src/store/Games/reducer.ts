@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchGamesByMonth, fetchOfficialsProfiles } from './actions';
+import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame } from './actions';
 import { formatDate } from '../../utils/helpers';
 
 const league = 'bchl'; 
@@ -78,6 +78,18 @@ const gamesSlice = createSlice({
       state.error = error;
       state.loading = false;
     });
+    builder.addCase(assignToGame.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(assignToGame.fulfilled, (state) => {
+      state.error = null;
+      state.loading = false;
+    });
+    builder.addCase(assignToGame.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    
   },
 });
 

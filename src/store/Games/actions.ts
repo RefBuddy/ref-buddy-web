@@ -100,3 +100,36 @@ export const editGameDate = createAsyncThunk(
     }
   }
 });
+
+export const assignToGame = createAsyncThunk(
+  'games/assignToGame',
+  async (gameData: AssignGameRequestData, { rejectWithValue }) => {
+  try {
+    const data = {
+      data: gameData
+    };
+
+    const response = await fetch(`${URL}/assignToGame`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      return null;  // resolve with a null payload
+    } else {
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (err) {
+    const typedErr: any = err;
+    if (typedErr.response && typedErr.response.status !== 401) {
+      return rejectWithValue(`HTTP Error! Status: ${typedErr.response.status}`);
+    } else {
+      return rejectWithValue(`Unexpected error occurred: ${err.message}`);
+    }
+  }
+  }
+);
+
+

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useAppSelector } from '../../store';
+import { useAppSelector, useAppDispatch } from '../../store';
+import { assignToGame } from '../../store/Games/actions';
 
 const OfficialsList: React.FC = () => {
+    const dispatch = useAppDispatch();
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [sortedData, setSortedData] = useState<any[]>([]);
     const officials = useAppSelector(state => state.officials.officialsList);
@@ -29,6 +31,21 @@ const OfficialsList: React.FC = () => {
         setSortedData(sortedOfficials);
     };
 
+    const handleOfficialClick = (officialId: string) => {
+        // Define the game data here, these are just placeholders
+        const gameData = {
+          uid: officialId,
+          role: 'referee1',
+          date: '2023-03-01',
+          gameNumber: '332',
+          league: 'bchl',
+          season: '2022-2023',
+        };
+
+        // Dispatch the assignToGame action
+        dispatch(assignToGame(gameData));
+    };
+
     return (
         <div className="absolute z-10 w-60 bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto top-48 left-[-3rem]">
             <div className="py-4 px-3">
@@ -41,16 +58,20 @@ const OfficialsList: React.FC = () => {
                 />
             </div>
             {sortedData.map((official: any, index) => (
-                <div key={official.uid} className={`flex items-center p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}>
-                <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
-                <div>
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
-                    {official.firstName} {official.lastName}
-                    </p>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
-                    {official.city}
-                    </p>
-                </div>
+                <div 
+                key={official.uid} 
+                className={`flex items-center p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
+                onClick={() => handleOfficialClick(official.uid)}
+                >
+                    <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
+                    <div>
+                        <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
+                        {official.firstName} {official.lastName}
+                        </p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
+                        {official.city}
+                        </p>
+                    </div>
                 </div>
             ))}
         </div>
