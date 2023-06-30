@@ -17,13 +17,11 @@ const UserProfile = ({ userData }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <img 
-        className="rounded-full max-w-[80px] max-h-[80px] object-cover h-[80px] w-[80px]"
-        width={80}
-        height={80}
+        className="rounded-full max-w-[100px] max-h-[100px] object-cover h-[100px] w-[100px]"
         src={userData.profilePictureUrl}
         alt={name}
       />
-      <p className={`text-center pt-3`}>{name}</p>
+      <p className={`text-center pt-6`}>{name}</p>
     </div>
   );
 };
@@ -49,8 +47,7 @@ const OfficialBox = ({ official, label, color }) => {
 
   return (
     <div 
-      className="flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer relative flex-none"
-      style={{ borderColor: color, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)', minWidth: '130px', minHeight: '160px', width: '130px' }}
+      className={`flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer relative flex-none w-40 h-48 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
       onClick={(event) => {
         event.stopPropagation();
         handleClick();
@@ -59,10 +56,10 @@ const OfficialBox = ({ official, label, color }) => {
       {official ?
         <UserProfile userData={official}/> :
         <div>Add {label}</div>}
-
+  
       {showOfficialsList && <OfficialsList />}
     </div>
-  );
+  );  
 };
 
 const GameAssignment = ({ officialsData }) => {
