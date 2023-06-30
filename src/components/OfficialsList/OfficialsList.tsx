@@ -24,7 +24,8 @@ const OfficialsList: React.FC = () => {
         const filtered = officialsArray.filter(
             (official: any) =>
                 official.firstName.toLowerCase().includes(searchTermLowerCase) ||
-                official.lastName.toLowerCase().includes(searchTermLowerCase)
+                official.lastName.toLowerCase().includes(searchTermLowerCase) ||
+                official.city.toLowerCase().includes(searchTermLowerCase)
         );
 
         const sortedOfficials = filtered.sort((a: any, b: any) => a.lastName.localeCompare(b.lastName));
