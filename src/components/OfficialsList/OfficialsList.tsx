@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from '../../store';
 import { assignToGame } from '../../store/Games/actions';
 
-const OfficialsList: React.FC = () => {
+const OfficialsList = ({ game, role }) => {
     const dispatch = useAppDispatch();
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [sortedData, setSortedData] = useState<any[]>([]);
     const officials = useAppSelector(state => state.officials.officialsList);
+    const league = useAppSelector(state => state.games.currentLeague);
+    const season = useAppSelector(state => state.games.currentSeason);
+    const date = game.time.slice(0, 10);
+    const gameNumber = game.gameNumber;
 
     // this hook converts the officials object to an array and sorts it when the component mounts
     useEffect(() => {
@@ -32,15 +36,14 @@ const OfficialsList: React.FC = () => {
         setSortedData(sortedOfficials);
     };
 
-    const handleOfficialClick = (officialId: string) => {
-        // Define the game data here, these are just placeholders
+    const handleOfficialClick = (uid: string) => {
         const gameData = {
-          uid: officialId,
-          role: 'referee1',
-          date: '2023-03-01',
-          gameNumber: '332',
-          league: 'bchl',
-          season: '2022-2023',
+          uid: uid,
+          role: role,
+          date: date,
+          gameNumber: gameNumber,
+          league: league,
+          season: season,
         };
 
         // Dispatch the assignToGame action
@@ -52,7 +55,7 @@ const OfficialsList: React.FC = () => {
             <div className="py-4 px-3">
                 <input
                 type="text"
-                placeholder="Search officials..."
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={handleSearch}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"

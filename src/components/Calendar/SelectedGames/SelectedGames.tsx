@@ -26,7 +26,7 @@ const UserProfile = ({ userData }) => {
   );
 };
 
-const OfficialBox = ({ official, label, color }) => {
+const OfficialBox = ({ official, game, role, label, color }) => {
   const [showOfficialsList, setShowOfficialsList] = useState(false);
 
   useEffect(() => {
@@ -57,19 +57,19 @@ const OfficialBox = ({ official, label, color }) => {
         <UserProfile userData={official}/> :
         <div>Add {label}</div>}
   
-      {showOfficialsList && <OfficialsList />}
+      {showOfficialsList && <OfficialsList game={game} role={role} />}
     </div>
   );  
 };
 
-const GameAssignment = ({ officialsData }) => {
+const GameAssignment = ({ officialsData, gameData }) => {
 
   return (
     <div className="flex">
-      <OfficialBox official={officialsData.official1} label="Referee" color="orange" />
-      <OfficialBox official={officialsData.official2} label="Referee" color="orange" />
-      <OfficialBox official={officialsData.official3} label="Linesman" color="black" />
-      <OfficialBox official={officialsData.official4} label="Linesman" color="black" />
+      <OfficialBox official={officialsData.official1} game={gameData} role="referee1" label="Referee" color="orange" />
+      <OfficialBox official={officialsData.official2} game={gameData} role="referee2" label="Referee" color="orange" />
+      <OfficialBox official={officialsData.official3} game={gameData} role="linesman1" label="Linesman" color="black" />
+      <OfficialBox official={officialsData.official4} game={gameData} role="linesman2" label="Linesman" color="black" />
     </div>
   );
 };
@@ -219,7 +219,7 @@ const SelectedGames = () => {
               </div>
             </div>
             <div className="flex-none">
-              {officialsData && officialsData[game.id] && <GameAssignment officialsData={officialsData[game.id]} />}
+              {officialsData && officialsData[game.id] && <GameAssignment officialsData={officialsData[game.id]} gameData={game} />}
             </div>
           </div>
         ))}
