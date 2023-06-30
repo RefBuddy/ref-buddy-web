@@ -30,34 +30,31 @@ const OfficialsList: React.FC = () => {
     };
 
     return (
-        <div className="px-6 py-4">
-            <div className="py-4">
+        <div className="absolute z-10 w-60 bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto top-40 left-[-3rem]">
+            <div className="py-4 px-3">
                 <input
-                    type="text"
-                    placeholder="Search officials..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                type="text"
+                placeholder="Search officials..."
+                value={searchTerm}
+                onChange={handleSearch}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                 />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sortedData.map((official: any) => (
-                    <div className="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-                        key={official.uid}>
-                        <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
-                        <div>
-                            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                {official.firstName} {official.lastName}
-                            </p>
-                            <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                                {official.city}
-                            </p>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            {sortedData.map((official: any, index) => (
+                <div key={official.uid} className={`flex items-center p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}>
+                <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
+                <div>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
+                    {official.firstName} {official.lastName}
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
+                    {official.city}
+                    </p>
+                </div>
+                </div>
+            ))}
         </div>
-    );
+      );      
 };
 
 export default OfficialsList;

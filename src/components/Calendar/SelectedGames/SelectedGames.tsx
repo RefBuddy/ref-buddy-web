@@ -9,8 +9,6 @@ import moment from 'moment-timezone';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './App.css';
-import { createPortal } from 'react-dom';
-import Modal from '../../Modal/Modal';
 import OfficialsList from '../../OfficialsList/OfficialsList';
 
 const UserProfile = ({ userData }) => {
@@ -31,38 +29,38 @@ const UserProfile = ({ userData }) => {
 };
 
 const OfficialBox = ({ official, label, color }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // define modal state
+  const [showOfficialsList, setShowOfficialsList] = useState(false);
+
+  useEffect(() => {
+    const closeDropdown = () => setShowOfficialsList(false);
+    window.addEventListener('click', closeDropdown);
+  
+    return () => window.removeEventListener('click', closeDropdown);
+  }, []);
+  
 
   const handleClick = () => {
     if (!official) {
-      setIsModalOpen(true); // open modal if no official is present
+      setShowOfficialsList(true); 
     } else {
       // ... handle click on box when official is present
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false); // close modal
-  };
-
   return (
     <div 
-      className="flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer"
-      style={{ borderColor: color, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)', minWidth: '130px', minHeight: '160px' }}
-      onClick={handleClick}
+      className="flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer relative flex-none"
+      style={{ borderColor: color, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25)', minWidth: '130px', minHeight: '160px', width: '130px' }}
+      onClick={(event) => {
+        event.stopPropagation();
+        handleClick();
+      }}
     >
       {official ?
         <UserProfile userData={official}/> :
         <div>Add {label}</div>}
-      
-      {isModalOpen ? (
-        createPortal(
-          <Modal onClose={closeModal}>
-            <OfficialsList /> 
-          </Modal>,
-          document.body
-        )
-      ) : null}
+
+      {showOfficialsList && <OfficialsList />}
     </div>
   );
 };
