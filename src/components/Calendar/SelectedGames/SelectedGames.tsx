@@ -9,6 +9,7 @@ import moment from 'moment-timezone';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './App.css';
+<<<<<<< Updated upstream
 import OfficialsList from '../../OfficialsList/OfficialsList';
 
 const UserProfile = ({ userData }) => {
@@ -89,6 +90,9 @@ const GameAssignment = ({ officialsData, gameData }) => {
   );
 };
 
+=======
+import { GameAssignment } from '../GameAssignment';
+>>>>>>> Stashed changes
 
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
