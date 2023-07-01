@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import OfficialsList from '../../../OfficialsList/OfficialsList';
+import OfficialsList from '../../../../OfficialsList/OfficialsList';
 
 const UserProfile = ({ userData }) => {
     const name = `${userData.firstName} ${userData.lastName}`;

@@ -9,7 +9,7 @@ import moment from 'moment-timezone';
 import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './App.css';
-import { GameAssignment } from '../GameAssignment';
+import { GameAssignment } from './GameAssignment';
 
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
