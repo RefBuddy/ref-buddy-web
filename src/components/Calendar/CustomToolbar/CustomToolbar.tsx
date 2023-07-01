@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Navigate } from 'react-big-calendar';
-import { addMonths, subMonths } from "date-fns";
+import { addMonths, subMonths, parseISO } from "date-fns";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setCurrentDate } from '../../../store/Games/reducer';
@@ -18,14 +18,16 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
 
   const handleNavigate = (action: Navigate.ACTION) => {
     if (action === Navigate.PREVIOUS) {
-      const previousMonth = subMonths(new Date(currentDate), 1);
-      const dateString = formatDate(previousMonth)
+      let currentDateObj = parseISO(currentDate);
+      const previousMonth = subMonths(currentDateObj, 1);
+      const dateString = formatDate(previousMonth);
       dispatch(setCurrentDate(dateString));
     } else if (action === Navigate.NEXT) {
-      const nextMonth = addMonths(new Date(currentDate), 1);
-      const dateString = formatDate(nextMonth)
+      let currentDateObj = parseISO(currentDate);
+      const nextMonth = addMonths(currentDateObj, 1);
+      const dateString = formatDate(nextMonth);
       dispatch(setCurrentDate(dateString));
-    }
+    }   
 
     onNavigate(action);
   };
