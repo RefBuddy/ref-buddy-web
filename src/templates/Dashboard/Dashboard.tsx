@@ -15,7 +15,6 @@ import { getOfficialsList } from '../../store/OfficialsList/actions';
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
   const modalType = useAppSelector(state => state.modal.modalType);
-  const selectedEvent = useAppSelector(state => state.games.selectedEvent);
   const selectedGames = useAppSelector(state => state.games.selectedGames);
   const loading = useAppSelector(state => state.games.loading);
   const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
@@ -38,8 +37,6 @@ const Dashboard: React.FC<any> = () => {
   const chartSeries = [3, 6];
   const labels = ['Hotel', 'Home'];
 
-  console.log('list of officials', useAppSelector(state => state.officials.officialsList));
-
   return (
     <div style={{ display: 'flex' }}>
       <Navbar />
@@ -56,7 +53,7 @@ const Dashboard: React.FC<any> = () => {
           </div>
           <OverviewTravel chartSeries={chartSeries} labels={labels} />
         </div>
-        {(openModal && modalType === 'games') || (openModal && modalType === 'event' && selectedEvent) ? (
+        {(openModal && modalType === 'games') ? (
           createPortal(
             <Modal onClose={() => setIsGamesModalOpen(false)}>
               <SelectedGames />
