@@ -68,15 +68,15 @@ const MyCalendar: FC = () => {
     }
   }, [isAuthenticated, loading, currentDate, isModalOpen]);
 
-  const selectEvent = (event: CalendarEvent) => {
-    if (!events) return;
-    const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
-    const gamesOnDate = events[eventDateKey] as GameData[];
-    const selectedGame = gamesOnDate.find(game => game.id === event.resource);
+  // const selectEvent = (event: CalendarEvent) => {
+  //   if (!events) return;
+  //   const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
+  //   const gamesOnDate = events[eventDateKey] as GameData[];
+  //   const selectedGame = gamesOnDate.find(game => game.id === event.resource);
 
-    dispatch(setSelectedEvent(selectedGame));
-    dispatch(setModalState({ modalOpen: true, modalType: 'event' }))
-  }
+  //   dispatch(setSelectedEvent(selectedGame));
+  //   dispatch(setModalState({ modalOpen: true, modalType: 'event' }))
+  // }
 
   const selectSlot = (slotInfo: { slots: Date[] }) => {
     if (!events) return;
@@ -119,7 +119,7 @@ const MyCalendar: FC = () => {
             events={convertedEvents}
             style={{ height: "60vh", width: "50vw", margin: "0 auto 2rem" }}
             selectable
-            onSelectEvent={event => selectEvent(event)}
+            // onSelectEvent={event => selectEvent(event)}
             onSelectSlot={slotInfo => selectSlot(slotInfo)}
             views={["month"]}
             components={{
