@@ -156,7 +156,7 @@ const SelectedGames = () => {
               </div>
             </div>
             <div className="flex-none">
-              {officialsData && officialsData[game.id] && <GameAssignment officialsData={officialsData[game.id]} gameData={game} />}
+              {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
             </div>
           </div>
         ))}
