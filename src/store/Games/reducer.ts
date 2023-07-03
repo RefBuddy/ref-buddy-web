@@ -3,7 +3,7 @@ import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame } from './actio
 import { formatDate } from '../../utils/helpers';
 
 const league = 'bchl'; 
-const season = '2022-2023';
+const season = '2023-2024';
 
 const initialState = {
   monthGameData: {},
