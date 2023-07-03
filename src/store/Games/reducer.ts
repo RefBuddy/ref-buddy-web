@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchGamesByMonth, fetchOfficialsProfiles } from './actions';
+import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame } from './actions';
 import { formatDate } from '../../utils/helpers';
 
 const league = 'bchl'; 
 const season = '2022-2023';
 
 const initialState = {
-  monthGameData: undefined,
+  monthGameData: {},
   officialsData: {},
   loading: false,
   error: undefined,
@@ -37,12 +37,13 @@ const gamesSlice = createSlice({
       state.selectedGames = payload;
     },
     editGameDate: (state, { payload }) => {
-      const { gameId, date } = payload;
+      const { gameId, newDate, newISO } = payload;
       const gameIndex = state.selectedGames.findIndex(game => game.id === gameId);
       if (gameIndex !== -1) {
-        const updatedGame: Game = {
+        const updatedGame: GameData = {
           ...state.selectedGames[gameIndex],
-          date,
+          date: newDate,
+          time: newISO,
         };
         state.selectedGames[gameIndex] = updatedGame;
       }
@@ -77,6 +78,23 @@ const gamesSlice = createSlice({
       state.error = error;
       state.loading = false;
     });
+    builder.addCase(assignToGame.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(assignToGame.fulfilled, (state, { payload, meta }) => {
+      state.error = null;
+      state.loading = false;
+
+      if (payload) {
+        const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
+        state.selectedGames[gameIndex].officials = payload.updatedOfficials;
+      }
+    });
+    builder.addCase(assignToGame.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    
   },
 });
 

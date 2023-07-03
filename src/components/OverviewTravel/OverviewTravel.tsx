@@ -13,7 +13,7 @@ const useChartOptions = (labels: string[]) => {
       background: 'transparent'
     },
     colors: [
-      '#f5a614', // orange
+      '#FFB24D', // orange
       '#000000' // black
     ],
     dataLabels: {
