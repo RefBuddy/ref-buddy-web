@@ -77,7 +77,7 @@ const SelectedGames = () => {
 
       const updatedGameData: GameDateRequestData = {
         league: 'bchl',
-        season: '2022-2023',
+        season: '2023-2024',
         date: game.time.slice(0, 10),
         gameNumber: game.gameNumber,
         newDate: selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
