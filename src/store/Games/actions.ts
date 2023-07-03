@@ -117,7 +117,8 @@ export const assignToGame = createAsyncThunk(
       body: JSON.stringify(data),
     });
     if (response.ok) {
-      return null;  // resolve with a null payload
+      const json = await response.json();
+      return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`);
     }
@@ -126,10 +127,8 @@ export const assignToGame = createAsyncThunk(
     if (typedErr.response && typedErr.response.status !== 401) {
       return rejectWithValue(`HTTP Error! Status: ${typedErr.response.status}`);
     } else {
-      return rejectWithValue(`Unexpected error occurred: ${err.message}`);
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   }
   }
 );
-
-

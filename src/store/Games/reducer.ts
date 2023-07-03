@@ -81,9 +81,14 @@ const gamesSlice = createSlice({
     builder.addCase(assignToGame.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(assignToGame.fulfilled, (state) => {
+    builder.addCase(assignToGame.fulfilled, (state, { payload, meta }) => {
       state.error = null;
       state.loading = false;
+
+      if (payload) {
+        const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
+        state.selectedGames[gameIndex].officials = payload.updatedOfficials;
+      }
     });
     builder.addCase(assignToGame.rejected, (state, { error }) => {
       state.error = error;
