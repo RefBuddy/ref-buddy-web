@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from '../../store';
 import { assignToGame } from '../../store/Games/actions';
 
-const OfficialsList = ({ game, role }) => {
+const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     const dispatch = useAppDispatch();
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [sortedData, setSortedData] = useState<any[]>([]);
@@ -36,7 +36,7 @@ const OfficialsList = ({ game, role }) => {
         setSortedData(sortedOfficials);
     };
 
-    const handleOfficialClick = (uid: string) => {
+    const handleOfficialClick = async (uid: string) => {
         const gameData = {
           uid: uid,
           role: role,
@@ -45,10 +45,14 @@ const OfficialsList = ({ game, role }) => {
           league: league,
           season: season,
         };
-
-        // Dispatch the assignToGame action
-        dispatch(assignToGame(gameData));
-    };
+      
+        // Dispatch the assignToGame action and await for it to finish
+        await dispatch(assignToGame(gameData));
+      
+        // Close the OfficialsList after official is clicked
+        setShowOfficialsList(false);
+      };
+      
 
     return (
         <div className="absolute z-10 w-60 bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto top-48 left-[-3rem]">
