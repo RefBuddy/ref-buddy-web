@@ -46,7 +46,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         <UserProfile userData={official}/> :
         <div>Add {label}</div>}
 
-      {showOfficialsList && <OfficialsList game={gameData} role={role} />}
+      {showOfficialsList && <OfficialsList setShowOfficialsList={setShowOfficialsList} game={gameData} role={role} />}
     </div>
   );  
 };
