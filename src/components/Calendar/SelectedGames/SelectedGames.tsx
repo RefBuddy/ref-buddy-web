@@ -141,7 +141,7 @@ const SelectedGames = () => {
                 <button className="..." onClick={() => handleSaveClick(game)}>{isEditing ? "Save" : "Edit"}</button>
               </>
             ) : (
-              <button className="..." onClick={() => handleEditClick(game)}>{isEditing ? "Save" : "Edit"}</button>
+              <button className="..." onClick={() => editingGame && editingGame.id === game.id ? handleSaveClick(game) : handleEditClick(game)}>{editingGame && editingGame.id === game.id ? "Save" : "Edit"}</button>
             )}
             <div className="flex flex-row items-center gap-3">
               <div className="flex flex-col items-center justify-center">
