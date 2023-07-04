@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
-import { setSelectedGames } from '../../../store/Games/reducer';
 import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
 import Datepicker from "tailwind-datepicker-react"
 import TimePicker from 'rc-time-picker';
@@ -31,6 +30,7 @@ const SelectedGames = () => {
   // Time picker state
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [gameData, setGameData] = useState<GameDateRequestData | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // Function for handling time changes
   const handleTimeChange = (value) => {
@@ -43,6 +43,7 @@ const SelectedGames = () => {
 
   const handleEditClick = (game) => {
     setEditingGame(game);
+    setIsEditing(true);
     if (gameData && gameData.gameNumber === game.gameNumber) {
       // If there is gameData for this game, initialize the selectedDate and selectedTime with the new date and time
       setSelectedDate(new Date(gameData.newDate));
@@ -88,6 +89,7 @@ const SelectedGames = () => {
       setEditingGame(null);
       setSelectedDate(null);
       setSelectedTime(null);
+      setIsEditing(false);
     }
   }
   
@@ -131,35 +133,35 @@ const SelectedGames = () => {
       {selectedGames.map(game => (
         <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
           <div className="flex flex-1 flex-col items-start justify-center gap-3">
-          <p className="font-bold mb-1 mt-[-5px]">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} @ {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)}</p>
-              {editingGame && editingGame.id === game.id ? (
-                <>
-                  <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
-                  <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
-                  <button className="..." onClick={() => handleSaveClick(game)}>Save</button>
-                </>
-              ) : (
-                <button className="..." onClick={() => handleEditClick(game)}>Edit</button>
-              )}
-              <div className="flex flex-row items-center gap-3">
-                <div className="flex flex-col items-center justify-center">
-                  <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
-                  <p className="text-sm text-black pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
-                  <p className="text-gray-700 text-sm opacity-50 text-center">Visiting</p>
-                </div>
-                <div className="min-w-[30px]"></div>
-                <div className="flex flex-col items-center justify-center">
-                  <img width={70} height={70} src={game.homeTeam.logo} alt="home team logo" />
-                  <p className="text-sm text-black pt-2 text-center min-w-24">{game.homeTeam.city}</p>
-                  <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
-                </div>
+            <p className="font-bold mb-1 mt-[-5px]">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} @ {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)}</p>
+            {editingGame && editingGame.id === game.id ? (
+              <>
+                <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
+                <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
+                <button className="..." onClick={() => handleSaveClick(game)}>{isEditing ? "Save" : "Edit"}</button>
+              </>
+            ) : (
+              <button className="..." onClick={() => handleEditClick(game)}>{isEditing ? "Save" : "Edit"}</button>
+            )}
+            <div className="flex flex-row items-center gap-3">
+              <div className="flex flex-col items-center justify-center">
+                <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
+                <p className="text-sm text-black pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
+                <p className="text-gray-700 text-sm opacity-50 text-center">Visiting</p>
+              </div>
+              <div className="min-w-[30px]"></div>
+              <div className="flex flex-col items-center justify-center">
+                <img width={70} height={70} src={game.homeTeam.logo} alt="home team logo" />
+                <p className="text-sm text-black pt-2 text-center min-w-24">{game.homeTeam.city}</p>
+                <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
               </div>
             </div>
-            <div className="flex-none">
-              {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
-            </div>
           </div>
-        ))}
+          <div className="flex-none">
+            {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
+          </div>
+        </div>
+      ))}
       </div>
     </div>
   );
