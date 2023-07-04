@@ -5,13 +5,16 @@ const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex items-center">
       <img 
-        className="rounded-full max-w-[100px] max-h-[100px] object-cover h-[100px] w-[100px]"
+        className="rounded-full max-w-[50px] max-h-[50px] object-cover h-[50px] w-[50px]"
         src={userData.profilePictureUrl}
         alt={name}
       />
-      <p className={`text-center pt-6`}>{name}</p>
+      <div className="flex flex-col ml-4">
+        <p className="text-left">{userData.firstName}</p>
+        <p className="text-left">{userData.lastName}</p>
+      </div>
     </div>
   );
 };
@@ -36,7 +39,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
 
   return (
     <div 
-      className={`flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer relative flex-none w-40 h-48 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
+      className={`flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer relative flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
       onClick={(event) => {
         event.stopPropagation();
         handleClick();

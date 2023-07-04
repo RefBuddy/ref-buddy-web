@@ -103,8 +103,8 @@ const SelectedGames = () => {
     autoHide: true,
     todayBtn: false,
     clearBtn: false,
-    maxDate: new Date("2023-03-31"),
-    minDate: new Date("2022-09-01"),
+    maxDate: new Date("2024-03-31"),
+    minDate: new Date("2023-09-01"),
     theme: {
       // background: "bg-gray-700 dark:bg-gray-800",
       background: "bg-white",
@@ -129,31 +129,31 @@ const SelectedGames = () => {
   
   return (
     <div className="mt-6">
-      <div className="flex flex-row items-center gap-4 flex-wrap max-w-2/3">
+      <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3">
       {selectedGames.map(game => (
-        <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-5 mx-4">
+        <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-3 mx-4">
           <div className="flex flex-1 flex-col items-start justify-center gap-3">
-            <p className="font-bold mb-1 mt-[-5px]">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} @ {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)}</p>
-            {editingGame && editingGame.id === game.id ? (
+            <div className="flex items-center justify-between">
+              <p className="font-bold mb-1 mt-[-5px]">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} @ {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)}</p>
+              <button className="border border-gray-300 rounded-md py-1 px-2 mx-4 mb-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => editingGame && editingGame.id === game.id ? handleSaveClick(game) : handleEditClick(game)}>{editingGame && editingGame.id === game.id ? "Save" : "Edit"}</button>
+            </div>
+            {editingGame && editingGame.id === game.id && (
               <>
                 <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
                 <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
-                <button className="..." onClick={() => handleSaveClick(game)}>{isEditing ? "Save" : "Edit"}</button>
               </>
-            ) : (
-              <button className="..." onClick={() => editingGame && editingGame.id === game.id ? handleSaveClick(game) : handleEditClick(game)}>{editingGame && editingGame.id === game.id ? "Save" : "Edit"}</button>
             )}
-            <div className="flex flex-row items-center gap-3">
+            <div className="flex flex-row items-center gap-3 -mt-3">
               <div className="flex flex-col items-center justify-center">
-                <img width={70} height={70} src={game.visitingTeam.logo} alt="visiting team logo" />
+                <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
                 <p className="text-sm text-black pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
-                <p className="text-gray-700 text-sm opacity-50 text-center">Visiting</p>
               </div>
-              <div className="min-w-[30px]"></div>
               <div className="flex flex-col items-center justify-center">
-                <img width={70} height={70} src={game.homeTeam.logo} alt="home team logo" />
+                <div className="text-xl font-bold mb-6">@</div>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
                 <p className="text-sm text-black pt-2 text-center min-w-24">{game.homeTeam.city}</p>
-                <p className="text-gray-700 text-sm opacity-50 text-center">Home</p>
               </div>
             </div>
           </div>
