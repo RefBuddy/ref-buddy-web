@@ -109,7 +109,6 @@ const gamesSlice = createSlice({
       if (payload) {
         // const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
         // state.selectedGames[gameIndex].officials = payload.updatedOfficials;
-        console.log(payload);
         state.savedNewGame = true;
       }
     });

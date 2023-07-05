@@ -17,7 +17,6 @@ const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector(state => state.games.selectedGames)
   const currentDate = useAppSelector(state => state.games.currentDate);
-  console.log(currentDate);
   useEffect(() => {
     // Dispatch action to fetch officials data
     selectedGames.forEach(game => {
@@ -63,7 +62,6 @@ const SelectedGames = () => {
 
   const handleSaveClick = (game) => {
     if (selectedDate && editingGame) {
-      console.log("Game", game);
       const timezone = editingGame.homeTeam.abbreviation === 'CRA' ? 'America/Denver' : 'America/Los_Angeles';
       let ISO = "";
       if (selectedTime) {

@@ -58,7 +58,6 @@ export const fetchOfficialsProfiles = createAsyncThunk(
 
     if (response.ok) {
       const json = await response.json();
-      console.log(json.data);
       return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`)
