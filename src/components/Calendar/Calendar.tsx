@@ -14,10 +14,29 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAuthenticationStatus } from '../../components/hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchGamesByMonth } from '../../store/Games/actions';
-import { setSelectedEvent, setSelectedGames } from '../../store/Games/reducer';
+import { setSelectedGames } from '../../store/Games/reducer';
 import { setModalState } from '../../store/Modal/reducer';
 import CustomToolbar from './CustomToolbar/CustomToolbar';
 
+
+const CustomEvent = ({ event }) => {
+  const greenEvents = event.events.filter((event) => event.officials.length === 4);
+  const yellowEvents = event.events.filter((event) => event.officials.length < 4 && event.officials.length > 0);
+  const redEvents = event.events.filter((event) => event.officials.length === 0);
+  return (
+    <div className="text-red-500 flex flex-col flex-wrap">
+      <div className="flex flex-row gap-1">
+        {greenEvents.map((_) => <span className="text-success-500 text-xs">●</span>)}
+      </div>
+      <div className="flex flex-row gap-1 flex-wrap">
+        {yellowEvents.map((_) => <span className="text-warning-500 text-xs">●</span>)}
+      </div>
+      <div className="flex flex-row gap-1 flex-wrap">
+        {redEvents.map((_) => <span className="text-error-500 text-xs">●</span>)}
+      </div>
+    </div>
+  )
+}
 const locales = {
 	"en-US": require("date-fns")
 };
@@ -39,19 +58,18 @@ const convertEvents = (events: MonthGameData[]): CalendarEvent[] => {
       const eventDate = format(new Date(event.time), "yyyy-MM-dd");
       if (groupedEvents[eventDate]) {
         groupedEvents[eventDate].allDay = true;
-        groupedEvents[eventDate].title += " ●";
+        groupedEvents[eventDate].events.push(event);
       } else {
         groupedEvents[eventDate] = {
-          title: "●",
           start: new Date(event.time),
           end: new Date(event.time),
           allDay: true,
           resource: event.id,
+          events: [event],
         };
       }
     });
   });
-
   return Object.values(groupedEvents);
 }
 
@@ -124,9 +142,10 @@ const MyCalendar: FC = () => {
             views={["month"]}
             components={{
               toolbar: CustomToolbar,
+              eventWrapper: CustomEvent,
             }}
             eventPropGetter={
-              () => {
+              (event) => {
                 let newStyle = {
                   backgroundColor: "transparent",
                   color: "#10b981", 
