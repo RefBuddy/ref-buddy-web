@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
-import { fetchOfficialsProfiles, editGameDate, fetchGamesByMonth } from '../../../store/Games/actions';
+import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
 import Datepicker from "tailwind-datepicker-react"
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
@@ -16,7 +16,7 @@ import { resetSavedGameState } from '../../../store/Games/reducer';
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector(state => state.games.selectedGames)
-  const currentDate = useAppSelector(state => state.games.currentDate);
+  
   useEffect(() => {
     // Dispatch action to fetch officials data
     selectedGames.forEach(game => {
@@ -134,7 +134,6 @@ const SelectedGames = () => {
   const onCreateGameClose = () => {
     setShowCreate(false)
     dispatch(resetSavedGameState());
-    dispatch(fetchGamesByMonth());
   }
   
   return (

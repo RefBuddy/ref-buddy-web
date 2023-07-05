@@ -9,7 +9,7 @@ import { Select } from '../../Select';
 import { teamNames } from '../../../constants/TeamNames';
 import { Button } from '../../Button';
 import { useAppDispatch, useAppSelector } from '../../../store';
-import { addGame } from '../../../store/Games/actions';
+import { addGame, fetchGamesByMonth } from '../../../store/Games/actions';
 
 const options = {
   title: "",
@@ -80,6 +80,7 @@ const CreateGame = ({ onClose }: { onClose: () => void}) => {
       toast('Game successfully added!', {
         type: 'success',
       });
+      dispatch(fetchGamesByMonth());
       onClose();
     }
    
