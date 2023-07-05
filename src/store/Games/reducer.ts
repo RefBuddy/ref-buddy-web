@@ -16,6 +16,7 @@ const initialState = {
   currentSeason: season,
   selectedEvent: undefined,
   selectedGames: [],
+  savedNewGame: false,
 } as GamesState;
 
 const gamesSlice = createSlice({
@@ -49,6 +50,9 @@ const gamesSlice = createSlice({
         state.selectedGames[gameIndex] = updatedGame;
       }
     },
+    resetSavedGameState: (state) => {
+      state.savedNewGame = false;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchGamesByMonth.pending, (state) => {
@@ -106,6 +110,7 @@ const gamesSlice = createSlice({
         // const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
         // state.selectedGames[gameIndex].officials = payload.updatedOfficials;
         console.log(payload);
+        state.savedNewGame = true;
       }
     });
     builder.addCase(addGame.rejected, (state, { error }) => {
@@ -122,6 +127,7 @@ export const {
   setSelectedEvent,
   setSelectedGames,
   editGameDate,
+  resetSavedGameState,
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;

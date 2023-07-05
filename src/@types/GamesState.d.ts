@@ -10,4 +10,5 @@ interface GamesState {
   currentSeason: string;
   selectedEvent?: GameData;
   selectedGames: GameData[];
+  savedNewGame: boolean;
 }

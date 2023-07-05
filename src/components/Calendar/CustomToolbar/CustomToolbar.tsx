@@ -34,14 +34,14 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
   };
 
   const handleAddGame = () => {
-    const newGame = {
-      league: 'bchl',
-      season: '2023-2024',
-      homeTeam: 'Salmon Arm',
-      visitingTeam: 'Penticton',
-      dateISO8601: '2023-09-27T19:00:00-07:00',
-    };
-    dispatch(addGame(newGame));
+    // const newGame = {
+    //   league: 'bchl',
+    //   season: '2023-2024',
+    //   homeTeam: 'Salmon Arm',
+    //   visitingTeam: 'Penticton',
+    //   dateISO8601: '2023-09-27T19:00:00-07:00',
+    // };
+    // dispatch(addGame(newGame));
   };
 
   return (

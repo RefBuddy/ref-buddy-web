@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
-import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
+import { fetchOfficialsProfiles, editGameDate, fetchGamesByMonth } from '../../../store/Games/actions';
 import Datepicker from "tailwind-datepicker-react"
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
@@ -9,11 +9,15 @@ import { formatTime } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './App.css';
 import { GameAssignment } from './GameAssignment';
+import { Button } from '../../Button';
+import CreateGame from '../CreateGame/CreateGame';
+import { resetSavedGameState } from '../../../store/Games/reducer';
 
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector(state => state.games.selectedGames)
-
+  const currentDate = useAppSelector(state => state.games.currentDate);
+  console.log(currentDate);
   useEffect(() => {
     // Dispatch action to fetch officials data
     selectedGames.forEach(game => {
@@ -31,6 +35,8 @@ const SelectedGames = () => {
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [gameData, setGameData] = useState<GameDateRequestData | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  // Show the create view
+  const [showCreate, setShowCreate] = useState<boolean>(false);
 
   // Function for handling time changes
   const handleTimeChange = (value) => {
@@ -126,11 +132,17 @@ const SelectedGames = () => {
     defaultDate: selectedDate,
     language: "en",
   };
+
+  const onCreateGameClose = () => {
+    setShowCreate(false)
+    dispatch(resetSavedGameState());
+    dispatch(fetchGamesByMonth());
+  }
   
   return (
     <div className="mt-6">
-      <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3">
-      {selectedGames.map(game => (
+      <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
+      {!showCreate && selectedGames.map(game => (
         <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm px-2.5 py-1 mx-4">
           <div className="flex flex-1 flex-col items-start justify-center gap-3">
             <div className="flex items-center justify-between">
@@ -162,6 +174,10 @@ const SelectedGames = () => {
           </div>
         </div>
       ))}
+      {showCreate && (
+        <CreateGame onClose={() => onCreateGameClose()} />
+      )}
+      {!showCreate && <Button onClick={() => setShowCreate(true)}>Create New Game</Button>}
       </div>
     </div>
   );
