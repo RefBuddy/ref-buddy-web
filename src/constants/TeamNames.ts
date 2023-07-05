@@ -187,3 +187,7 @@ const teamNames: {} = {
         team_name: "West Kelowna Warriors"
     }
 };
+
+export {
+    teamNames
+}
