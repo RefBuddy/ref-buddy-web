@@ -24,7 +24,9 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
 
   useEffect(() => {
     const closeDropdown = () => setShowOfficialsList(false);
-    window.addEventListener('click', closeDropdown);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('click', closeDropdown);
+    }
 
     return () => window.removeEventListener('click', closeDropdown);
   }, []);
