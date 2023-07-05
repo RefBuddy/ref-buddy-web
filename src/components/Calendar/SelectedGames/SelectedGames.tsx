@@ -131,7 +131,7 @@ const SelectedGames = () => {
     <div className="mt-6">
       <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3">
       {selectedGames.map(game => (
-        <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm p-3 mx-4">
+        <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm px-2.5 py-1 mx-4">
           <div className="flex flex-1 flex-col items-start justify-center gap-3">
             <div className="flex items-center justify-between">
               <p className="font-bold mb-1 mt-[-5px]">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} @ {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)}</p>
@@ -143,17 +143,17 @@ const SelectedGames = () => {
                 <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
               </>
             )}
-            <div className="flex flex-row items-center gap-3 -mt-3">
+            <div className="flex flex-row items-center gap-3 -mt-4">
               <div className="flex flex-col items-center justify-center">
                 <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
-                <p className="text-sm text-black pt-2 text-center min-w-24">{game.visitingTeam.city}</p>
+                <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
               </div>
               <div className="flex flex-col items-center justify-center">
                 <div className="text-xl font-bold mb-6">@</div>
               </div>
               <div className="flex flex-col items-center justify-center">
                 <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
-                <p className="text-sm text-black pt-2 text-center min-w-24">{game.homeTeam.city}</p>
+                <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
               </div>
             </div>
           </div>
