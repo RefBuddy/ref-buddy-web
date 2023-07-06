@@ -8,7 +8,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Alberni Valley Bulldogs"
+        team_name: "Alberni Valley Bulldogs",
+        venue: "Alberni Valley Multiplex"
     },
     "Chilliwack Chiefs": {
         abbreviation: "CHW",
@@ -19,7 +20,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Chilliwack Chiefs"
+        team_name: "Chilliwack Chiefs",
+        venue:"Chilliwack Coliseum"
     },
     "Coquitlam Express": {
         abbreviation: "COQ",
@@ -30,7 +32,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Coquitlam Express"
+        team_name: "Coquitlam Express",
+        venue:"Poirier Sports and Leisure Centre"
     },
     "Cranbrook Bucks": {
         abbreviation: "CRA",
@@ -41,7 +44,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Cranbrook Bucks"
+        team_name: "Cranbrook Bucks",
+        venue:"Western Financial Place"
     },
     "Cowichan Valley Capitals": {
         abbreviation: "CV",
@@ -52,7 +56,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Cowichan Valley Capitals"
+        team_name: "Cowichan Valley Capitals",
+        venue:"Cowichan Community Centre"
     },
     "Langley Rivermen": {
         abbreviation: "LAN",
@@ -63,7 +68,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Langley Rivermen"
+        team_name: "Langley Rivermen",
+        venue:"George Preston Arena"
     },
     "Merritt Centennials": {
         abbreviation: "MER",
@@ -74,7 +80,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Merritt Centennials"
+        team_name: "Merritt Centennials",
+        venue:"Nicola Valley Memorial Arena"
     },
     "Nanaimo Clippers": {
         abbreviation: "NAN",
@@ -85,7 +92,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Nanaimo Clippers"
+        team_name: "Nanaimo Clippers",
+        venue:"Frank Crane Arena"
     },
     "Penticton Vees": {
         abbreviation: "PEN",
@@ -96,7 +104,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Penticton Vees"
+        team_name: "Penticton Vees",
+        venue:"South Okanagan Events Centre"
     },
     "Powell River Kings": {
         abbreviation: "PR",
@@ -107,7 +116,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Powell River Kings"
+        team_name: "Powell River Kings",
+        venue:"Hap Parker Arena"
     },
     "Prince George Spruce Kings": {
         abbreviation: "PG",
@@ -118,7 +128,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Prince George Spruce Kings"
+        team_name: "Prince George Spruce Kings",
+        venue:"Kopar Memorial Arena"
     },
     "Salmon Arm Silverbacks": {
         abbreviation: "SA",
@@ -129,7 +140,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Salmon Arm Silverbacks"
+        team_name: "Salmon Arm Silverbacks",
+        venue:"Shaw Centre"
     },
     "Surrey Eagles": {
         abbreviation: "SUR",
@@ -140,7 +152,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Surrey Eagles"
+        team_name: "Surrey Eagles",
+        venue:"Souoth Surrey Arena"
     },
     "Trail Smoke Eaters": {
         abbreviation: "TRA",
@@ -151,7 +164,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Trail Smoke Eaters"
+        team_name: "Trail Smoke Eaters",
+        venue:"Cominco Arena"
     },
     "Vernon Vipers": {
         abbreviation: "VER",
@@ -162,7 +176,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Vernon Vipers"
+        team_name: "Vernon Vipers",
+        venue:"Kal Tire Place"
     },
     "Victoria Grizzlies": {
         abbreviation: "VIC",
@@ -173,7 +188,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "Victoria Grizzlies"
+        team_name: "Victoria Grizzlies",
+        venue:"The Q Centre"
     },
     "West Kelowna Warriors": {
         abbreviation: "WK",
@@ -184,7 +200,8 @@ const teamNames: {} = {
         penalty_minutes: 0,
         powerplay_goals: 0,
         shots: 0,
-        team_name: "West Kelowna Warriors"
+        team_name: "West Kelowna Warriors",
+        venue:"Royal LePage Place"
     }
 };
 
