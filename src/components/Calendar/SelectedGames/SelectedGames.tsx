@@ -140,36 +140,38 @@ const SelectedGames = () => {
     <div className="mt-6">
       <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
       {!showCreate && selectedGames.map(game => (
-        <div key={game.id} className="w-full flex items-center justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm px-2.5 py-1 mx-4">
-          <div className="flex flex-1 flex-col items-start justify-center gap-3">
-            <div className="flex items-center justify-between">
-              <p className="font-bold mb-1 mt-[-5px]">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} @ {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)}</p>
-              <button className="border border-gray-300 rounded-md py-1 px-2 mx-4 mb-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => editingGame && editingGame.id === game.id ? handleSaveClick(game) : handleEditClick(game)}>{editingGame && editingGame.id === game.id ? "Save" : "Edit"}</button>
-            </div>
-            {editingGame && editingGame.id === game.id && (
+        <div key={game.id} className="w-full flex flex-col items-start justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm px-2.5 py-1 mx-4">
+          <div className="flex items-center w-full">
+              <div className="flex items-center gap-2">
+                  <p className="font-bold ">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} - {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)} - {game.venue}</p>
+                  <button className="border border-gray-300 rounded-md py-1 px-2 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => editingGame && editingGame.id === game.id ? handleSaveClick(game) : handleEditClick(game)}>{editingGame && editingGame.id === game.id ? "Save" : "Edit"}</button>
+              </div>
+          </div>
+          {editingGame && editingGame.id === game.id && (
               <>
-                <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
-                <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
+                  <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
+                  <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
               </>
-            )}
-            <div className="flex flex-row items-center gap-3 -mt-4">
-              <div className="flex flex-col items-center justify-center">
-                <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
-                <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
+          )}
+          <div className="flex w-full -mt-2 items-center justify-between">
+              <div className="flex flex-row items-center gap-3">
+                  <div className="flex flex-col items-center justify-center">
+                      <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
+                      <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
+                  </div>
+                  <div className="flex flex-col items-center justify-center">
+                      <div className="text-xl font-bold mb-5">@</div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center">
+                      <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
+                      <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
+                  </div>
               </div>
-              <div className="flex flex-col items-center justify-center">
-                <div className="text-xl font-bold mb-6">@</div>
+              <div className="flex-none pb-1">
+                  {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
               </div>
-              <div className="flex flex-col items-center justify-center">
-                <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
-                <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
-              </div>
-            </div>
           </div>
-          <div className="flex-none">
-            {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
-          </div>
-        </div>
+      </div>    
       ))}
       {showCreate && (
         <CreateGame onClose={() => onCreateGameClose()} />
