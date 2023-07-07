@@ -96,6 +96,13 @@ const SelectedGames = () => {
       setIsEditing(false);
     }
   }
+
+  const handleCancelClick = () => {
+    setEditingGame(null);
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setIsEditing(false);
+  }  
   
   const [show, setShow] = useState(false)
   const handleClose = (state: boolean) => {
@@ -154,8 +161,9 @@ const SelectedGames = () => {
           {editingGame && editingGame.id === game.id && (
             <div className="flex items-center">
               <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
-              <TimePicker className="-ml-9" onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
-              <button className="border border-gray-300 rounded-md py-1 px-2 mx-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleSaveClick(game)}>Save</button>
+              <TimePicker className="-ml-12" onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
+              <button className="border border-gray-300 rounded-md py-1 px-2 ml-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleSaveClick(game)}>Save</button>
+              <button className="border border-gray-300 rounded-md py-1 px-2 ml-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleCancelClick()}>Cancel</button>
             </div>
           )}
           <div className="flex w-full -mt-2 items-center justify-between">
