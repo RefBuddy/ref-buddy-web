@@ -108,7 +108,7 @@ const SelectedGames = () => {
     todayBtn: false,
     clearBtn: false,
     maxDate: new Date("2024-03-31"),
-    minDate: new Date("2023-09-01"),
+    minDate: new Date("2023-07-01"),
     theme: {
       // background: "bg-gray-700 dark:bg-gray-800",
       background: "bg-white",
@@ -142,16 +142,21 @@ const SelectedGames = () => {
       {!showCreate && selectedGames.map(game => (
         <div key={game.id} className="w-full flex flex-col items-start justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm px-2.5 py-1 mx-4">
           <div className="flex items-center w-full">
-              <div className="flex items-center gap-2">
-                  <p className="font-bold ">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} - {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)} - {game.venue}</p>
-                  <button className="border border-gray-300 rounded-md py-1 px-2 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => editingGame && editingGame.id === game.id ? handleSaveClick(game) : handleEditClick(game)}>{editingGame && editingGame.id === game.id ? "Save" : "Edit"}</button>
-              </div>
+            <div className="flex items-center gap-2">
+              {editingGame && editingGame.id === game.id ? null : 
+                <p className="font-bold ">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} - {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)} - {game.venue}</p>
+              }
+              {editingGame && editingGame.id === game.id ? null : 
+                <button className="border border-gray-300 rounded-md py-1 px-2 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleEditClick(game)}>Edit</button>
+              }
+            </div>
           </div>
           {editingGame && editingGame.id === game.id && (
-              <>
-                  <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
-                  <TimePicker onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
-              </>
+            <div className="flex items-center">
+              <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
+              <TimePicker className="-ml-9" onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
+              <button className="border border-gray-300 rounded-md py-1 px-2 mx-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleSaveClick(game)}>Save</button>
+            </div>
           )}
           <div className="flex w-full -mt-2 items-center justify-between">
               <div className="flex flex-row items-center gap-3">
