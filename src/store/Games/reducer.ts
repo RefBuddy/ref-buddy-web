@@ -17,6 +17,7 @@ const initialState = {
   selectedEvent: undefined,
   selectedGames: [],
   savedNewGame: false,
+  refetchCalendarEvents: false,
 } as GamesState;
 
 const gamesSlice = createSlice({
@@ -52,6 +53,9 @@ const gamesSlice = createSlice({
     },
     resetSavedGameState: (state) => {
       state.savedNewGame = false;
+    },
+    resetCalendarEventsFetch: (state) => {
+      state.refetchCalendarEvents = false;
     }
   },
   extraReducers: (builder) => {
@@ -89,7 +93,7 @@ const gamesSlice = createSlice({
     builder.addCase(assignToGame.fulfilled, (state, { payload, meta }) => {
       state.error = null;
       state.loading = false;
-
+      state.refetchCalendarEvents = true;
       if (payload) {
         const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
         state.selectedGames[gameIndex].officials = payload.updatedOfficials;
@@ -105,7 +109,7 @@ const gamesSlice = createSlice({
     builder.addCase(removeFromGame.fulfilled, (state, { payload, meta }) => {
       state.error = null;
       state.loading = false;
-    
+      state.refetchCalendarEvents = true
       if (payload) {
         const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
         const officialIndex = state.selectedGames[gameIndex].officials.findIndex(official => official.uid === meta.arg.uid);
@@ -147,6 +151,7 @@ export const {
   setSelectedGames,
   editGameDate,
   resetSavedGameState,
+  resetCalendarEventsFetch,
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;

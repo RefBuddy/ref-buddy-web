@@ -11,12 +11,14 @@ import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
 import { AssigningStatus } from '../../components/AssigningStatus';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
-import { getUserCalendarEvents, getAllOfficialsCalendarEvents } from '../../store/User/actions';
+import { getAllOfficialsCalendarEvents } from '../../store/User/actions';
+import { resetCalendarEventsFetch } from '../../store/Games/reducer';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
   const modalType = useAppSelector(state => state.modal.modalType);
-  const loading = useAppSelector(state => state.games.loading);
+  const loading = useAppSelector(state => state.games.loading || state.user.loading || state.officials.loading);
+  const { refetchCalendarEvents } = useAppSelector(state => state.games);
   const dispatch = useAppDispatch();
 
   // store list of officials in redux
@@ -36,6 +38,12 @@ const Dashboard: React.FC<any> = () => {
     dispatch(getAllOfficialsCalendarEvents());
   }, []);
 
+  useEffect(() => {
+    if (refetchCalendarEvents) {
+      dispatch(getAllOfficialsCalendarEvents());
+      dispatch(resetCalendarEventsFetch())
+    }
+  }, [refetchCalendarEvents])
   // OverviewTravel component data
   const chartSeries = [3, 6];
   const labels = ['Hotel', 'Home'];

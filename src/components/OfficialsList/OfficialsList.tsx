@@ -26,8 +26,6 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     }, []);
 
     useEffect(() => {
-      console.log("OFFICIALS CALENDAR DATA CHECK")
-      console.log(officialsCalendarData);
       if (!officialsCalendarData) {
         dispatch(getAllOfficialsCalendarEvents());
       }
@@ -75,7 +73,6 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
         blockedOffDates = officialsCalendarData[uid].blockedOffTimes;
       }
       
-      const assignedGames = officialsCalendarData[uid].assignedGames;
       const currentSelectedDate = parseISO(game.time);
       const formattedTime = formatDate(currentSelectedDate);
 
@@ -89,28 +86,20 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     }
 
     const assignedGamesOfOfficial = (uid: string) => {
-      console.log("CHECKING ASSIGNED GAMES")
       if (!officialsCalendarData) return null;
       if (!officialsCalendarData[uid]) return null;
       const assignedGames = officialsCalendarData[uid].assignedGames;
       const currentSelectedDate = parseISO(game.time);
       const formattedTime = formatDate(currentSelectedDate);
       const alreadyAssigned = Object.keys(assignedGames).filter(key => key === formattedTime);
-      console.log(alreadyAssigned);
       if (alreadyAssigned.length > 0) {
         // return the assigned games data array of games
         return assignedGames[alreadyAssigned[0]]
       }
       return null;
     }
-    console.log("CALENDAR DATA");
-    console.log(officialsCalendarData);
-    console.log(game); 
-    console.log(officials);
     const assignedGamesAlready = assignedGamesOfOfficial(officialHovered);
-    console.log(assignedGamesAlready);
     const blockedOffDatesAlready = gatherOfficialCalendarDataById(officialHovered);
-    console.log(blockedOffDatesAlready);
     return (
         <div className="w-full bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto mt-12">
             <div className="py-4 px-3">
