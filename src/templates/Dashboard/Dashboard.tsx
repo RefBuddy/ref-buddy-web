@@ -11,6 +11,7 @@ import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
 import { AssigningStatus } from '../../components/AssigningStatus';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
+import { getUserCalendarEvents } from '../../store/User/actions';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
@@ -23,6 +24,10 @@ const Dashboard: React.FC<any> = () => {
   // store list of officials in redux
   useEffect(() => {
     dispatch(getOfficialsList({ league: 'bchl' }));
+    dispatch(getUserCalendarEvents({ uid: 'gUJf0bsrLxaXfrzqSsoeZVki3m13' }));
+    dispatch(getUserCalendarEvents({ uid: '9f9qDSbt3Vd24hO4JdMIW5b8Oh93' }));
+    dispatch(getUserCalendarEvents({ uid: 'pPtrMKCdPeeCOxXp363HSkuMolz1' }));
+    dispatch(getUserCalendarEvents({ uid: 'uRpsolPDKhfK8oG2w0156wv5yap1' }));
   }, [dispatch]);
 
   useEffect(() => {
