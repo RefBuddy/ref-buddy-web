@@ -1,11 +1,24 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchSelf } from './actions';
+import { getUserCalendarEvents, getOfficialsStats, getUserGames } from './actions';
 
-interface UserState {
+export interface ResolvedGame {
+  [key: string]: any; 
+}
+
+export interface UserState {
   user?: User;
   loading: boolean;
   error: any;
+  assignedGames?: {
+    [key: string]: ResolvedGame[];
+  };
+  blockedOffTimes?: {
+    [key: string]: any; 
+  };
+  userDocData: {}; 
+  officialsStats: {}; 
+  userGames: {}; 
 }
 
 const initialState = {
@@ -19,16 +32,41 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchSelf.pending, (state) => {
+    builder.addCase(getUserCalendarEvents.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchSelf.fulfilled, (state, { payload }) => {
-      state.user = payload;
+    builder.addCase(getUserCalendarEvents.fulfilled, (state, { payload }) => {
+      state.assignedGames = payload.assignedGames;
+      state.blockedOffTimes = payload.blockedOffTimes;
       state.error = false;
       state.loading = false;
     });
-    builder.addCase(fetchSelf.rejected, (state, { error }) => {
-      state.error = true;
+    builder.addCase(getUserCalendarEvents.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(getOfficialsStats.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getOfficialsStats.fulfilled, (state, { payload }) => {
+      state.officialsStats = payload.data;
+      state.error = false;
+      state.loading = false;
+    });    
+    builder.addCase(getOfficialsStats.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(getUserGames.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getUserGames.fulfilled, (state, { payload }) => {
+      state.userGames = payload.data;
+      state.error = false;
+      state.loading = false;
+    });    
+    builder.addCase(getUserGames.rejected, (state, { error }) => {
+      state.error = error;
       state.loading = false;
     });
   },

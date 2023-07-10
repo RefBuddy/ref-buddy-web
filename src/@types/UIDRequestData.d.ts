@@ -1,0 +1,3 @@
+interface UIDRequestData {
+    uid: string;
+}
