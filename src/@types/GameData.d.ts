@@ -6,4 +6,5 @@ interface GameData {
   officials: Official[];
   time: string;
   visitingTeam: Team;
+  venue: string;
 }

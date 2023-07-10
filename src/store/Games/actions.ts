@@ -58,7 +58,6 @@ export const fetchOfficialsProfiles = createAsyncThunk(
 
     if (response.ok) {
       const json = await response.json();
-      console.log(json.data);
       return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`)
@@ -130,5 +129,35 @@ export const assignToGame = createAsyncThunk(
       return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   }
+});
+
+export const addGame = createAsyncThunk(
+  'games/addGame',
+  async (gameData: AddGameRequestData, { rejectWithValue }) => {
+  try {
+    const data = {
+      data: gameData
+    };
+
+    const response = await fetch(`${URL}/addGame`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      const json = await response.json();
+      return json.data;
+    } else {
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (err) {
+    const typedErr: any = err;
+    if (typedErr.response && typedErr.response.status !== 401) {
+      return rejectWithValue(`HTTP Error! Status: ${typedErr.response.status}`);
+    } else {
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
+    }
   }
-);
+});

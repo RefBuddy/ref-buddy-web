@@ -55,7 +55,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
       
 
     return (
-        <div className="absolute z-10 w-60 bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto top-48 left-[-3rem]">
+        <div className="absolute z-10 w-60 bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto top-[3rem] left-[-3rem]">
             <div className="py-4 px-3">
                 <input
                 type="text"

@@ -13,11 +13,8 @@ const Login: React.FC<any> = () => {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    console.log(isAuthenticated);
     if (isAuthenticated && !loading) {
-      console.log(isAuthenticated, loading);
       const id = auth.currentUser?.uid;
-      console.log(id);
       if (id) {
         navigate(`/portal/${id}/dashboard`);
       }

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame } from './actions';
+import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame, addGame } from './actions';
 import { formatDate } from '../../utils/helpers';
+import { add } from 'date-fns';
 
 const league = 'bchl'; 
 const season = '2023-2024';
@@ -15,6 +16,7 @@ const initialState = {
   currentSeason: season,
   selectedEvent: undefined,
   selectedGames: [],
+  savedNewGame: false,
 } as GamesState;
 
 const gamesSlice = createSlice({
@@ -48,6 +50,9 @@ const gamesSlice = createSlice({
         state.selectedGames[gameIndex] = updatedGame;
       }
     },
+    resetSavedGameState: (state) => {
+      state.savedNewGame = false;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchGamesByMonth.pending, (state) => {
@@ -94,7 +99,23 @@ const gamesSlice = createSlice({
       state.error = error;
       state.loading = false;
     });
-    
+    builder.addCase(addGame.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addGame.fulfilled, (state, { payload, meta }) => {
+      state.error = null;
+      state.loading = false;
+
+      if (payload) {
+        // const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
+        // state.selectedGames[gameIndex].officials = payload.updatedOfficials;
+        state.savedNewGame = true;
+      }
+    });
+    builder.addCase(addGame.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
   },
 });
 
@@ -105,6 +126,7 @@ export const {
   setSelectedEvent,
   setSelectedGames,
   editGameDate,
+  resetSavedGameState,
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;
