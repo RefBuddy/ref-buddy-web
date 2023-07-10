@@ -32,6 +32,31 @@ export const getUserCalendarEvents = createAsyncThunk('user/getUserCalendarEvent
   }
 });
 
+export const getAllOfficialsCalendarEvents = createAsyncThunk('user/getAllOfficialsCalendarEvents', async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`${URL}/getAllOfficialsCalendarEvents`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      const json = await response.json();
+      console.log("All officials calendar events: ", json);
+      return json.data;
+    } else {
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (err) {
+    const typedErr: any = err;
+    if (typedErr.response && typedErr.response.status !== 401) {
+      return rejectWithValue(`HTTP Error! Status: ${typedErr.response.status}`);
+    } else {
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
+    }
+  }
+});
+
 export const getOfficialsStats = createAsyncThunk('user/getOfficialsStats', async (statsData: StatsRequestData, { rejectWithValue }) => {
   try {
     const data = {

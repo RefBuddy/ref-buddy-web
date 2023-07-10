@@ -1,0 +1,3 @@
+interface OfficialsUIDsRequestData {
+    uidData: string[];
+}
