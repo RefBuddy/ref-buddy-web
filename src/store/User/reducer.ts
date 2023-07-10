@@ -1,9 +1,19 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { getUserCalendarEvents, getOfficialsStats } from './actions';
+import {
+  getUserCalendarEvents,
+  getOfficialsStats,
+  getAllOfficialsCalendarEvents
+} from './actions';
 
 export interface ResolvedGame {
   [key: string]: any; 
+}
+
+interface BlockedTimes {
+  endTime: string;
+  notes: string;
+  startTime: string;
 }
 
 export interface UserState {
@@ -18,13 +28,15 @@ export interface UserState {
   };
   userDocData: {}; 
   officialsStats: {}; 
-  userGames: {}; 
+  userGames: {};
+  officialsCalendarData: {}; 
 }
 
 const initialState = {
   user: undefined,
   loading: false,
   error: null,
+  officialsCalendarData: {},
 } as UserState;
 
 const userSlice = createSlice({
@@ -54,6 +66,21 @@ const userSlice = createSlice({
       state.loading = false;
     });    
     builder.addCase(getOfficialsStats.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(getAllOfficialsCalendarEvents.pending, (state) => {
+      console.log("AM I LOADING");
+      state.loading = true;
+    });
+    builder.addCase(getAllOfficialsCalendarEvents.fulfilled, (state, { payload }) => {
+      console.log("AM I GETTING SET");
+      state.officialsCalendarData = payload;
+      state.error = false;
+      state.loading = false;
+    });    
+    builder.addCase(getAllOfficialsCalendarEvents.rejected, (state, { error }) => {
+      console.log("AM I ERRORING");
       state.error = error;
       state.loading = false;
     });

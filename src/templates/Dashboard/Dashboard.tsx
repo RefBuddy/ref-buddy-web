@@ -16,19 +16,17 @@ import { getUserCalendarEvents, getAllOfficialsCalendarEvents } from '../../stor
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
   const modalType = useAppSelector(state => state.modal.modalType);
-  const selectedGames = useAppSelector(state => state.games.selectedGames);
   const loading = useAppSelector(state => state.games.loading);
-  const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   // store list of officials in redux
   useEffect(() => {
-    const uids = [
-      'gUJf0bsrLxaXfrzqSsoeZVki3m13',
-      '9f9qDSbt3Vd24hO4JdMIW5b8Oh93',
-      'pPtrMKCdPeeCOxXp363HSkuMolz1',
-      'uRpsolPDKhfK8oG2w0156wv5yap1',
-    ];
+    // const uids = [
+    //   'gUJf0bsrLxaXfrzqSsoeZVki3m13',
+    //   '9f9qDSbt3Vd24hO4JdMIW5b8Oh93',
+    //   'pPtrMKCdPeeCOxXp363HSkuMolz1',
+    //   'uRpsolPDKhfK8oG2w0156wv5yap1',
+    // ];
 
     dispatch(getOfficialsList({ league: 'bchl' }));
     // dispatch(getUserCalendarEvents({ uid: 'gUJf0bsrLxaXfrzqSsoeZVki3m13' }));
@@ -36,15 +34,7 @@ const Dashboard: React.FC<any> = () => {
     // dispatch(getUserCalendarEvents({ uid: 'pPtrMKCdPeeCOxXp363HSkuMolz1' }));
     // dispatch(getUserCalendarEvents({ uid: 'uRpsolPDKhfK8oG2w0156wv5yap1' }));
     dispatch(getAllOfficialsCalendarEvents());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (selectedGames && selectedGames.length > 0 && openModal && modalType === 'games') {
-      setIsGamesModalOpen(true);
-    } else {
-      setIsGamesModalOpen(false);
-    }
-  }, [selectedGames, openModal, modalType]);
+  }, []);
 
   // OverviewTravel component data
   const chartSeries = [3, 6];
@@ -68,7 +58,7 @@ const Dashboard: React.FC<any> = () => {
         </div>
         {(openModal && modalType === 'games') ? (
           createPortal(
-            <Modal onClose={() => setIsGamesModalOpen(false)}>
+            <Modal>
               <SelectedGames />
             </Modal>,
             document.body

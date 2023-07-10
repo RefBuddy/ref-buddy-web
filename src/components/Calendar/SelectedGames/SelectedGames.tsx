@@ -180,7 +180,7 @@ const SelectedGames = () => {
                       <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
                   </div>
               </div>
-              <div className="flex-none pb-1">
+              <div className="w-auto gap-2 pb-1">
                   {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
               </div>
           </div>

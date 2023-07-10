@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { XCircleIcon } from '@heroicons/react/24/solid';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch } from '../../../../../store';
 import { removeFromGame } from '../../../../../store/Games/actions';
-import { XCircleIcon } from '@heroicons/react/24/solid';
+import { Modal } from '../../../../Modal';
 
-const UserProfile = ({ userData, gameData, handleClick }) => {
+const UserProfile = ({ userData, handleClick }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
@@ -33,15 +34,6 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
     }
   };
 
-  useEffect(() => {
-    const closeDropdown = () => setShowOfficialsList(false);
-    if (typeof window !== 'undefined') {
-      window.addEventListener('click', closeDropdown);
-    }
-
-    return () => window.removeEventListener('click', closeDropdown);
-  }, []);
-
   const handleClick = () => {
     if (!official) {
       setShowOfficialsList(true); 
@@ -50,32 +42,42 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
     }
   };
 
+  const handleClose = () => {
+    setShowOfficialsList(false)
+  }
+
   return (
-    <div 
-      className={`flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer relative flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
-      onMouseEnter={() => setIsHovered(true)} 
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={(event) => {
-        event.stopPropagation();
-        handleClick();
-      }}
-    >
-      {official ?
-        <UserProfile userData={official} gameData={gameData} handleClick={handleClick}/> :
-        <div>Add {label}</div>}
-      {isHovered && official && (
-        <button
-          onClick={removeOfficialFromGame}
-          className="absolute top-3 left-3 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
-        >
-          <XCircleIcon
-            className="w-5 h-5 text-gray-500 hover:text-red-500"
-            aria-hidden="true"
-          />
-        </button>
+    <>
+      <div 
+        className={`flex flex-col items-center justify-center border-2 rounded-md p-3 cursor-pointer relative min-h-20 flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={(event) => {
+          event.stopPropagation();
+          handleClick();
+        }}
+      >
+        {official ?
+          <UserProfile userData={official} handleClick={() => handleClick()}/> :
+          <div>Add {label}</div>}
+          {isHovered && official && (
+                                     <button
+                                     onClick={removeOfficialFromGame}
+                                     className="absolute top-3 left-3 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
+                                     >
+                                     <XCircleIcon
+                                     className="w-5 h-5 text-gray-500 hover:text-red-500"
+                                     aria-hidden="true"
+                                     />
+                                     </button>
+                                     )}
+      </div>
+      {showOfficialsList && (
+        <Modal onClose={() => handleClose()}>
+          <OfficialsList setShowOfficialsList={setShowOfficialsList} game={gameData} role={role} />
+        </Modal>
       )}
-      {showOfficialsList && <OfficialsList setShowOfficialsList={setShowOfficialsList} game={gameData} role={role} />}
-    </div>
+    </>
   );  
 };
 
