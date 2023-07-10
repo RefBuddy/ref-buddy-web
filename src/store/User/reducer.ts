@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { getUserCalendarEvents, getOfficialsStats, getUserGames } from './actions';
+import { getUserCalendarEvents, getOfficialsStats } from './actions';
 
 export interface ResolvedGame {
   [key: string]: any; 
@@ -54,18 +54,6 @@ const userSlice = createSlice({
       state.loading = false;
     });    
     builder.addCase(getOfficialsStats.rejected, (state, { error }) => {
-      state.error = error;
-      state.loading = false;
-    });
-    builder.addCase(getUserGames.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(getUserGames.fulfilled, (state, { payload }) => {
-      state.userGames = payload.data;
-      state.error = false;
-      state.loading = false;
-    });    
-    builder.addCase(getUserGames.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
     });
