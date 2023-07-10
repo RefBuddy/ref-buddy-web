@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 
-const UserProfile = ({ userData }) => {
+const UserProfile = ({ userData, handleClick }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
-    <div className="flex items-center">
+    <div 
+      className="flex items-center"
+      onClick={(event) => {
+        event.stopPropagation();
+        handleClick();
+      }}
+    >
       <img 
         className="rounded-full max-w-[50px] max-h-[50px] object-cover h-[50px] w-[50px]"
         src={userData.profilePictureUrl}
@@ -48,7 +54,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
       }}
     >
       {official ?
-        <UserProfile userData={official}/> :
+        <UserProfile userData={official} handleClick={handleClick}/> :
         <div>Add {label}</div>}
 
       {showOfficialsList && <OfficialsList setShowOfficialsList={setShowOfficialsList} game={gameData} role={role} />}
