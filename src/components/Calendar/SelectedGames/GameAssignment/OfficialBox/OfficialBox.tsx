@@ -5,55 +5,33 @@ import { removeFromGame } from '../../../../../store/Games/actions';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 
 const UserProfile = ({ userData, gameData, handleClick }) => {
-  const dispatch = useAppDispatch();
-  const [isHovered, setIsHovered] = useState(false); 
-
-  const removeOfficialFromGame = () => {
-    dispatch(removeFromGame({ uid: userData.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
-  };
-
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
-    <div 
-      className="relative"
-      onMouseEnter={() => setIsHovered(true)} 
-      onMouseLeave={() => setIsHovered(false)} 
-    >
-      <div
-        className="flex items-center"
-        onClick={(event) => {
-          event.stopPropagation();
-          handleClick();
-        }}
-      >
-        <img
-          className="rounded-full max-w-[50px] max-h-[50px] object-cover h-[50px] w-[50px]"
-          src={userData.profilePictureUrl}
-          alt={name}
-        />
-        <div className="flex flex-col ml-4">
-          <p className="text-left">{userData.firstName}</p>
-          <p className="text-left">{userData.lastName}</p>
-        </div>
+    <div className="flex items-center">
+      <img
+        className="rounded-full max-w-[50px] max-h-[50px] object-cover h-[50px] w-[50px]"
+        src={userData.profilePictureUrl}
+        alt={name}
+      />
+      <div className="flex flex-col ml-4">
+        <p className="text-left">{userData.firstName}</p>
+        <p className="text-left">{userData.lastName}</p>
       </div>
-      {isHovered && (
-        <button
-          onClick={removeOfficialFromGame}
-          className="absolute top-0 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
-        >
-          <XCircleIcon
-            className="w-5 h-5 text-gray-500 hover:text-red-500"
-            aria-hidden="true"
-          />
-        </button>
-      )}
     </div>
   );
 };
 
 const OfficialBox = ({ gameData, official, role, label, color }) => {
+  const dispatch = useAppDispatch();
   const [showOfficialsList, setShowOfficialsList] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // <-- Add this line
+
+  const removeOfficialFromGame = () => {
+    if(official) {
+      dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
+    }
+  };
 
   useEffect(() => {
     const closeDropdown = () => setShowOfficialsList(false);
@@ -75,6 +53,8 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   return (
     <div 
       className={`flex flex-col items-center justify-center border-2 rounded-md p-3 mx-1 cursor-pointer relative flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)}
       onClick={(event) => {
         event.stopPropagation();
         handleClick();
@@ -83,7 +63,17 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
       {official ?
         <UserProfile userData={official} gameData={gameData} handleClick={handleClick}/> :
         <div>Add {label}</div>}
-
+      {isHovered && official && (
+        <button
+          onClick={removeOfficialFromGame}
+          className="absolute top-3 left-3 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
+        >
+          <XCircleIcon
+            className="w-5 h-5 text-gray-500 hover:text-red-500"
+            aria-hidden="true"
+          />
+        </button>
+      )}
       {showOfficialsList && <OfficialsList setShowOfficialsList={setShowOfficialsList} game={gameData} role={role} />}
     </div>
   );  
