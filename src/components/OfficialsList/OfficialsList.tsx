@@ -109,8 +109,8 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
       </div>
       {sortedData.map((official: any, index) => {
         const isOfficialHovered = officialHovered === official.uid;
-        const assignedGamesAlready = isOfficialHovered ? assignedGamesOfOfficial(official.uid) : null;
-        const blockedOffDatesAlready = isOfficialHovered ? gatherOfficialCalendarDataById(official.uid) : null;
+        const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
+        const blockedOffDatesAlready = gatherOfficialCalendarDataById(official.uid);
 
         return (
           <div
@@ -119,47 +119,48 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
             className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
           >
             <div className="flex flex-row justify-between items-center gap-2 w-full">
-              <div className="flex flex-row items-center justify-start">
-                <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
-                    {official.firstName} {official.lastName}
-                  </p>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
-                    {official.city}
-                  </p>
+              <div className="flex flex-row items-start">
+                <div className="flex flex-row items-center justify-start">
+                  <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
+                      {official.firstName} {official.lastName}
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
+                      {official.city}
+                    </p>
+                  </div>
+
+                  {assignedGamesAlready && assignedGamesAlready.length > 0 && (
+                    <div className="flex-1">
+                      <p className={`ml-4 text-sm font-normal  ${assignedGamesAlready && assignedGamesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
+                        {assignedGamesAlready && assignedGamesAlready.length > 0 ? <strong>@ {assignedGamesAlready[0].home_team.abbreviation}</strong> : ''}
+                      </p>
+                    </div>
+                  )}
+
+                  {blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
+                    <div className="flex-4 ml-8 -mt-2">
+                      <p className={`mt-2 text-sm font-normal text-black`}>
+                        <strong>BLOCKED OFF TIMES</strong>
+                        <br />
+                        {blockedOffDatesAlready.map((times, index) => (
+                          <React.Fragment key={index}>
+                            <span className="mt-2">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
+                            <br />
+                            <span className="mt-2">Notes: {times.notes}</span>
+                            <br />
+                          </React.Fragment>
+                        ))}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
               {isOfficialHovered && (
-                <Button className="self-end" onClick={() => handleOfficialClick(official.uid)}>Assign + </Button>
+                <Button className="self-start" onClick={() => handleOfficialClick(official.uid)}>Assign + </Button>
               )}
             </div>
-
-            {isOfficialHovered && assignedGamesAlready && assignedGamesAlready.length > 0 && (
-              <div className="flex justify-end items-end self-end">
-                <p className={`mt-2 text-sm font-normal  ${assignedGamesAlready && assignedGamesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
-                  {assignedGamesAlready && assignedGamesAlready.length > 0 ? "❌ Has Assigned Games already on this date" : ""}
-                  <br />
-                  <strong>{assignedGamesAlready[0].home_team.abbreviation}</strong> vs. <strong>{assignedGamesAlready[0].visiting_team.abbreviation}</strong> @ {assignedGamesAlready[0].venue}
-                </p>
-              </div>
-            )}
-            {isOfficialHovered && blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
-              <div className="flex justify-end items-end self-end">
-                <p className={`mt-2 text-sm font-normal  ${blockedOffDatesAlready && blockedOffDatesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
-                  <strong>BLOCKED OFF TIMES</strong>
-                  <br />
-                  {blockedOffDatesAlready.map((times, index) => (
-                    <React.Fragment key={index}>
-                      <span className="mt-2">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
-                      <br />
-                      <span className="mt-2">Notes: {times.notes}</span>
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </p>
-              </div>
-            )}
           </div>
         );
       })}
