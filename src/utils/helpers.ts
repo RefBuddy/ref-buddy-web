@@ -12,7 +12,16 @@ const formatTime = (time: string): string => {
   return `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
 }
 
+const format24HourTime = (time: string): string => {
+  const [hours, minutes] = time.split(':');
+  const date = new Date();
+  date.setHours(Number(hours));
+  date.setMinutes(Number(minutes));
+  return date.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric', hour12: true, hourCycle: 'h12' });
+}
+
 export {
   formatDate,
   formatTime,
+  format24HourTime
 }

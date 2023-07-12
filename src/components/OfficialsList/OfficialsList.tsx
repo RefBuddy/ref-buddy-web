@@ -5,6 +5,7 @@ import { assignToGame } from '../../store/Games/actions';
 import { formatDate } from "../../utils/helpers";
 import { getAllOfficialsCalendarEvents } from "../../store/User/actions";
 import { Button } from "../Button";
+import { format24HourTime } from '../../utils/helpers';
 
 const OfficialsList = ({ game, role, setShowOfficialsList }) => {
   const dispatch = useAppDispatch();
@@ -150,9 +151,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                   <br />
                   {blockedOffDatesAlready.map((times, index) => (
                     <React.Fragment key={index}>
-                      <span className="mt-2">Start: {times.startTime}</span>
-                      <br />
-                      <span className="mt-2">End: {times.endTime}</span>
+                      <span className="mt-2">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
                       <br />
                       <span className="mt-2">Notes: {times.notes}</span>
                       <br />
