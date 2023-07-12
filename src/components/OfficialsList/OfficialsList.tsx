@@ -3,7 +3,7 @@ import { parseISO } from "date-fns";
 import { useAppSelector, useAppDispatch } from '../../store';
 import { assignToGame } from '../../store/Games/actions';
 import { formatDate } from "../../utils/helpers";
-import { getAllOfficialsCalendarEvents } from "../../store/User/actions";
+import { getUserCalendarEvents, getAllOfficialsCalendarEvents } from "../../store/User/actions";
 import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
@@ -112,11 +112,18 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
         const isOfficialHovered = officialHovered === official.uid;
         const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
         const blockedOffDatesAlready = gatherOfficialCalendarDataById(official.uid);
+
+        const handleClick = (uid: string) => {
+          if (isOfficialHovered) {
+            dispatch(getUserCalendarEvents({ uid: uid }));
+          }
+        };
   
         return (
           <div
             key={official.uid}
             onMouseOver={() => setOfficialHovered(official.uid)}
+            onClick={() => handleClick(official.uid)}
             className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
           >
             <div className="flex flex-row justify-between items-center gap-2 w-full">

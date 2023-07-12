@@ -17,6 +17,7 @@ export const getUserCalendarEvents = createAsyncThunk('user/getUserCalendarEvent
     })
     if (response.ok) {
       const json = await response.json();
+      console.log("User calendar events: ", json.data);
       return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`);
