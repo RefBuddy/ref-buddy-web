@@ -26,7 +26,7 @@ const UserProfile = ({ userData }) => {
 const OfficialBox = ({ gameData, official, role, label, color }) => {
   const dispatch = useAppDispatch();
   const [showOfficialsList, setShowOfficialsList] = useState(false);
-  const [isHovered, setIsHovered] = useState(false); // <-- Add this line
+  const [isHovered, setIsHovered] = useState(false);
   const removeOfficialFromGame = () => {
     if(official) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
@@ -48,7 +48,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   return (
     <>
       <div 
-        className={`flex flex-col items-center justify-center border-2 rounded-md p-3 cursor-pointer relative min-h-20 flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
+        className={`flex flex-col items-center justify-center border-2 rounded-md p-1 cursor-pointer relative min-h-14 flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={(event) => {
