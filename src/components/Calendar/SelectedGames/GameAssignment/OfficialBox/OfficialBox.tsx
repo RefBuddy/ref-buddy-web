@@ -4,9 +4,8 @@ import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import { removeFromGame } from '../../../../../store/Games/actions';
 import { Modal } from '../../../../Modal';
-import { getAllOfficialsCalendarEvents } from '../../../../../store/User/actions';
 
-const UserProfile = ({ userData, handleClick }) => {
+const UserProfile = ({ userData }) => {
   const name = `${userData.firstName} ${userData.lastName}`;
 
   return (
@@ -58,7 +57,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         }}
       >
         {official ?
-          <UserProfile userData={official} handleClick={() => handleClick()}/> :
+          <UserProfile userData={official} /> :
           <div>Add {label}</div>}
           {isHovered && official && (
             <button

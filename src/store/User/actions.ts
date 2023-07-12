@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const URL = process.env.GATSBY_API_URL;
 
-export const getUserCalendarEvents = createAsyncThunk('user/getUserCalendarEvents',async (uidData: UIDRequestData, { rejectWithValue }) => {
+export const getUserCalendarEvents = createAsyncThunk('user/getUserCalendarEvents', async (uidData: UIDRequestData, { rejectWithValue }) => {
   try {
     const data = {
       data: uidData
@@ -17,7 +17,6 @@ export const getUserCalendarEvents = createAsyncThunk('user/getUserCalendarEvent
     })
     if (response.ok) {
       const json = await response.json();
-      console.log("User calendar events: ", json.data);
       return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`);
@@ -32,14 +31,19 @@ export const getUserCalendarEvents = createAsyncThunk('user/getUserCalendarEvent
   }
 });
 
-export const getAllOfficialsCalendarEvents = createAsyncThunk('user/getAllOfficialsCalendarEvents', async (_, { rejectWithValue }) => {
+export const getAllOfficialsCalendarEvents = createAsyncThunk('user/getAllOfficialsCalendarEvents', async (gameDate: getAllOfficialsCalendarEventsRequestData, { rejectWithValue }) => {
   try {
+    const data = {
+      data: gameDate
+    };
+
     const response = await fetch(`${URL}/getAllOfficialsCalendarEvents`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+      body: JSON.stringify(data),
+    })
     if (response.ok) {
       const json = await response.json();
       console.log("All officials calendar events: ", json.data);

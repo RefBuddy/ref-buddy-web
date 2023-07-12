@@ -1,0 +1,3 @@
+interface getAllOfficialsCalendarEventsRequestData {
+    gameDate: string;
+}
