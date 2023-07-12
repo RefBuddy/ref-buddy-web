@@ -6,6 +6,7 @@ import { formatDate } from "../../utils/helpers";
 import { getAllOfficialsCalendarEvents } from "../../store/User/actions";
 import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
 const OfficialsList = ({ game, role, setShowOfficialsList }) => {
   const dispatch = useAppDispatch();
@@ -111,7 +112,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
         const isOfficialHovered = officialHovered === official.uid;
         const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
         const blockedOffDatesAlready = gatherOfficialCalendarDataById(official.uid);
-
+  
         return (
           <div
             key={official.uid}
@@ -130,7 +131,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                       {official.city}
                     </p>
                   </div>
-
+  
                   {assignedGamesAlready && assignedGamesAlready.length > 0 && (
                     <div className="flex-1">
                       <p className={`ml-4 text-sm font-normal  ${assignedGamesAlready && assignedGamesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
@@ -138,22 +139,23 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                       </p>
                     </div>
                   )}
-
+  
                   {blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
-                    <div className="flex-4 ml-8 -mt-2">
-                      <p className={`mt-2 text-sm font-normal text-black`}>
-                        <strong>BLOCKED OFF TIMES</strong>
-                        <br />
+                    <div className="flex items-start ml-6 -mb-6 -mt-2">
+                      <ExclamationTriangleIcon className="h-6 w-6 text-warning-300 mr-4 mt-4" />
+                      <div>
                         {blockedOffDatesAlready.map((times, index) => (
                           <React.Fragment key={index}>
-                            <span className="mt-2">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
-                            <br />
-                            <span className="mt-2">Notes: {times.notes}</span>
+                            <p className="mt-2 text-sm font-medium text-black">
+                              <span className="text-gray-700">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
+                              <br />
+                              <span className="text-gray-700">Notes: {times.notes}</span>
+                            </p>
                             <br />
                           </React.Fragment>
                         ))}
-                      </p>
-                    </div>
+                      </div>
+                    </div>                  
                   )}
                 </div>
               </div>
@@ -165,7 +167,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
         );
       })}
     </div>
-  );
+  );  
 };
 
 export default OfficialsList;
