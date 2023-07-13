@@ -30,9 +30,6 @@ const Dashboard: React.FC<any> = () => {
       dispatch(resetCalendarEventsFetch())
     }
   }, [refetchCalendarEvents])
-  // OverviewTravel component data
-  const chartSeries = [3, 6];
-  const labels = ['Hotel', 'Home'];
 
   return (
     <div style={{ display: 'flex' }}>
@@ -40,15 +37,13 @@ const Dashboard: React.FC<any> = () => {
       <main style={{ flex: 1 }}>
         {loading ? <Loading /> : <></>}
         <div className="flex items-center p-5">
-          <OverviewExpenses value="$10,000" positive={true} difference={10} />
           <OverviewGameReports progress={44} value="4 / 9" />
           <AssigningStatus />
         </div>
-        <div className="flex items-center p-5 justify-between">
-          <div className="flex-1">
+        <div className="flex items-center p-5 justify-center">
+          <div>
             <MyCalendar />
           </div>
-          <OverviewTravel chartSeries={chartSeries} labels={labels} />
         </div>
         {(openModal && modalType === 'games') ? (
           createPortal(
