@@ -60,7 +60,7 @@ const Season = {
   key: 'season',
   label: 'Season',
   required: true,
-  options: ['2023-2024'],
+  options: ['2023-2024', '2022-2023'],
 }
 
 const CreateGame = ({ onClose }: { onClose: () => void}) => {

@@ -11,28 +11,25 @@ import { OverviewGameReports } from '../../components/OverviewGameReports';
 import { OverviewTravel } from '../../components/OverviewTravel';
 import { AssigningStatus } from '../../components/AssigningStatus';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
+import { resetCalendarEventsFetch } from '../../store/Games/reducer';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
   const modalType = useAppSelector(state => state.modal.modalType);
-  const selectedGames = useAppSelector(state => state.games.selectedGames);
-  const loading = useAppSelector(state => state.games.loading);
-  const [isGamesModalOpen, setIsGamesModalOpen] = useState(false);
+  const loading = useAppSelector(state => state.games.loading || state.user.loading || state.officials.loading);
+  const { refetchCalendarEvents } = useAppSelector(state => state.games);
   const dispatch = useAppDispatch();
 
   // store list of officials in redux
   useEffect(() => {
     dispatch(getOfficialsList({ league: 'bchl' }));
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
-    if (selectedGames && selectedGames.length > 0 && openModal && modalType === 'games') {
-      setIsGamesModalOpen(true);
-    } else {
-      setIsGamesModalOpen(false);
+    if (refetchCalendarEvents) {
+      dispatch(resetCalendarEventsFetch())
     }
-  }, [selectedGames, openModal, modalType]);
-
+  }, [refetchCalendarEvents])
   // OverviewTravel component data
   const chartSeries = [3, 6];
   const labels = ['Hotel', 'Home'];
@@ -55,7 +52,7 @@ const Dashboard: React.FC<any> = () => {
         </div>
         {(openModal && modalType === 'games') ? (
           createPortal(
-            <Modal onClose={() => setIsGamesModalOpen(false)}>
+            <Modal>
               <SelectedGames />
             </Modal>,
             document.body

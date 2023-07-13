@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame, addGame } from './actions';
+import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame, removeFromGame, addGame } from './actions';
 import { formatDate } from '../../utils/helpers';
 import { add } from 'date-fns';
 
@@ -17,6 +17,7 @@ const initialState = {
   selectedEvent: undefined,
   selectedGames: [],
   savedNewGame: false,
+  refetchCalendarEvents: false,
 } as GamesState;
 
 const gamesSlice = createSlice({
@@ -52,6 +53,9 @@ const gamesSlice = createSlice({
     },
     resetSavedGameState: (state) => {
       state.savedNewGame = false;
+    },
+    resetCalendarEventsFetch: (state) => {
+      state.refetchCalendarEvents = false;
     }
   },
   extraReducers: (builder) => {
@@ -89,13 +93,33 @@ const gamesSlice = createSlice({
     builder.addCase(assignToGame.fulfilled, (state, { payload, meta }) => {
       state.error = null;
       state.loading = false;
-
+      state.refetchCalendarEvents = true;
       if (payload) {
         const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
         state.selectedGames[gameIndex].officials = payload.updatedOfficials;
       }
     });
     builder.addCase(assignToGame.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(removeFromGame.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(removeFromGame.fulfilled, (state, { payload, meta }) => {
+      state.error = null;
+      state.loading = false;
+      state.refetchCalendarEvents = true
+      if (payload) {
+        const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
+        const officialIndex = state.selectedGames[gameIndex].officials.findIndex(official => official.uid === meta.arg.uid);
+        
+        if (officialIndex !== -1) {
+          state.selectedGames[gameIndex].officials.splice(officialIndex, 1);
+        }
+      }
+    });
+    builder.addCase(removeFromGame.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
     });
@@ -127,6 +151,7 @@ export const {
   setSelectedGames,
   editGameDate,
   resetSavedGameState,
+  resetCalendarEventsFetch,
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;

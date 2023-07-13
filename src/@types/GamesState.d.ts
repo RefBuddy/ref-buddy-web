@@ -11,4 +11,5 @@ interface GamesState {
   selectedEvent?: GameData;
   selectedGames: GameData[];
   savedNewGame: boolean;
+  refetchCalendarEvents: boolean;
 }
