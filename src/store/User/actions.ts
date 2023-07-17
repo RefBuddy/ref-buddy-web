@@ -78,6 +78,7 @@ export const getOfficialsStats = createAsyncThunk('user/getOfficialsStats', asyn
 
     if (response.ok) {
       const json = await response.json();
+      console.log("Official Stats: ", json.data);
       return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`)

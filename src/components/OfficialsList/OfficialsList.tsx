@@ -3,7 +3,7 @@ import { parseISO } from "date-fns";
 import { useAppSelector, useAppDispatch } from '../../store';
 import { assignToGame } from '../../store/Games/actions';
 import { formatDate } from "../../utils/helpers";
-import { getUserCalendarEvents, getAllOfficialsCalendarEvents } from "../../store/User/actions";
+import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
@@ -13,7 +13,9 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortedData, setSortedData] = useState<any[]>([]);
   const [officialHovered, setOfficialHovered] = useState('');
-  const { officialsCalendarData } = useAppSelector(state => state.user);
+  const [officialClicked, setOfficialClicked] = useState('');
+  const [officialsData, setOfficialsData] = useState<OfficialInfo | null>(null);
+  const { officialsCalendarData, assignedGames, officialsStats } = useAppSelector(state => state.user);
   const officials = useAppSelector(state => state.officials.officialsList);
   const league = useAppSelector(state => state.games.currentLeague);
   const season = useAppSelector(state => state.games.currentSeason);
@@ -97,6 +99,29 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     }
   };
 
+  const isOfficialHovered = (uid) => officialHovered === uid;
+
+  const handleClick = (uid: string) => {
+    if (isOfficialHovered(uid)) {
+      const filteredOfficialProfileInfoKey = Object.keys(officials).filter((key) => key === uid)
+      if (filteredOfficialProfileInfoKey.length > 0) {
+        const filterOfficialProfile = officials[filteredOfficialProfileInfoKey[0]]
+        setOfficialsData(filterOfficialProfile);
+        setOfficialClicked(uid);
+        dispatch(getUserCalendarEvents({ uid: uid }));
+        const statProps = {
+          league: 'bchl',
+          season: '2022-2023',
+          name: `${filterOfficialProfile.firstName} ${filterOfficialProfile.lastName}`
+        }
+        dispatch(getOfficialsStats(statProps));
+      }
+      
+    }
+  };
+
+  console.log("Stats");
+  console.log(officialsStats);
   return (
     <div className="w-full bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto mt-12">
       <div className="py-4 px-3">
@@ -109,19 +134,11 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
         />
       </div>
       {sortedData.map((official: any, index) => {
-        const isOfficialHovered = officialHovered === official.uid;
         const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
         const blockedOffDatesAlready = gatherOfficialCalendarDataById(official.uid);
-
-        const handleClick = (uid: string) => {
-          if (isOfficialHovered) {
-            dispatch(getUserCalendarEvents({ uid: uid }));
-          }
-        };
-  
         return (
           <div
-            key={official.uid}
+            key={`official-${official.uid}`}
             onMouseOver={() => setOfficialHovered(official.uid)}
             onClick={() => handleClick(official.uid)}
             className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
@@ -166,10 +183,90 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                   )}
                 </div>
               </div>
-              {isOfficialHovered && (
+              {isOfficialHovered(official.uid) && (
                 <Button className="self-start" onClick={() => handleOfficialClick(official.uid)}>Assign + </Button>
               )}
             </div>
+            {officialClicked === official.uid && officialsData && (
+              <div className="mt-4 flex flex-col">
+                <div className="flex flex-row gap-4">
+                  <div className="flex flex-col">
+                    <p className="text-gray-700 text-sm font-medium">Address</p>
+                    <p className="text-sm text-gray-700">{officialsData.address}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-700 text-sm font-medium">Phone</p>
+                    <p className="text-sm text-gray-700">{officialsData.phoneNumber}</p>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-gray-700 text-sm font-medium">Email</p>
+                    <p className="text-sm text-gray-700">{officialsData.email}</p>
+                  </div>
+                </div>
+                {assignedGames && (
+                  <div className="flex flex-row flex-1 gap-4 justify-between">
+                    <div className="h-auto min-w-[300px]">
+                      <p className="text-xs mt-4 font-bold">Assigned Games</p>
+                      <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                        <thead>
+                          <tr className="text-xs font-medium text-black">
+                            <td>Date</td>
+                            <td>Home/Away</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {assignedGames && Object.keys(assignedGames).map((dateKey) => (
+                            <>
+                              {assignedGames[dateKey].map((game) => (
+                                <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
+                                  <td>{dateKey}</td>
+                                  <td>{game.home_team.abbreviation} / {game.visiting_team.abbreviation}</td>
+                                </tr>
+                              ))}
+                            </>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {officialsStats && (
+                      <div className="h-auto min-w-1/2">
+                        <p className="text-xs mt-4 font-bold">Stats (From Last Season)</p>
+                        <div className="flex flex-row gap-x-8 gap-y-2 flex-wrap mt-2">
+                          <div className="flex flex-col w-[40%]">
+                            <p className="text-black text-xs font-medium">Games</p>
+                            <p className="text-xs text-gray-700">{officialsStats.refereeStats ? officialsStats.refereeStats.games : officialsStats.linesmanStats?.games}</p>
+                          </div>
+                          <div className="flex flex-col w-[40%]">
+                            <p className="text-black text-xs font-medium">Goals / game</p>
+                            <p className="text-xs text-gray-700">{officialsStats.refereeStats ? officialsStats.refereeStats.average_goals.toFixed(2) : officialsStats.linesmanStats?.average_goals.toFixed(2)}</p>
+                          </div>
+                          <div className="flex flex-col w-[40%]">
+                            <p className="text-black text-xs font-medium">PP / game</p>
+                            <p className="text-xs text-gray-700">{officialsStats.refereeStats ? officialsStats.refereeStats.average_power_plays.toFixed(2) : officialsStats.linesmanStats?.average_power_plays.toFixed(2)}</p>
+                          </div>
+                          <div className="flex flex-col w-[40%]">
+                            <p className="text-black text-xs font-medium">Infractions / game</p>
+                            <p className="text-xs text-gray-700">{officialsStats.refereeStats ? officialsStats.refereeStats.average_infractions.toFixed(2) : officialsStats.linesmanStats?.average_infractions.toFixed(2)}</p>
+                          </div>
+                          <div className="flex flex-col w-[40%]">
+                            <p className="text-black text-xs font-medium">Penalty minutes / game</p>
+                            <p className="text-xs text-gray-700">{officialsStats.refereeStats ? officialsStats.refereeStats.average_penalty_minutes.toFixed(2) : officialsStats.linesmanStats?.average_penalty_minutes.toFixed(2)}</p>
+                          </div>
+                          <div className="flex flex-col w-[40%]">
+                            <p className="text-black text-xs font-medium">Home penalty %</p>
+                            <p className="text-xs text-gray-700">{officialsStats.refereeStats ? ((officialsStats.refereeStats.total_home_infractions / (officialsStats.refereeStats.total_home_infractions + officialsStats.refereeStats.total_visiting_infractions)) * 100).toFixed(2) : ((officialsStats.linesmanStats!.total_home_infractions / (officialsStats.linesmanStats!.total_home_infractions + officialsStats.linesmanStats!.total_visiting_infractions)) * 100).toFixed(2)}</p>
+                          </div>
+                          <div className="flex flex-col w-[40%]">
+                            <p className="text-black text-xs font-medium">Home win %</p>
+                            <p className="text-xs text-gray-700">{officialsStats.refereeStats ? ((officialsStats.refereeStats.total_home_wins / (officialsStats.refereeStats.total_home_wins + officialsStats.refereeStats.total_visiting_wins)) * 100).toFixed(2) : ((officialsStats.linesmanStats!.total_home_wins / (officialsStats.linesmanStats!.total_home_wins + officialsStats.linesmanStats!.total_visiting_wins)) * 100).toFixed(2)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
       })}

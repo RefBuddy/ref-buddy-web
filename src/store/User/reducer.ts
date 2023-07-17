@@ -27,7 +27,7 @@ export interface UserState {
     [key: string]: any; 
   };
   userDocData: {}; 
-  officialsStats: {}; 
+  officialsStats?: OfficialStats | null; 
   userGames: {};
   officialsCalendarData: {}; 
 }
@@ -36,6 +36,7 @@ const initialState = {
   user: undefined,
   loading: false,
   error: null,
+  officialsStats: null,
   officialsCalendarData: {},
 } as UserState;
 
@@ -61,7 +62,7 @@ const userSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getOfficialsStats.fulfilled, (state, { payload }) => {
-      state.officialsStats = payload.data;
+      state.officialsStats = payload;
       state.error = false;
       state.loading = false;
     });    
