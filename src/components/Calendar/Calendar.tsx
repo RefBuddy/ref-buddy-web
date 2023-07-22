@@ -20,7 +20,6 @@ import CustomToolbar from './CustomToolbar/CustomToolbar';
 
 
 const CustomEvent = ({ event }) => {
-  console.log('event', event);
   const greenEvents = event.events.filter((event) => 
     event.officials.length === 4 && 
     event.officials.every((official) => official.status.confirmed === true)
