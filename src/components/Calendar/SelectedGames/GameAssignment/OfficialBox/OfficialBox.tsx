@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import { removeFromGame } from '../../../../../store/Games/actions';
@@ -27,6 +28,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   const dispatch = useAppDispatch();
   const [showOfficialsList, setShowOfficialsList] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
   const removeOfficialFromGame = () => {
     if(official) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
@@ -59,17 +61,33 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         {official ?
           <UserProfile userData={official} /> :
           <div>Add {label}</div>}
-          {isHovered && official && (
-            <button
-              onClick={removeOfficialFromGame}
-              className="absolute top-3 left-3 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
-            >
+        {official && (
+          <>
+            {officialStatus && officialStatus.declined && (
               <XCircleIcon
-                className="w-5 h-5 text-gray-500 hover:text-red-500"
+                className="w-5 h-5 text-error-500 absolute top-0.5 right-0.5"
                 aria-hidden="true"
               />
-            </button>
-          )}
+            )}
+            {officialStatus && !officialStatus.confirmed && !officialStatus.declined && (
+              <ExclamationTriangleIcon
+                className="w-5 h-5 text-warning-300 absolute top-0.5 right-0.5"
+                aria-hidden="true"
+              />
+            )}
+          </>
+        )}
+        {isHovered && official && (
+          <button
+            onClick={removeOfficialFromGame}
+            className="absolute top-3 left-3 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
+          >
+            <XCircleIcon
+              className="w-5 h-5 text-gray-500 hover:text-red-500"
+              aria-hidden="true"
+            />
+          </button>
+        )}
       </div>
       {showOfficialsList && (
         <Modal onClose={() => handleClose()}>

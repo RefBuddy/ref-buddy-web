@@ -120,8 +120,6 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     }
   };
 
-  console.log("Stats");
-  console.log(officialsStats);
   return (
     <div className="w-full bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto mt-12">
       <div className="py-4 px-3">

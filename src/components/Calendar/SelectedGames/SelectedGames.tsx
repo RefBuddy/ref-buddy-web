@@ -142,48 +142,63 @@ const SelectedGames = () => {
     setShowCreate(false)
     dispatch(resetSavedGameState());
   }
+
+  const getBorderColor = (game) => {
+    if (game.officials && game.officials.length === 4 && game.officials.every((official) => official['status'].confirmed === true)) {
+      return { color: "border-success-500", priority: 3 };
+    } else if (game.officials && game.officials.length === 4 && game.officials.filter((official) => official['status'].confirmed === true).length < 4 && game.officials.every((official) => official['status'].declined === false)) {
+      return { color: "border-warning-300", priority: 2 };
+    } else if (game.officials && game.officials.length < 4 || game.officials && game.officials.some((official) => official['status'].declined === true)) {
+      return { color: "border-error-400", priority: 1 };
+    } else {
+      return { color: "border-gray-200", priority: 4 };
+    }
+  }  
   
   return (
     <div className="mt-6">
       <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
-      {!showCreate && selectedGames.map(game => (
-        <div key={game.id} className="w-full flex flex-col items-start justify-center gap-3 border-gray-200 border-solid border rounded shadow-sm px-2.5 py-1 mx-4">
-          <div className="flex items-center w-full">
-            <div className="flex items-center gap-2">
-              {editingGame && editingGame.id === game.id ? null : 
-                <p className="font-bold ">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} - {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)} - {game.venue}</p>
-              }
-              {editingGame && editingGame.id === game.id ? null : 
-                <button className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleEditClick(game)}>Edit</button>
-              }
-            </div>
+      {!showCreate && [...selectedGames].sort((a, b) => getBorderColor(a).priority - getBorderColor(b).priority).map(game => (
+      <div 
+        key={game.id} 
+        className={`w-full flex flex-col items-start justify-center gap-3 border-solid border rounded px-2.5 py-1 mx-4 ${getBorderColor(game).color}`}
+      >
+        <div className="flex items-center w-full">
+          <div className="flex items-center gap-2">
+            {editingGame && editingGame.id === game.id ? null : 
+              <p className="font-bold ">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} - {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)} - {game.venue}</p>
+            }
+            {editingGame && editingGame.id === game.id ? null : 
+              <button className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleEditClick(game)}>Edit</button>
+            }
           </div>
-          {editingGame && editingGame.id === game.id && (
-            <div className="flex items-center">
-              <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
-              <TimePicker className="-ml-12" onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
-              <button className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleSaveClick(game)}>Save</button>
-              <button className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleCancelClick()}>Cancel</button>
-            </div>
-          )}
-          <div className="flex w-full -mt-2 items-center justify-between">
-              <div className="flex flex-row items-center gap-3">
-                  <div className="flex flex-col items-center justify-center">
-                      <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
-                      <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
-                  </div>
-                  <div className="flex flex-col items-center justify-center">
-                      <div className="text-xl font-bold mb-5">@</div>
-                  </div>
-                  <div className="flex flex-col items-center justify-center">
-                      <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
-                      <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
-                  </div>
-              </div>
-              <div className="w-auto gap-2 pb-1">
-                  {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
-              </div>
+        </div>
+        {editingGame && editingGame.id === game.id && (
+          <div className="flex items-center">
+            <Datepicker options={options} onChange={handleDateChange} show={show} setShow={handleClose} />
+            <TimePicker className="-ml-12" onChange={handleTimeChange} value={selectedTime ? moment(selectedTime) : undefined} showSecond={false} format="h:mm a" use12Hours={true} />
+            <button className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleSaveClick(game)}>Save</button>
+            <button className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleCancelClick()}>Cancel</button>
           </div>
+        )}
+        <div className="flex w-full -mt-2 items-center justify-between">
+            <div className="flex flex-row items-center gap-3">
+                <div className="flex flex-col items-center justify-center">
+                    <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
+                    <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                    <div className="text-xl font-bold mb-5">@</div>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                    <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
+                    <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
+                </div>
+            </div>
+            <div className="w-auto gap-2 pb-1">
+                {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
+            </div>
+        </div>
       </div>    
       ))}
       {showCreate && (

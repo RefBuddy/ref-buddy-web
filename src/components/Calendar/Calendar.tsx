@@ -20,16 +20,26 @@ import CustomToolbar from './CustomToolbar/CustomToolbar';
 
 
 const CustomEvent = ({ event }) => {
-  const greenEvents = event.events.filter((event) => event.officials.length === 4);
-  const yellowEvents = event.events.filter((event) => event.officials.length < 4 && event.officials.length > 0);
-  const redEvents = event.events.filter((event) => event.officials.length === 0);
+  const greenEvents = event.events.filter((event) => 
+    event.officials.length === 4 && 
+    event.officials.every((official) => official.status.confirmed === true)
+  );
+  const yellowEvents = event.events.filter((event) => 
+    event.officials.length === 4 && 
+    event.officials.filter((official) => official.status.confirmed === true).length < 4 &&
+    event.officials.every((official) => official.status.declined === false)
+  );
+  const redEvents = event.events.filter((event) => event.officials.length < 4 ||
+    event.officials.some((official) => official.status.declined === true)
+  );
+  
   return (
     <div className="text-red-500 flex flex-col flex-wrap">
       <div className="flex flex-row gap-1">
         {greenEvents.map((_) => <span className="text-success-500 text-xs">●</span>)}
       </div>
       <div className="flex flex-row gap-1 flex-wrap">
-        {yellowEvents.map((_) => <span className="text-warning-500 text-xs">●</span>)}
+        {yellowEvents.map((_) => <span className="text-warning-300 text-xs">●</span>)}
       </div>
       <div className="flex flex-row gap-1 flex-wrap">
         {redEvents.map((_) => <span className="text-error-500 text-xs">●</span>)}
@@ -37,6 +47,7 @@ const CustomEvent = ({ event }) => {
     </div>
   )
 }
+
 const locales = {
 	"en-US": require("date-fns")
 };
