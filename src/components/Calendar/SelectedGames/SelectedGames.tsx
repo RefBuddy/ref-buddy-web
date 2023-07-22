@@ -145,23 +145,23 @@ const SelectedGames = () => {
 
   const getBorderColor = (game) => {
     if (game.officials && game.officials.length === 4 && game.officials.every((official) => official['status'].confirmed === true)) {
-      return "border-success-500";
+      return { color: "border-success-500", priority: 3 };
     } else if (game.officials && game.officials.length === 4 && game.officials.filter((official) => official['status'].confirmed === true).length < 4 && game.officials.every((official) => official['status'].declined === false)) {
-      return "border-warning-500";
+      return { color: "border-warning-500", priority: 2 };
     } else if (game.officials && game.officials.length < 4 || game.officials && game.officials.some((official) => official['status'].declined === true)) {
-      return "border-error-500";
+      return { color: "border-error-500", priority: 1 };
     } else {
-      return "border-gray-200";
+      return { color: "border-gray-200", priority: 4 };
     }
-  }
+  }  
   
   return (
     <div className="mt-6">
       <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
-      {!showCreate && selectedGames.map(game => (
+      {!showCreate && [...selectedGames].sort((a, b) => getBorderColor(a).priority - getBorderColor(b).priority).map(game => (
       <div 
         key={game.id} 
-        className={`w-full flex flex-col items-start justify-center gap-3 border-solid border rounded px-2.5 py-1 mx-4 ${getBorderColor(game)}`}
+        className={`w-full flex flex-col items-start justify-center gap-3 border-solid border rounded px-2.5 py-1 mx-4 ${getBorderColor(game).color}`}
       >
         <div className="flex items-center w-full">
           <div className="flex items-center gap-2">
