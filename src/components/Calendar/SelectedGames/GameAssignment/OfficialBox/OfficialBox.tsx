@@ -31,15 +31,20 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   const [isHovered, setIsHovered] = useState(false);
   const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
   const removeOfficialFromGame = () => {
-    if(official) {
+    if(official && assigningStatus) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
+      toast.success(`${official.firstName} ${official.lastName} removed from game.`);
+    }
+    if (!assigningStatus) {
+      toast.error('Assigning is disabled. Please enable assigning to remove officials from games.');
     }
   };
 
   const handleClick = () => {
     if (!official && assigningStatus) {
       setShowOfficialsList(true); 
-    } else {
+    }
+    if (!assigningStatus) {
       toast.error('Assigning is disabled. Please enable assigning to add officials to games.');
     }
   };
