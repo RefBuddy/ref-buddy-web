@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { parseISO } from "date-fns";
+import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { assignToGame } from '../../store/Games/actions';
 import { formatDate } from "../../utils/helpers";
@@ -50,7 +51,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     setSortedData(sortedOfficials);
   };
 
-  const handleOfficialClick = async (uid: string) => {
+  const handleAssignClick = async (uid: string) => {
     const gameData = {
       uid: uid,
       role: role,
@@ -65,6 +66,9 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
 
     // Close the OfficialsList after official is clicked
     setShowOfficialsList(false);
+
+    // Show toast message
+    toast.success(`${officials[uid].firstName} ${officials[uid].lastName} assigned to game.`);
   };
 
   const gatherOfficialCalendarDataById = (uid: string) => {
@@ -182,7 +186,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                 </div>
               </div>
               {isOfficialHovered(official.uid) && (
-                <Button className="self-start" onClick={() => handleOfficialClick(official.uid)}>Assign + </Button>
+                <Button className="self-start" onClick={() => handleAssignClick(official.uid)}>Assign + </Button>
               )}
             </div>
             {officialClicked === official.uid && officialsData && (
