@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { XCircleIcon } from '@heroicons/react/24/solid';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import React, { useState } from 'react';
+import { XCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import { toast } from 'react-toastify';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import { removeFromGame } from '../../../../../store/Games/actions';
@@ -26,6 +26,7 @@ const UserProfile = ({ userData }) => {
 
 const OfficialBox = ({ gameData, official, role, label, color }) => {
   const dispatch = useAppDispatch();
+  const assigningStatus = useAppSelector((state) => state.assigning.assigningStatus);
   const [showOfficialsList, setShowOfficialsList] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
@@ -36,10 +37,10 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   };
 
   const handleClick = () => {
-    if (!official) {
+    if (!official && assigningStatus) {
       setShowOfficialsList(true); 
     } else {
-      // ... handle click on box when official is present
+      toast.error('Assigning is disabled. Please enable assigning to add officials to games.');
     }
   };
 
