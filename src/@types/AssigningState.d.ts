@@ -1,0 +1,3 @@
+interface AssigningState {
+    assigningStatus: boolean;
+}

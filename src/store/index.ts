@@ -5,13 +5,14 @@ import userReducer from './User/reducer';
 import gamesReducer from './Games/reducer';
 import modalReducer from './Modal/reducer';
 import officialsReducer from './OfficialsList/reducer';
+import assigningReducer from './Assigning/reducer';
 
 export const rootReducer = combineReducers({
-  // Add reducers here
   user: userReducer,
   games: gamesReducer,
   modal: modalReducer,
   officials: officialsReducer,
+  assigning: assigningReducer,
 });
 
 const store = configureStore({
