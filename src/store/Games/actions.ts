@@ -100,15 +100,15 @@ export const editGameDate = createAsyncThunk(
   }
 });
 
-export const assignToGame = createAsyncThunk(
-  'games/assignToGame',
+export const addToQueue = createAsyncThunk(
+  'games/addToQueue',
   async (gameData: AssignGameRequestData, { rejectWithValue }) => {
   try {
     const data = {
       data: gameData
     };
 
-    const response = await fetch(`${URL}/assignToGame`, {
+    const response = await fetch(`${URL}/addToQueue`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { parseISO } from "date-fns";
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
-import { assignToGame } from '../../store/Games/actions';
+import { addToQueue } from '../../store/Games/actions';
 import { formatDate } from "../../utils/helpers";
 import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
@@ -61,8 +61,8 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
       season: season,
     };
 
-    // Dispatch the assignToGame action and await for it to finish
-    await dispatch(assignToGame(gameData));
+    // Dispatch the addToQueue action and await for it to finish
+    await dispatch(addToQueue(gameData));
 
     // Close the OfficialsList after official is clicked
     setShowOfficialsList(false);
@@ -91,17 +91,25 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
       return null;
     }
-
-    const assignedGames = officialsCalendarData[uid].assignedGames;
+  
+    let assignedGames = officialsCalendarData[uid].assignedGames || {};
+    const queuedGames = officialsCalendarData[uid].queuedGames || {};
     const currentSelectedDate = parseISO(game.time);
     const formattedTime = formatDate(currentSelectedDate);
-
+  
+    // add queued games to assigned games
+    if (queuedGames && queuedGames[formattedTime]) {
+      // Create a copy of assignedGames to prevent mutation of the original data
+      assignedGames = { ...assignedGames };
+      assignedGames[formattedTime] = queuedGames[formattedTime];
+    }
+  
     try {
       return assignedGames[formattedTime];
     } catch (error) {
       return null;
     }
-  };
+  };  
 
   const isOfficialHovered = (uid) => officialHovered === uid;
 

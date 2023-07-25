@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchGamesByMonth, fetchOfficialsProfiles, assignToGame, removeFromGame, addGame } from './actions';
+import { fetchGamesByMonth, fetchOfficialsProfiles, addToQueue, removeFromGame, addGame } from './actions';
 import { formatDate } from '../../utils/helpers';
 import { add } from 'date-fns';
 
@@ -87,10 +87,10 @@ const gamesSlice = createSlice({
       state.error = error;
       state.loading = false;
     });
-    builder.addCase(assignToGame.pending, (state) => {
+    builder.addCase(addToQueue.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(assignToGame.fulfilled, (state, { payload, meta }) => {
+    builder.addCase(addToQueue.fulfilled, (state, { payload, meta }) => {
       state.error = null;
       state.loading = false;
       state.refetchCalendarEvents = true;
@@ -99,7 +99,7 @@ const gamesSlice = createSlice({
         state.selectedGames[gameIndex].officials = payload.updatedOfficials;
       }
     });
-    builder.addCase(assignToGame.rejected, (state, { error }) => {
+    builder.addCase(addToQueue.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
     });
