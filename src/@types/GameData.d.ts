@@ -7,4 +7,5 @@ interface GameData {
   time: string;
   visitingTeam: Team;
   venue: string;
+  queue: boolean;
 }

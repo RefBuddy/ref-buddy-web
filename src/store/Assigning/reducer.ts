@@ -4,6 +4,8 @@ import { releaseGame } from './actions';
 const initialState = {
   assigningStatus: false,
   loading: false,
+  releaseSuccessful: false,
+  error: null,
 } as AssigningState;
 
 export const assigningSlice = createSlice({
@@ -12,6 +14,9 @@ export const assigningSlice = createSlice({
   reducers: {
     setAssigningStatus: (state, { payload }) => {
       state.assigningStatus = payload;
+    },
+    setReleaseSuccessful: (state, { payload }) => {
+      state.releaseSuccessful = payload;
     }
   },
   extraReducers: (builder) => {
@@ -21,14 +26,16 @@ export const assigningSlice = createSlice({
     builder.addCase(releaseGame.fulfilled, (state) => {
       // state.assigningStatus = false;
       state.loading = false;
+      state.releaseSuccessful = true;
     });
     builder.addCase(releaseGame.rejected, (state) => {
       // state.assigningStatus = false;
       state.loading = false;
+      state.error = `There was an error releasing the game`;
     });
   },
 })
 
-export const { setAssigningStatus } = assigningSlice.actions;
+export const { setAssigningStatus, setReleaseSuccessful } = assigningSlice.actions;
 
 export default assigningSlice.reducer;

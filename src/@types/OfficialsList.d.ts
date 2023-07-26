@@ -1,5 +1,7 @@
 interface OfficialsListState {
-    officialsList: OfficialData[];
+    officialsList: {
+        [uid: string]: OfficialData
+    };
     loading: boolean;
     error?: SerializedError;
 }

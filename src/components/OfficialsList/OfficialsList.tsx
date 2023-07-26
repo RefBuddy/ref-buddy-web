@@ -15,7 +15,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
   const [sortedData, setSortedData] = useState<any[]>([]);
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
-  const [officialsData, setOfficialsData] = useState<OfficialInfo | null>(null);
+  const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
   const { officialsCalendarData, assignedGames, officialsStats } = useAppSelector(state => state.user);
   const officials = useAppSelector(state => state.officials.officialsList);
   const league = useAppSelector(state => state.games.currentLeague);
