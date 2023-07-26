@@ -38,6 +38,8 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
       uids: ['gUJf0bsrLxaXfrzqSsoeZVki3m13', 'pPtrMKCdPeeCOxXp363HSkuMolz1', 'yJATy5ryMchCgBUU6IQvT0pZtY52', 'uRpsolPDKhfK8oG2w0156wv5yap1'],
       date: '2023-09-08',
       gameNumber: '30',
+      league: 'bchl',
+      season: '2023-2024',
     };
     dispatch(releaseGame(newGame));
   };
