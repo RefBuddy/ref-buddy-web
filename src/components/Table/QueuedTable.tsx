@@ -26,7 +26,7 @@ const QueuedTable = () => {
 
     useEffect(() => {
         if (releaseSuccess) {
-            toast("Successfully Released Game!", { type: 'success' });
+            toast("Successfully released game!", { type: 'success' });
             dispatch(fetchGamesByMonth());
             dispatch(setReleaseSuccessful(false));
         }
@@ -54,6 +54,10 @@ const QueuedTable = () => {
         } as ReleaseGameRequestData;
         dispatch(releaseGame(data));
     }
+
+    if (queuedGames.length === 0) {
+        return null;
+      }
 
     return (
         <div className="w-full flex flex-col border border-gray-200 rounded-lg p-4 border-solid">
