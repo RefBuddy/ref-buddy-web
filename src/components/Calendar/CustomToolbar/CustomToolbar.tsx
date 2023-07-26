@@ -4,7 +4,7 @@ import { addMonths, subMonths, parseISO } from "date-fns";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { setCurrentDate } from '../../../store/Games/reducer';
-import { addGame } from '../../../store/Games/actions';
+import { releaseGame } from '../../../store/Assigning/actions';
 import { formatDate } from '../../../utils/helpers';
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@heroicons/react/24/solid';
 
@@ -33,15 +33,13 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
     onNavigate(action);
   };
 
-  const handleAddGame = () => {
-    // const newGame = {
-    //   league: 'bchl',
-    //   season: '2023-2024',
-    //   homeTeam: 'Salmon Arm',
-    //   visitingTeam: 'Penticton',
-    //   dateISO8601: '2023-09-27T19:00:00-07:00',
-    // };
-    // dispatch(addGame(newGame));
+  const handleReleaseGame = () => {
+    const newGame = {
+      uids: ['gUJf0bsrLxaXfrzqSsoeZVki3m13', 'pPtrMKCdPeeCOxXp363HSkuMolz1', 'yJATy5ryMchCgBUU6IQvT0pZtY52', 'uRpsolPDKhfK8oG2w0156wv5yap1'],
+      date: '2023-09-08',
+      gameNumber: '30',
+    };
+    dispatch(releaseGame(newGame));
   };
 
   return (
@@ -53,7 +51,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
       <button type="button" onClick={() => handleNavigate(Navigate.NEXT)}>
         <ChevronRightIcon className="h-6 w-6"/>
       </button>
-      <button type="button" onClick={handleAddGame}>
+      <button type="button" onClick={handleReleaseGame}>
         <PlusIcon className="h-6 w-6 ml-4"/>
       </button>
     </div>
