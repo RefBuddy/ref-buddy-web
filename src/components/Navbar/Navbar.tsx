@@ -17,10 +17,10 @@ const Navbar: React.FC<any> = () => {
     <div className="flex h-screen">
       <nav className="flex flex-col justify-between items-center p-4 bg-black min-w-200px text-white">
         <div className="flex items-center">
-          <img src={Logo} alt="logo" className="h-8 w-8 mr-2" />
-          <h1>Ref Buddy</h1>
+          <img src={Logo} alt="logo" className="h-4 w-4 mr-2" />
+          <p className="text-md font-semibold">Ref Buddy</p>
         </div>
-        <button onClick={handleLogout} className="border-white border bg-white text-black cursor-pointer py-1 px-2">
+        <button onClick={handleLogout} className="border-white border bg-white text-black cursor-pointer px-1">
           Logout
         </button>
       </nav>

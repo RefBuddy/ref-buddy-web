@@ -68,7 +68,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     setShowOfficialsList(false);
 
     // Show toast message
-    toast.success(`${officials[uid].firstName} ${officials[uid].lastName} assigned to game.`);
+    toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
   };
 
   const gatherOfficialCalendarDataById = (uid: string) => {
