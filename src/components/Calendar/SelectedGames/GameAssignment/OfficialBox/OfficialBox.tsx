@@ -35,9 +35,6 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
       toast.success(`${official.firstName} ${official.lastName} removed from game.`);
     }
-    if (!assigningStatus) {
-      toast.error('Assigning is disabled. Please enable assigning to remove officials from games.');
-    }
   };
 
   const handleClick = () => {
