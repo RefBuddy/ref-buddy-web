@@ -140,7 +140,7 @@ const MyCalendar: FC = () => {
   return (
     <div>
       {isAuthenticated ? (
-        <div className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4" >
+        <div className="flex items-center justify-center gap-0 border-gray-200 border-solid border rounded-lg shadow-sm px-4 ml-4" >
           <Calendar
             localizer={localizer}
             defaultDate={new Date()}

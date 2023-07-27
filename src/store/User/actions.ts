@@ -47,7 +47,6 @@ export const getAllOfficialsCalendarEvents = createAsyncThunk('user/getAllOffici
     })
     if (response.ok) {
       const json = await response.json();
-      console.log("All officials calendar events: ", json.data);
       return json.data;
     } else {
       return rejectWithValue(`HTTP error! Status: ${response.status}`);

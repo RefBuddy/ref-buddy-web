@@ -12,6 +12,7 @@ import { OverviewTravel } from '../../components/OverviewTravel';
 import { AssigningStatus } from '../../components/AssigningStatus';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
 import { resetCalendarEventsFetch } from '../../store/Games/reducer';
+import { QueuedTable } from '../../components/Table';
 
 const Dashboard: React.FC<any> = () => {
   const openModal = useAppSelector(state => state.modal.modalOpen);
@@ -40,9 +41,15 @@ const Dashboard: React.FC<any> = () => {
           <OverviewGameReports progress={44} value="4 / 9" />
           <AssigningStatus />
         </div>
-        <div className="flex items-center p-5 justify-center">
-          <div>
+        <div className="flex flex-1 xl:flex-row flex-col items-start xl:gap-2 gap-4 p-5 mr-4">
+          <div className="xl:w-3/5 w-full">
             <MyCalendar />
+          </div>
+          <div className="xl:w-2/5 w-auto ml-4">
+            {/* Add table */}
+            {!loading ? (
+              <QueuedTable />
+            ) : <></>}
           </div>
         </div>
         {(openModal && modalType === 'games') ? (

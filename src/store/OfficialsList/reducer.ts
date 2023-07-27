@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getOfficialsList } from './actions';
 
 const initialState = {
-  officialsList: [],
+  officialsList: {},
   loading: false,
   error: undefined
 } as OfficialsListState;

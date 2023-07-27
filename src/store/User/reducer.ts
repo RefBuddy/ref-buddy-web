@@ -23,6 +23,9 @@ export interface UserState {
   assignedGames?: {
     [key: string]: ResolvedGame[];
   };
+  queuedGames?: {
+    [key: string]: ResolvedGame[];
+  };
   blockedOffTimes?: {
     [key: string]: any; 
   };
@@ -50,6 +53,7 @@ const userSlice = createSlice({
     });
     builder.addCase(getUserCalendarEvents.fulfilled, (state, { payload }) => {
       state.assignedGames = payload.assignedGames;
+      state.queuedGames = payload.queuedGames;
       state.blockedOffTimes = payload.blockedOffTimes;
       state.error = false;
       state.loading = false;
