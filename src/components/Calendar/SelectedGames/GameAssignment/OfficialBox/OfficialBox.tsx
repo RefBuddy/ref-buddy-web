@@ -42,7 +42,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
       setShowOfficialsList(true); 
     }
     if (!assigningStatus) {
-      toast.error('Assigning is disabled. Please enable assigning to add officials to games.');
+      toast.error('Assigning is disabled.');
     }
   };
 
