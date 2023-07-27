@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import { useAppDispatch } from '../../store';
+import { setAssigningStatus } from '../../store/Assigning/reducer';
 
 const AssigningStatus = () => {
+  const dispatch = useAppDispatch();
   const [isActive, setIsActive] = useState(false);
 
   const handleClick = () => {
     setIsActive(!isActive);
+    dispatch(setAssigningStatus(!isActive));
   };
 
   return (
