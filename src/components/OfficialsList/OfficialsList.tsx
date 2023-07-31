@@ -200,7 +200,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
             </div>
             {officialClicked === official.uid && officialsData && (
               <div className="mt-4 flex flex-col">
-                <div className="flex flex-row gap-4">
+                {/* <div className="flex flex-row gap-4">
                   <div className="flex flex-col">
                     <p className="text-gray-700 text-sm font-medium">Address</p>
                     <p className="text-sm text-gray-700">{officialsData.address}</p>
@@ -213,7 +213,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                     <p className="text-gray-700 text-sm font-medium">Email</p>
                     <p className="text-sm text-gray-700">{officialsData.email}</p>
                   </div>
-                </div>
+                </div> */}
                 {assignedGames && (
                   <div className="flex flex-row flex-1 gap-4 justify-between">
                     <div className="h-auto min-w-[300px]">
