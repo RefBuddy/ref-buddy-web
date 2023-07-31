@@ -7,7 +7,6 @@ const Modal: React.FC<PropsWithChildren<any>> = ({ children, onClose }) => {
   const dispatch = useAppDispatch();
   const handleClose = () => {
     if(onClose) {
-      console.log("CLOSING");
       onClose();
       return;
     }
