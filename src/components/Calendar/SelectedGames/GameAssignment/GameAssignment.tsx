@@ -30,6 +30,7 @@ const GameAssignment = ({ gameData }) => {
       <OfficialBox official={officialsByRole["referee2"]} gameData={gameData} role="referee2" label="Referee" color="orange" />
       <OfficialBox official={officialsByRole["linesman1"]} gameData={gameData} role="linesman1" label="Linesman" color="black" />
       <OfficialBox official={officialsByRole["linesman2"]} gameData={gameData} role="linesman2" label="Linesman" color="black" />
+      <OfficialBox official={officialsByRole["supervisor"]} gameData={gameData} role="supervisor" label="Supervisor" color="grey" />
     </div>
   );
 };
