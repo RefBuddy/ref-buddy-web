@@ -67,10 +67,9 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         {official && (
           <>
             {officialStatus && officialStatus.declined && (
-              <XCircleIcon
-                className="w-5 h-5 text-error-500 absolute top-0.5 right-0.5"
-                aria-hidden="true"
-              />
+              <p className="absolute top-0 right-1" aria-hidden="true">
+                ❌
+              </p>
             )}
             {officialStatus && !officialStatus.confirmed && !officialStatus.declined && (
               <ExclamationTriangleIcon
