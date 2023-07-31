@@ -20,6 +20,7 @@ const QueuedTable = () => {
             })
     }, [events]);
     const officials = useAppSelector(state => state.officials.officialsList);
+    const supervisors = useAppSelector(state => state.officials.supervisorsList);
     const loading = useAppSelector(state => state.assigning.loading);
     const releaseSuccess = useAppSelector(state => state.assigning.releaseSuccessful);
     const releaseError = useAppSelector(state => state.assigning.error);
@@ -57,7 +58,7 @@ const QueuedTable = () => {
 
     if (queuedGames.length === 0) {
         return null;
-      }
+    }
 
     return (
         <div className="w-full flex flex-col border border-gray-200 rounded-lg p-4 border-solid">
@@ -73,17 +74,30 @@ const QueuedTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {queuedGames.map((game, idx) => (
-                        <tr key={`queued-${idx}`} className={getBackgroundColor(idx)}>
+                    {queuedGames.map((game, idx) => {
+                        const officialsInGame = game.officials.filter(off => off.role !== 'supervisor');
+                        const supervisor = game.officials.find(off => off.role === 'supervisor');
+
+                        const officialNames = officialsInGame.map((off) => 
+                            officials[off.uid] ? `${officials[off.uid].firstName} ${officials[off.uid].lastName}` : 'Unknown official'
+                        ).join(', ');
+
+                        const supervisorName = supervisor && supervisors[supervisor.uid] 
+                            ? `${supervisors[supervisor.uid].firstName} ${supervisors[supervisor.uid].lastName}` 
+                            : 'N/A';
+
+                        return (
+                            <tr key={`queued-${idx}`} className={getBackgroundColor(idx)}>
                             <td className="text-xs p-2">{game.date}</td>
                             <td className="text-xs p-2">{game.homeTeam.abbreviation} vs. {game.visitingTeam.abbreviation}</td>
-                            <td className="text-xs p-2">{game.officials.map((off) => `${officials[off.uid].firstName} ${officials[off.uid].lastName}`).join(', ')}</td>
-                            <td className="text-xs p-2">admin@bchl.ca</td>
+                            <td className="text-xs p-2">{officialNames}</td>
+                            <td className="text-xs p-2">{supervisorName}</td>
                             <td className="text-xs p-2">
                                 <Button onClick={() => release(game)}>Release</Button>
                             </td>
-                        </tr>
-                    ))}
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </table>
 

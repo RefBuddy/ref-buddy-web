@@ -17,11 +17,12 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
   const { officialsCalendarData, assignedGames, officialsStats } = useAppSelector(state => state.user);
-  const officials = useAppSelector(state => state.officials.officialsList);
   const league = useAppSelector(state => state.games.currentLeague);
   const season = useAppSelector(state => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
+  
+  const officials = role === 'supervisor' ? useAppSelector(state => state.officials.supervisorsList) : useAppSelector(state => state.officials.officialsList);
 
   // this hook converts the officials object to an array and sorts it when the component mounts
   useEffect(() => {
@@ -238,7 +239,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                         </tbody>
                       </table>
                     </div>
-                    {officialsStats && (
+                    {officialsStats && role != 'supervisor' && (
                       <div className="h-auto min-w-1/2">
                         <p className="text-xs mt-4 font-bold">Stats (From Last Season)</p>
                         <div className="flex flex-row gap-x-8 gap-y-2 flex-wrap mt-2">

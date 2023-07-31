@@ -16,9 +16,9 @@ const UserProfile = ({ userData }) => {
         src={userData.profilePictureUrl}
         alt={name}
       />
-      <div className="flex flex-col ml-4">
+      <div className="flex flex-col ml-1">
         <p className="text-left">{userData.firstName}</p>
-        <p className="text-left">{userData.lastName}</p>
+        <p className="text-left -mt-1">{userData.lastName}</p>
       </div>
     </div>
   );
