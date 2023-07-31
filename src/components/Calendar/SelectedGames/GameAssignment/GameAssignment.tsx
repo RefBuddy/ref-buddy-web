@@ -25,7 +25,7 @@ const GameAssignment = ({ gameData }) => {
   }
 
   return (
-    <div className="flex flex-row flex-wrap w-full gap-2">
+    <div className="flex flex-row flex-wrap w-full gap-1">
       <OfficialBox official={officialsByRole["referee1"]} gameData={gameData} role="referee1" label="Referee" color="orange" />
       <OfficialBox official={officialsByRole["referee2"]} gameData={gameData} role="referee2" label="Referee" color="orange" />
       <OfficialBox official={officialsByRole["linesman1"]} gameData={gameData} role="linesman1" label="Linesman" color="black" />
