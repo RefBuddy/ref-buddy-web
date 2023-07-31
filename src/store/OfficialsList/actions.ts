@@ -23,7 +23,7 @@ export const getOfficialsList = createAsyncThunk(
           if (json.data['officials'] == null) {
             return {};
           }
-          return json.data['officials'];
+          return json.data;
         } else {
           return rejectWithValue(`HTTP error! Status: ${response.status}`);
         }
