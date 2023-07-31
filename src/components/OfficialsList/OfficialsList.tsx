@@ -176,22 +176,33 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                   )}
   
                   {blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
-                    <div className="flex items-start ml-6 -mb-6 -mt-2">
-                      <ExclamationTriangleIcon className="h-6 w-6 text-warning-300 mr-4 mt-4" />
-                      <div>
-                        {blockedOffDatesAlready.map((times, index) => (
-                          <React.Fragment key={index}>
+                  <div className="flex flex-col ml-6 -mb-6 -mt-2">
+                    {blockedOffDatesAlready.map((times, index) => (
+                      <React.Fragment key={index}>
+                        <div className="flex items-center">
+                          {times.startTime === '00:00' && times.endTime === '23:59' ? (
+                            <p className="h-6 w-6 text-warning-300 mr-2 mt-1">❌</p>
+                          ) : (
+                            <ExclamationTriangleIcon className="h-6 w-6 text-warning-300 mr-2 mt-1" />
+                          )}
+                          <div>
                             <p className="mt-2 text-sm font-medium text-black">
-                              <span className="text-gray-700">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
+                              {times.startTime === '00:00' && times.endTime === '23:59' ? (
+                                <span className="text-gray-700">Not Available</span>
+                              ) : (
+                                <span className="text-gray-700">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
+                              )}
                               <br />
                               <span className="text-gray-700">Notes: {times.notes}</span>
                             </p>
-                            <br />
-                          </React.Fragment>
-                        ))}
-                      </div>
-                    </div>                  
-                  )}
+                          </div>
+                        </div>
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </div>                  
+                )}
+
                 </div>
               </div>
               {isOfficialHovered(official.uid) && (
