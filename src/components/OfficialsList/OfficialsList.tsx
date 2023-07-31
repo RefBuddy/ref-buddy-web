@@ -239,7 +239,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                         </tbody>
                       </table>
                     </div>
-                    {officialsStats && role != 'supervisor' && (
+                    {/* {officialsStats && role != 'supervisor' && (
                       <div className="h-auto min-w-1/2">
                         <p className="text-xs mt-4 font-bold">Stats (From Last Season)</p>
                         <div className="flex flex-row gap-x-8 gap-y-2 flex-wrap mt-2">
@@ -273,7 +273,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                           </div>
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 )}
               </div>
