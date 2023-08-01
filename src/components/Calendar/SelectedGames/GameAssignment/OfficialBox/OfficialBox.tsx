@@ -16,9 +16,9 @@ const UserProfile = ({ userData }) => {
         src={userData.profilePictureUrl}
         alt={name}
       />
-      <div className="flex flex-col ml-4">
+      <div className="flex flex-col ml-1">
         <p className="text-left">{userData.firstName}</p>
-        <p className="text-left">{userData.lastName}</p>
+        <p className="text-left -mt-1">{userData.lastName}</p>
       </div>
     </div>
   );
@@ -67,10 +67,9 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         {official && (
           <>
             {officialStatus && officialStatus.declined && (
-              <XCircleIcon
-                className="w-5 h-5 text-error-500 absolute top-0.5 right-0.5"
-                aria-hidden="true"
-              />
+              <p className="absolute top-0 right-1" aria-hidden="true">
+                ❌
+              </p>
             )}
             {officialStatus && !officialStatus.confirmed && !officialStatus.declined && (
               <ExclamationTriangleIcon

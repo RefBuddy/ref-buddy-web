@@ -182,7 +182,7 @@ const SelectedGames = () => {
           </div>
         )}
         <div className="flex w-full -mt-2 items-center justify-between">
-            <div className="flex flex-row items-center gap-3">
+            <div className="flex flex-row items-center gap-1">
                 <div className="flex flex-col items-center justify-center">
                     <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
                     <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>

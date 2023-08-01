@@ -33,16 +33,16 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
     onNavigate(action);
   };
 
-  const handleReleaseGame = () => {
-    const newGame = {
-      uids: ['gUJf0bsrLxaXfrzqSsoeZVki3m13', 'pPtrMKCdPeeCOxXp363HSkuMolz1', 'yJATy5ryMchCgBUU6IQvT0pZtY52', 'uRpsolPDKhfK8oG2w0156wv5yap1'],
-      date: '2023-09-08',
-      gameNumber: '30',
-      league: 'bchl',
-      season: '2023-2024',
-    };
-    dispatch(releaseGame(newGame));
-  };
+  // const handleReleaseGame = () => {
+  //   const newGame = {
+  //     uids: ['gUJf0bsrLxaXfrzqSsoeZVki3m13', 'pPtrMKCdPeeCOxXp363HSkuMolz1', 'yJATy5ryMchCgBUU6IQvT0pZtY52', 'uRpsolPDKhfK8oG2w0156wv5yap1'],
+  //     date: '2023-09-08',
+  //     gameNumber: '30',
+  //     league: 'bchl',
+  //     season: '2023-2024',
+  //   };
+  //   dispatch(releaseGame(newGame));
+  // };
 
   return (
     <div className="rbc-toolbar flex justify-center items-center pt-4">
@@ -53,9 +53,9 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onNavigate, label }) => {
       <button type="button" onClick={() => handleNavigate(Navigate.NEXT)}>
         <ChevronRightIcon className="h-6 w-6"/>
       </button>
-      <button type="button" onClick={handleReleaseGame}>
+      {/* <button type="button" onClick={handleReleaseGame}>
         <PlusIcon className="h-6 w-6 ml-4"/>
-      </button>
+      </button> */}
     </div>
   );
 };
