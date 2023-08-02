@@ -21,9 +21,6 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
   const season = useAppSelector(state => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
-
-  // console.log('officialsCalendarData', officialsCalendarData);
-  // console.log('assignedGames', assignedGames);
   
   const officials = role === 'supervisor' ? useAppSelector(state => state.officials.supervisorsList) : useAppSelector(state => state.officials.officialsList);
 
@@ -164,7 +161,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
 
 
   return (
-    <div className="w-full bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto mt-12">
+    <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto mt-12">
       <div className="py-4 px-3">
         <input
           type="text"
