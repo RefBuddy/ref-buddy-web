@@ -72,7 +72,11 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     setShowOfficialsList(false);
 
     // Show toast message
-    toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
+    if (officials[uid].firstName == 'No' && officials[uid].lastName == 'Supervisor') {
+      toast.success(`Game has no supervisor.`);
+    } else {
+      toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
+    }
   };
 
   const gatherOfficialCalendarDataById = (uid: string) => {
