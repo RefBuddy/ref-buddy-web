@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import { useAppDispatch } from '../../store';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import OfficialsList from '../OfficialsList/OfficialsList';
+import { setModalState } from '../../store/Modal/reducer';
 import { Modal } from '../Modal';
 
 const OverviewOfficials = () => {
+  const dispatch = useAppDispatch();
   const [showOfficialsList, setShowOfficialsList] = useState(false);
 
   const handleClick = () => {
-    setShowOfficialsList(true);
+    setShowOfficialsList(!showOfficialsList);
+    dispatch(setModalState({ officialsList: { open: !showOfficialsList } }));
+    console.log('clicked');
   };
-
-  const handleClose = () => {
-    setShowOfficialsList(false);
-  }
 
   const game = {
     time: '2021-10-10T01:00:00.000Z',
@@ -35,8 +36,8 @@ const OverviewOfficials = () => {
       </div>
 
       {showOfficialsList && (
-        <Modal onClose={() => handleClose()}>
-          <OfficialsList game={game} role='dashboard' setShowOfficialsList={setShowOfficialsList} />
+        <Modal>
+          <OfficialsList game={game} role='dashboard' />
         </Modal>
       )}
     </div>

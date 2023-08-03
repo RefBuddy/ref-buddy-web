@@ -3,13 +3,14 @@ import { parseISO } from "date-fns";
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { addToQueue } from '../../store/Games/actions';
+import { setModalState } from '../../store/Modal/reducer';
 import { formatDate } from "../../utils/helpers";
 import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
-const OfficialsList = ({ game, role, setShowOfficialsList }) => {
+const OfficialsList = ({ game, role }) => {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortedData, setSortedData] = useState<any[]>([]);
@@ -61,13 +62,13 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
       league: league,
       season: season,
     };
-
+  
     // Dispatch the addToQueue action and await for it to finish
     await dispatch(addToQueue(gameData));
-
+  
     // Close the OfficialsList after official is clicked
-    setShowOfficialsList(false);
-
+    dispatch(setModalState({ officialsList: { open: false } }));
+  
     // Show toast message
     if (officials[uid].firstName == 'No' && officials[uid].lastName == 'Supervisor') {
       toast.success(`Game has no supervisor.`);
@@ -75,6 +76,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
       toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
     }
   };
+  
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {

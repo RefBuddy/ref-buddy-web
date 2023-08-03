@@ -3,6 +3,7 @@ import { XCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid'
 import { toast } from 'react-toastify';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { setModalState } from '../../../../../store/Modal/reducer';
 import { removeFromGame } from '../../../../../store/Games/actions';
 import { Modal } from '../../../../Modal';
 
@@ -39,7 +40,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
 
   const handleClick = () => {
     if (!official && assigningStatus) {
-      setShowOfficialsList(true); 
+      dispatch(setModalState({ assignGame: { open: true } }));
     }
     if (!assigningStatus) {
       toast.error('Assigning is disabled.');
@@ -47,7 +48,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   };
 
   const handleClose = () => {
-    setShowOfficialsList(false)
+    dispatch(setModalState({ assignGame: { open: false } }));
   }
 
   return (
@@ -92,8 +93,8 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         )}
       </div>
       {showOfficialsList && (
-        <Modal onClose={() => handleClose()}>
-          <OfficialsList setShowOfficialsList={setShowOfficialsList} game={gameData} role={role} />
+        <Modal>
+          <OfficialsList game={gameData} role={role} />
         </Modal>
       )}
     </>

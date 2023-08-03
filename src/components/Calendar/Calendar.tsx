@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import {
   Calendar,
   Event as CalendarEvent,
@@ -17,7 +17,8 @@ import { fetchGamesByMonth } from '../../store/Games/actions';
 import { setSelectedGames } from '../../store/Games/reducer';
 import { setModalState } from '../../store/Modal/reducer';
 import CustomToolbar from './CustomToolbar/CustomToolbar';
-
+import { SelectedGames } from '../../components/Calendar/SelectedGames';
+import Modal from '../../components/Modal/Modal';
 
 const CustomEvent = ({ event }) => {
   const greenEvents = event.events.filter((event) => 
@@ -89,13 +90,19 @@ const MyCalendar: FC = () => {
   const [isAuthenticated, loading] = useAuthenticationStatus();
   const events = useAppSelector(state => state.games.monthGameData);
   const currentDate = useAppSelector(state => state.games.currentDate);
-  const isModalOpen = useAppSelector(state => state.modal.modalOpen);
+  const [showOfficialsList, setShowOfficialsList] = useState(false);
+
+  const handleClick = () => {
+    setShowOfficialsList(!showOfficialsList);
+    dispatch(setModalState({ SelectedGames: { open: !showOfficialsList } }));
+    console.log('clicked');
+  };
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
       dispatch(fetchGamesByMonth());
     }
-  }, [isAuthenticated, loading, currentDate, isModalOpen]);
+  }, [isAuthenticated, loading, currentDate, showOfficialsList]);
 
   // const selectEvent = (event: CalendarEvent) => {
   //   if (!events) return;
@@ -132,7 +139,10 @@ const MyCalendar: FC = () => {
     });
 
     dispatch(setSelectedGames(gamesDuringSlots));
-    dispatch(setModalState({ modalOpen: true, modalType: 'games' }));
+    console.log('slots', slots);
+    if(slots.length > 0) {
+      handleClick();
+    }
   }
 
   const convertedEvents = convertEvents(events || [] as any);
@@ -171,6 +181,11 @@ const MyCalendar: FC = () => {
             }
             
           />
+          {showOfficialsList && (
+              <Modal onClose={() => handleClick()}>
+                <SelectedGames />
+              </Modal>
+            )}
         </div>
       ) : (
         <p>Please log in to view the calendar</p>

@@ -6,11 +6,10 @@ import { setModalState } from '../../store/Modal/reducer';
 const Modal: React.FC<PropsWithChildren<any>> = ({ children, onClose }) => {
   const dispatch = useAppDispatch();
   const handleClose = () => {
+    dispatch(setModalState({ officialsList: { open: true } }));
     if(onClose) {
       onClose();
-      return;
     }
-    dispatch(setModalState({ open: false, modalType: '' }));
   }
   
   return (
