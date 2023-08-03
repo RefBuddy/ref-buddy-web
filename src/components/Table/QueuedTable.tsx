@@ -84,7 +84,7 @@ const QueuedTable = () => {
 
                         const supervisorName = supervisor && supervisors[supervisor.uid] 
                             ? `${supervisors[supervisor.uid].firstName} ${supervisors[supervisor.uid].lastName}` 
-                            : 'N/A';
+                            : 'empty';
 
                         return (
                             <tr key={`queued-${idx}`} className={getBackgroundColor(idx)}>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
+import { setModalState } from '../../../store/Modal/reducer';
 import Datepicker from "tailwind-datepicker-react"
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
@@ -26,6 +27,7 @@ const SelectedGames = () => {
     })
 
   }, [selectedGames]);
+
   
   const officialsData = useAppSelector(state => state.games.officialsData);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);

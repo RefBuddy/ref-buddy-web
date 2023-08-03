@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useAppSelector, useAppDispatch } from '../../store';
 import Navbar from '../../components/Navbar';
 import MyCalendar from '../../components/Calendar';
-import Modal from '../../components/Modal/Modal';
-import { useAppSelector, useAppDispatch } from '../../store';
-import { SelectedGames } from '../../components/Calendar/SelectedGames';
 import { Loading } from '../../components/Loading';
-import { OverviewExpenses } from '../../components/OverviewExpenses';
-import { OverviewGameReports } from '../../components/OverviewGameReports';
-import { OverviewTravel } from '../../components/OverviewTravel';
-import { AssigningStatus } from '../../components/AssigningStatus';
+import OverviewOfficials from '../../components/OverviewOfficials/OverviewOfficials';
+import OverviewGameReports from '../../components/OverviewGameReports/OverviewGameReports';
+import OverviewTravel from '../../components/OverviewTravel/OverviewTravel';
+import AssigningStatus from '../../components/AssigningStatus/AssigningStatus';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
 import { resetCalendarEventsFetch } from '../../store/Games/reducer';
-import { QueuedTable } from '../../components/Table';
+import QueuedTable from '../../components/Table/QueuedTable';
 
 const Dashboard: React.FC<any> = () => {
-  const openModal = useAppSelector(state => state.modal.modalOpen);
-  const modalType = useAppSelector(state => state.modal.modalType);
   const loading = useAppSelector(state => state.games.loading || state.user.loading || state.officials.loading);
   const { refetchCalendarEvents } = useAppSelector(state => state.games);
   const dispatch = useAppDispatch();
@@ -39,6 +34,7 @@ const Dashboard: React.FC<any> = () => {
         {loading ? <Loading /> : <></>}
         <div className="flex items-center p-5">
           <OverviewGameReports progress={44} value="4 / 9" />
+          <OverviewOfficials />
           <AssigningStatus />
         </div>
         <div className="flex flex-1 xl:flex-row flex-col items-start xl:gap-2 gap-4 p-5 mr-4">
@@ -46,20 +42,11 @@ const Dashboard: React.FC<any> = () => {
             <MyCalendar />
           </div>
           <div className="xl:w-2/5 w-auto ml-4">
-            {/* Add table */}
             {!loading ? (
               <QueuedTable />
             ) : <></>}
           </div>
         </div>
-        {(openModal && modalType === 'games') ? (
-          createPortal(
-            <Modal>
-              <SelectedGames />
-            </Modal>,
-            document.body
-          )
-        ) : null}
       </main>
     </div>
   );

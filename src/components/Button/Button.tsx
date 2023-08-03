@@ -9,7 +9,7 @@ export interface ButtonProps {
   href?: string;
   loading?: boolean;
   'data-testid'?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   [x: string | number | symbol]: unknown;
 }
 
