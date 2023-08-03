@@ -146,11 +146,11 @@ const SelectedGames = () => {
   }
 
   const getBorderColor = (game) => {
-    if (game.officials && game.officials.length === 4 && game.officials.every((official) => official['status'].confirmed === true)) {
+    if (game.officials && game.officials.length === 5 && game.officials.every((official) => official['status'].confirmed === true)) {
       return { color: "border-success-500", priority: 3 };
-    } else if (game.officials && game.officials.length === 4 && game.officials.filter((official) => official['status'].confirmed === true).length < 4 && game.officials.every((official) => official['status'].declined === false)) {
+    } else if (game.officials && game.officials.length === 5 && game.officials.filter((official) => official['status'].confirmed === true).length < 5 && game.officials.every((official) => official['status'].declined === false)) {
       return { color: "border-warning-300", priority: 2 };
-    } else if (game.officials && game.officials.length < 4 || game.officials && game.officials.some((official) => official['status'].declined === true)) {
+    } else if (game.officials && game.officials.length < 5 || game.officials && game.officials.some((official) => official['status'].declined === true)) {
       return { color: "border-error-400", priority: 1 };
     } else {
       return { color: "border-gray-200", priority: 4 };
@@ -184,7 +184,7 @@ const SelectedGames = () => {
           </div>
         )}
         <div className="flex w-full -mt-2 items-center justify-between">
-            <div className="flex flex-row items-center gap-1">
+            <div className="flex flex-row items-center">
                 <div className="flex flex-col items-center justify-center">
                     <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
                     <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
@@ -197,7 +197,7 @@ const SelectedGames = () => {
                     <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
                 </div>
             </div>
-            <div className="w-auto gap-2 pb-1">
+            <div className="w-auto pb-1">
                 {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
             </div>
         </div>

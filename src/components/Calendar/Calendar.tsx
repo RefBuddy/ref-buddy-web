@@ -22,15 +22,15 @@ import Modal from '../../components/Modal/Modal';
 
 const CustomEvent = ({ event }) => {
   const greenEvents = event.events.filter((event) => 
-    event.officials.length === 4 && 
+    event.officials.length === 5 && 
     event.officials.every((official) => official.status.confirmed === true)
   );
   const yellowEvents = event.events.filter((event) => 
-    event.officials.length === 4 && 
-    event.officials.filter((official) => official.status.confirmed === true).length < 4 &&
+    event.officials.length === 5 && 
+    event.officials.filter((official) => official.status.confirmed === true).length < 5 &&
     event.officials.every((official) => official.status.declined === false)
   );
-  const redEvents = event.events.filter((event) => event.officials.length < 4 ||
+  const redEvents = event.events.filter((event) => event.officials.length < 5 ||
     event.officials.some((official) => official.status.declined === true)
   );
   
