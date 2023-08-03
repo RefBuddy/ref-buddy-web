@@ -17,7 +17,6 @@ const modalSlice = createSlice({
   initialState,
   reducers: {
     setModalState: (state, action) => {
-      console.log('setModalState', action.payload);
       state[action.payload.key] = action.payload.value;
 }
   },

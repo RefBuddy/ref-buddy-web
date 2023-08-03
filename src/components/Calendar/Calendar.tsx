@@ -95,7 +95,6 @@ const MyCalendar: FC = () => {
   const handleClick = () => {
     setShowOfficialsList(!showOfficialsList);
     dispatch(setModalState({ SelectedGames: { open: !showOfficialsList } }));
-    console.log('clicked');
   };
 
   useEffect(() => {
@@ -103,16 +102,6 @@ const MyCalendar: FC = () => {
       dispatch(fetchGamesByMonth());
     }
   }, [isAuthenticated, loading, currentDate, showOfficialsList]);
-
-  // const selectEvent = (event: CalendarEvent) => {
-  //   if (!events) return;
-  //   const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
-  //   const gamesOnDate = events[eventDateKey] as GameData[];
-  //   const selectedGame = gamesOnDate.find(game => game.id === event.resource);
-
-  //   dispatch(setSelectedEvent(selectedGame));
-  //   dispatch(setModalState({ modalOpen: true, modalType: 'event' }))
-  // }
 
   const selectSlot = (slotInfo: { slots: Date[] }) => {
     if (!events) return;
@@ -139,10 +128,7 @@ const MyCalendar: FC = () => {
     });
 
     dispatch(setSelectedGames(gamesDuringSlots));
-    console.log('slots', slots);
-    if(slots.length > 0) {
-      handleClick();
-    }
+    handleClick();
   }
 
   const convertedEvents = convertEvents(events || [] as any);

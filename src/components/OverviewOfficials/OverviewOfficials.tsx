@@ -12,7 +12,6 @@ const OverviewOfficials = () => {
   const handleClick = () => {
     setShowOfficialsList(!showOfficialsList);
     dispatch(setModalState({ officialsList: { open: !showOfficialsList } }));
-    console.log('clicked');
   };
 
   const game = {
