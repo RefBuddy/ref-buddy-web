@@ -90,18 +90,18 @@ const MyCalendar: FC = () => {
   const [isAuthenticated, loading] = useAuthenticationStatus();
   const events = useAppSelector(state => state.games.monthGameData);
   const currentDate = useAppSelector(state => state.games.currentDate);
-  const [showOfficialsList, setShowOfficialsList] = useState(false);
+  const [showSelectedGames, setShowSelectedGames] = useState(false);
 
   const handleClick = () => {
-    setShowOfficialsList(!showOfficialsList);
-    dispatch(setModalState({ SelectedGames: { open: !showOfficialsList } }));
+    setShowSelectedGames(!showSelectedGames);
+    dispatch(setModalState({ selectedGames: { open: !showSelectedGames } }));
   };
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
       dispatch(fetchGamesByMonth());
     }
-  }, [isAuthenticated, loading, currentDate, showOfficialsList]);
+  }, [isAuthenticated, loading, currentDate, showSelectedGames]);
 
   const selectSlot = (slotInfo: { slots: Date[] }) => {
     if (!events) return;
@@ -167,7 +167,7 @@ const MyCalendar: FC = () => {
             }
             
           />
-          {showOfficialsList && (
+          {showSelectedGames && (
               <Modal onClose={() => handleClick()}>
                 <SelectedGames />
               </Modal>

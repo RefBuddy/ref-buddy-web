@@ -35,7 +35,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   const handleClick = () => {
     if (!official && assigningStatus) {
       setShowOfficialsList(!showOfficialsList);
-      dispatch(setModalState({ SelectedGames: { open: !showOfficialsList } }));
+      dispatch(setModalState({ selectedGames: { open: !showOfficialsList } }));
     }
     if (!assigningStatus) {
       toast.error('Assigning is disabled.');
@@ -92,7 +92,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
       </div>
       {showOfficialsList && (
         <Modal onClose={() => handleClick()}>
-          <OfficialsList game={gameData} role={role} />
+          <OfficialsList game={gameData} role={role} close={handleClick} />
         </Modal>
       )}
     </>

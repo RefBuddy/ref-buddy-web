@@ -35,7 +35,7 @@ const OverviewOfficials = () => {
       </div>
 
       {showOfficialsList && (
-        <Modal>
+        <Modal onClick={handleClick}>
           <OfficialsList game={game} role='dashboard' />
         </Modal>
       )}

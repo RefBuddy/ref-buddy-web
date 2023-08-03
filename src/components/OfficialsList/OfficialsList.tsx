@@ -10,7 +10,7 @@ import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
-const OfficialsList = ({ game, role }) => {
+const OfficialsList = ({ game, role, close = () => {} }) => {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortedData, setSortedData] = useState<any[]>([]);
@@ -53,7 +53,8 @@ const OfficialsList = ({ game, role }) => {
     setSortedData(sortedOfficials);
   };
 
-  const handleAssignClick = async (uid: string) => {
+  const handleAssignClick = async (e, uid) => {
+    e.stopPropagation();
     const gameData = {
       uid: uid,
       role: role,
@@ -66,9 +67,9 @@ const OfficialsList = ({ game, role }) => {
     // Dispatch the addToQueue action and await for it to finish
     await dispatch(addToQueue(gameData));
   
-    // Close the OfficialsList after official is clicked
-    dispatch(setModalState({ officialsList: { open: false } }));
-  
+    // callback function to close the modal
+    close();
+    
     // Show toast message
     if (officials[uid].firstName == 'No' && officials[uid].lastName == 'Supervisor') {
       toast.success(`Game has no supervisor.`);
@@ -120,7 +121,8 @@ const OfficialsList = ({ game, role }) => {
 
   const isOfficialHovered = (uid) => officialHovered === uid;
 
-  const handleClick = (uid: string) => {
+  const handleClick = (e, uid) => {
+    e.stopPropagation();
     if (isOfficialHovered(uid)) {
       const filteredOfficialProfileInfoKey = Object.keys(officials).filter((key) => key === uid)
       if (filteredOfficialProfileInfoKey.length > 0) {
@@ -161,7 +163,6 @@ const OfficialsList = ({ game, role }) => {
     return Object.keys(queuedGames).length;
   };
 
-
   return (
     <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto mt-12">
       <div className="py-4 px-3">
@@ -180,7 +181,7 @@ const OfficialsList = ({ game, role }) => {
           <div
             key={`official-${official.uid}`}
             onMouseOver={() => setOfficialHovered(official.uid)}
-            onClick={() => handleClick(official.uid)}
+            onClick={(e) => handleClick(e, official.uid)}
             className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
           >
             <div className="flex flex-row justify-between items-start gap-2 w-full">
@@ -243,8 +244,8 @@ const OfficialsList = ({ game, role }) => {
                   {getQueuedGamesCount(official.uid).toString()}
                 </p>
   
-                {isOfficialHovered(official.uid) && (
-                  <Button className="self-start" onClick={() => handleAssignClick(official.uid)}>Assign + </Button>
+                {isOfficialHovered(official.uid) && date != '2021-10-10' && (
+                  <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>Assign + </Button>
                 )}
               </div>
             </div>
