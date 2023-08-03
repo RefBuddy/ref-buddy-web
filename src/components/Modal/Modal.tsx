@@ -1,16 +1,11 @@
-import React, { PropsWithChildren, useEffect } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
-import { useAppDispatch } from '../../store';
-import { setModalState } from '../../store/Modal/reducer';
 
 const Modal: React.FC<PropsWithChildren<any>> = ({ children, onClose }) => {
-  const dispatch = useAppDispatch();
   const handleClose = () => {
     if(onClose) {
       onClose();
-      return;
     }
-    dispatch(setModalState({ open: false, modalType: '' }));
   }
   
   return (

@@ -75,17 +75,14 @@ const userSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(getAllOfficialsCalendarEvents.pending, (state) => {
-      console.log("AM I LOADING");
       state.loading = true;
     });
     builder.addCase(getAllOfficialsCalendarEvents.fulfilled, (state, { payload }) => {
-      console.log("AM I GETTING SET");
       state.officialsCalendarData = payload;
       state.error = false;
       state.loading = false;
     });    
     builder.addCase(getAllOfficialsCalendarEvents.rejected, (state, { error }) => {
-      console.log("AM I ERRORING");
       state.error = error;
       state.loading = false;
     });

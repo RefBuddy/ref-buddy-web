@@ -3,27 +3,25 @@ import { parseISO } from "date-fns";
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { addToQueue } from '../../store/Games/actions';
+import { setModalState } from '../../store/Modal/reducer';
 import { formatDate } from "../../utils/helpers";
 import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
-const OfficialsList = ({ game, role, setShowOfficialsList }) => {
+const OfficialsList = ({ game, role, close = () => {} }) => {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortedData, setSortedData] = useState<any[]>([]);
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
-  const { officialsCalendarData, assignedGames, officialsStats } = useAppSelector(state => state.user);
+  const { officialsCalendarData, assignedGames, queuedGames, officialsStats } = useAppSelector(state => state.user);
   const league = useAppSelector(state => state.games.currentLeague);
   const season = useAppSelector(state => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
-
-  // console.log('officialsCalendarData', officialsCalendarData);
-  // console.log('assignedGames', assignedGames);
   
   const officials = role === 'supervisor' ? useAppSelector(state => state.officials.supervisorsList) : useAppSelector(state => state.officials.officialsList);
 
@@ -55,7 +53,8 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     setSortedData(sortedOfficials);
   };
 
-  const handleAssignClick = async (uid: string) => {
+  const handleAssignClick = async (e, uid) => {
+    e.stopPropagation();
     const gameData = {
       uid: uid,
       role: role,
@@ -64,13 +63,13 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
       league: league,
       season: season,
     };
-
+  
     // Dispatch the addToQueue action and await for it to finish
     await dispatch(addToQueue(gameData));
-
-    // Close the OfficialsList after official is clicked
-    setShowOfficialsList(false);
-
+  
+    // callback function to close the modal
+    close();
+    
     // Show toast message
     if (officials[uid].firstName == 'No' && officials[uid].lastName == 'Supervisor') {
       toast.success(`Game has no supervisor.`);
@@ -78,6 +77,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
       toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
     }
   };
+  
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
@@ -121,7 +121,8 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
 
   const isOfficialHovered = (uid) => officialHovered === uid;
 
-  const handleClick = (uid: string) => {
+  const handleClick = (e, uid) => {
+    e.stopPropagation();
     if (isOfficialHovered(uid)) {
       const filteredOfficialProfileInfoKey = Object.keys(officials).filter((key) => key === uid)
       if (filteredOfficialProfileInfoKey.length > 0) {
@@ -162,9 +163,8 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
     return Object.keys(queuedGames).length;
   };
 
-
   return (
-    <div className="w-full bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto mt-12">
+    <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto mt-12">
       <div className="py-4 px-3">
         <input
           type="text"
@@ -181,7 +181,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
           <div
             key={`official-${official.uid}`}
             onMouseOver={() => setOfficialHovered(official.uid)}
-            onClick={() => handleClick(official.uid)}
+            onClick={(e) => handleClick(e, official.uid)}
             className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
           >
             <div className="flex flex-row justify-between items-start gap-2 w-full">
@@ -244,8 +244,8 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                   {getQueuedGamesCount(official.uid).toString()}
                 </p>
   
-                {isOfficialHovered(official.uid) && (
-                  <Button className="self-start" onClick={() => handleAssignClick(official.uid)}>Assign + </Button>
+                {isOfficialHovered(official.uid) && date != '2021-10-10' && (
+                  <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>Assign + </Button>
                 )}
               </div>
             </div>
@@ -260,7 +260,7 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                         <thead>
                           <tr className="text-xs font-medium text-black">
                             <td>Date</td>
-                            <td>Home/Away</td>
+                            <td>Game</td>
                           </tr>
                         </thead>
                         <tbody>
@@ -269,7 +269,30 @@ const OfficialsList = ({ game, role, setShowOfficialsList }) => {
                               {assignedGames[dateKey].map((game) => (
                                 <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
                                   <td>{dateKey}</td>
-                                  <td>{game.home_team.abbreviation} / {game.visiting_team.abbreviation}</td>
+                                  <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
+                                </tr>
+                              ))}
+                            </>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="h-auto min-w-[300px]">
+                      <p className="text-xs mt-4 font-bold">Queued Games</p>
+                      <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                        <thead>
+                          <tr className="text-xs font-medium text-black">
+                            <td>Date</td>
+                            <td>Game</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {queuedGames && Object.keys(queuedGames).map((dateKey) => (
+                            <>
+                              {queuedGames[dateKey].map((game) => (
+                                <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
+                                  <td>{dateKey}</td>
+                                  <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
                                 </tr>
                               ))}
                             </>

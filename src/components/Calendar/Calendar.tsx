@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import {
   Calendar,
   Event as CalendarEvent,
@@ -17,7 +17,8 @@ import { fetchGamesByMonth } from '../../store/Games/actions';
 import { setSelectedGames } from '../../store/Games/reducer';
 import { setModalState } from '../../store/Modal/reducer';
 import CustomToolbar from './CustomToolbar/CustomToolbar';
-
+import { SelectedGames } from '../../components/Calendar/SelectedGames';
+import Modal from '../../components/Modal/Modal';
 
 const CustomEvent = ({ event }) => {
   const greenEvents = event.events.filter((event) => 
@@ -89,23 +90,18 @@ const MyCalendar: FC = () => {
   const [isAuthenticated, loading] = useAuthenticationStatus();
   const events = useAppSelector(state => state.games.monthGameData);
   const currentDate = useAppSelector(state => state.games.currentDate);
-  const isModalOpen = useAppSelector(state => state.modal.modalOpen);
+  const [showSelectedGames, setShowSelectedGames] = useState(false);
+
+  const handleClick = () => {
+    setShowSelectedGames(!showSelectedGames);
+    dispatch(setModalState({ selectedGames: { open: !showSelectedGames } }));
+  };
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
       dispatch(fetchGamesByMonth());
     }
-  }, [isAuthenticated, loading, currentDate, isModalOpen]);
-
-  // const selectEvent = (event: CalendarEvent) => {
-  //   if (!events) return;
-  //   const eventDateKey = format(new Date(event.start), "yyyy-MM-dd");
-  //   const gamesOnDate = events[eventDateKey] as GameData[];
-  //   const selectedGame = gamesOnDate.find(game => game.id === event.resource);
-
-  //   dispatch(setSelectedEvent(selectedGame));
-  //   dispatch(setModalState({ modalOpen: true, modalType: 'event' }))
-  // }
+  }, [isAuthenticated, loading, currentDate, showSelectedGames]);
 
   const selectSlot = (slotInfo: { slots: Date[] }) => {
     if (!events) return;
@@ -132,7 +128,7 @@ const MyCalendar: FC = () => {
     });
 
     dispatch(setSelectedGames(gamesDuringSlots));
-    dispatch(setModalState({ modalOpen: true, modalType: 'games' }));
+    handleClick();
   }
 
   const convertedEvents = convertEvents(events || [] as any);
@@ -171,6 +167,11 @@ const MyCalendar: FC = () => {
             }
             
           />
+          {showSelectedGames && (
+              <Modal onClose={() => handleClick()}>
+                <SelectedGames />
+              </Modal>
+            )}
         </div>
       ) : (
         <p>Please log in to view the calendar</p>

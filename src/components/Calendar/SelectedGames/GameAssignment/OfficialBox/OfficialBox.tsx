@@ -3,6 +3,7 @@ import { XCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid'
 import { toast } from 'react-toastify';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { setModalState } from '../../../../../store/Modal/reducer';
 import { removeFromGame } from '../../../../../store/Games/actions';
 import { Modal } from '../../../../Modal';
 
@@ -27,28 +28,26 @@ const UserProfile = ({ userData }) => {
 const OfficialBox = ({ gameData, official, role, label, color }) => {
   const dispatch = useAppDispatch();
   const assigningStatus = useAppSelector((state) => state.assigning.assigningStatus);
-  const [showOfficialsList, setShowOfficialsList] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
-  const removeOfficialFromGame = () => {
-    if(official && assigningStatus) {
-      dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
-      toast.success(`${official.firstName} ${official.lastName} removed from game.`);
-    }
-  };
+  const [showOfficialsList, setShowOfficialsList] = useState(false);
 
   const handleClick = () => {
     if (!official && assigningStatus) {
-      setShowOfficialsList(true); 
+      setShowOfficialsList(!showOfficialsList);
+      dispatch(setModalState({ selectedGames: { open: !showOfficialsList } }));
     }
     if (!assigningStatus) {
       toast.error('Assigning is disabled.');
     }
   };
 
-  const handleClose = () => {
-    setShowOfficialsList(false)
-  }
+  const removeOfficialFromGame = () => {
+    if(official && assigningStatus) {
+      dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
+      toast.success(`${official.firstName} ${official.lastName} removed from game.`);
+    }
+  };
 
   return (
     <>
@@ -92,8 +91,8 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         )}
       </div>
       {showOfficialsList && (
-        <Modal onClose={() => handleClose()}>
-          <OfficialsList setShowOfficialsList={setShowOfficialsList} game={gameData} role={role} />
+        <Modal onClose={() => handleClick()}>
+          <OfficialsList game={gameData} role={role} close={handleClick} />
         </Modal>
       )}
     </>

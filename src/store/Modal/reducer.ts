@@ -1,18 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  modalOpen: false,
-  modalType: '', // display different modals.
+  selectedGames: {
+    open: false,
+  }, 
+  assignGame: {
+    open: false,
+  },
+  officialsList: {
+    open: false,
+  },
 };
 
 const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    setModalState: (state, { payload }) => {
-      state.modalOpen = payload.modalOpen;
-      state.modalType = payload.modalType;
-    }
+    setModalState: (state, action) => {
+      state[action.payload.key] = action.payload.value;
+}
   },
 });
 
