@@ -184,7 +184,7 @@ const SelectedGames = () => {
           </div>
         )}
         <div className="flex w-full -mt-2 items-center justify-between">
-            <div className="flex flex-row items-center gap-1">
+            <div className="flex flex-row items-center">
                 <div className="flex flex-col items-center justify-center">
                     <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
                     <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
@@ -197,7 +197,7 @@ const SelectedGames = () => {
                     <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
                 </div>
             </div>
-            <div className="w-auto gap-2 pb-1">
+            <div className="w-auto pb-1">
                 {officialsData && officialsData[game.id] && <GameAssignment gameData={game} />}
             </div>
         </div>
