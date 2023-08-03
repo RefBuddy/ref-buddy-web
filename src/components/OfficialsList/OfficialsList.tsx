@@ -17,7 +17,7 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
-  const { officialsCalendarData, assignedGames, officialsStats } = useAppSelector(state => state.user);
+  const { officialsCalendarData, assignedGames, queuedGames, officialsStats } = useAppSelector(state => state.user);
   const league = useAppSelector(state => state.games.currentLeague);
   const season = useAppSelector(state => state.games.currentSeason);
   const date = game.time.slice(0, 10);
@@ -260,7 +260,7 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
                         <thead>
                           <tr className="text-xs font-medium text-black">
                             <td>Date</td>
-                            <td>Home/Away</td>
+                            <td>Game</td>
                           </tr>
                         </thead>
                         <tbody>
@@ -269,7 +269,30 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
                               {assignedGames[dateKey].map((game) => (
                                 <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
                                   <td>{dateKey}</td>
-                                  <td>{game.home_team.abbreviation} / {game.visiting_team.abbreviation}</td>
+                                  <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
+                                </tr>
+                              ))}
+                            </>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="h-auto min-w-[300px]">
+                      <p className="text-xs mt-4 font-bold">Queued Games</p>
+                      <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                        <thead>
+                          <tr className="text-xs font-medium text-black">
+                            <td>Date</td>
+                            <td>Game</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {queuedGames && Object.keys(queuedGames).map((dateKey) => (
+                            <>
+                              {queuedGames[dateKey].map((game) => (
+                                <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
+                                  <td>{dateKey}</td>
+                                  <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
                                 </tr>
                               ))}
                             </>
