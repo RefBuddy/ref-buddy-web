@@ -33,7 +33,9 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllOfficialsCalendarEvents({ gameDate: date }));
+    if (role !== 'dashboard') {
+      dispatch(getAllOfficialsCalendarEvents({ gameDate: date }));
+    }
   }, []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
