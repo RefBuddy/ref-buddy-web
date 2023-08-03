@@ -146,11 +146,11 @@ const SelectedGames = () => {
   }
 
   const getBorderColor = (game) => {
-    if (game.officials && game.officials.length === 4 && game.officials.every((official) => official['status'].confirmed === true)) {
+    if (game.officials && game.officials.length === 5 && game.officials.every((official) => official['status'].confirmed === true)) {
       return { color: "border-success-500", priority: 3 };
-    } else if (game.officials && game.officials.length === 4 && game.officials.filter((official) => official['status'].confirmed === true).length < 4 && game.officials.every((official) => official['status'].declined === false)) {
+    } else if (game.officials && game.officials.length === 5 && game.officials.filter((official) => official['status'].confirmed === true).length < 5 && game.officials.every((official) => official['status'].declined === false)) {
       return { color: "border-warning-300", priority: 2 };
-    } else if (game.officials && game.officials.length < 4 || game.officials && game.officials.some((official) => official['status'].declined === true)) {
+    } else if (game.officials && game.officials.length < 5 || game.officials && game.officials.some((official) => official['status'].declined === true)) {
       return { color: "border-error-400", priority: 1 };
     } else {
       return { color: "border-gray-200", priority: 4 };
