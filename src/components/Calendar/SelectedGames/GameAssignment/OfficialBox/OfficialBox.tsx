@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import { setModalState } from '../../../../../store/Modal/reducer';
+import { decrementCount } from '../../../../../store/OfficialsList/reducer';
 import { removeFromGame } from '../../../../../store/Games/actions';
 import { Modal } from '../../../../Modal';
 
@@ -45,6 +46,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   const removeOfficialFromGame = () => {
     if(official && assigningStatus) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
+      dispatch(decrementCount(official.uid));
       toast.success(`${official.firstName} ${official.lastName} removed from game.`);
     }
   };

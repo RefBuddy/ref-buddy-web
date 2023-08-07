@@ -3,6 +3,7 @@ import { parseISO } from "date-fns";
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { addToQueue } from '../../store/Games/actions';
+import { incrementQueueCount } from '../../store/OfficialsList/reducer';
 import { formatDate } from "../../utils/helpers";
 import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
@@ -68,17 +69,19 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
     // Dispatch the addToQueue action and await for it to finish
     await dispatch(addToQueue(gameData));
   
+    // Increment the queue count for the official
+    dispatch(incrementQueueCount(uid));
+    
     // callback function to close the modal
     close();
-    
+      
     // Show toast message
-    if (officials[uid].firstName == 'No' && officials[uid].lastName == 'Supervisor') {
+    if (officials[uid].firstName === 'No' && officials[uid].lastName === 'Supervisor') {
       toast.success(`Game has no supervisor.`);
     } else {
       toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
     }
   };
-  
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
