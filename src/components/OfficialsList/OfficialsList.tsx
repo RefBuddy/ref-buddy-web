@@ -3,7 +3,6 @@ import { parseISO } from "date-fns";
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { addToQueue } from '../../store/Games/actions';
-import { setModalState } from '../../store/Modal/reducer';
 import { formatDate } from "../../utils/helpers";
 import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
@@ -143,28 +142,6 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
     }
   };
 
-  const getAssignedGamesCount = (uid: string): number => {
-    if (!officialsCalendarData || !officialsCalendarData[uid] || !officialsCalendarData[uid].assignedGames) {
-        return 0;
-    }
-
-    // assignedGames is an object where each key is a date and the value is an array of games
-    const assignedGames = officialsCalendarData[uid].assignedGames;
-
-    return Object.keys(assignedGames).length;
-  };
-
-  const getQueuedGamesCount = (uid: string): number => {
-    if (!officialsCalendarData || !officialsCalendarData[uid] || !officialsCalendarData[uid].queuedGames) {
-        return 0;
-    }
-
-    // queuedGames is an object where each key is a date and the value is an array of games
-    const queuedGames = officialsCalendarData[uid].queuedGames;
-    
-    return Object.keys(queuedGames).length;
-  };
-
   return (
     <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto mt-12">
       <div className="py-4 px-3">
@@ -238,12 +215,12 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
               <div className="flex flex-row items-center gap-2">
                 {/* Display assigned games count */}
                 <p className="text-sm border border-success-500 rounded-md px-2 py-1">
-                  {getAssignedGamesCount(official.uid).toString()}
+                  {official.assignedCount ? official.assignedCount.toString() : '0'}
                 </p>
   
                 {/* Display queued games count */}
                 <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
-                  {getQueuedGamesCount(official.uid).toString()}
+                {official.queueCount ? official.queueCount.toString() : '0'}
                 </p>
   
                 {isOfficialHovered(official.uid) && date != '2021-10-10' && (
