@@ -8,4 +8,6 @@ interface OfficialData {
     phoneNumber: string;
     profilePictureUrl: string;
     uid: string;
+    queueCount?: number;
+    assignedCount?: number;
 }

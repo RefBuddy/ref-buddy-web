@@ -3,6 +3,7 @@ import moment from 'moment-timezone';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { Button } from '../Button';
 import { releaseGame } from '../../store/Assigning/actions';
+import { incrementAssignedCount } from '../../store/OfficialsList/reducer';
 import LoadingSmall from '../Loading/LoadingSmall';
 import { toast } from 'react-toastify';
 import { fetchGamesByMonth } from '../../store/Games/actions';
@@ -54,6 +55,7 @@ const QueuedTable = () => {
             season: '2023-2024',
         } as ReleaseGameRequestData;
         dispatch(releaseGame(data));
+        dispatch(incrementAssignedCount(data.uids));
     }
 
     if (queuedGames.length === 0) {
