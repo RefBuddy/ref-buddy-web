@@ -14,11 +14,11 @@ const QueuedTable = () => {
     const events = useAppSelector(state => state.games.monthGameData);
     const queuedGames = useMemo(() => {
         if (!events) return [];
-        return Object
-            .keys(events)
-            .flatMap((date) => {
-                return events[date].filter((gameOnDate) => gameOnDate.queue)
-            })
+        return Object.keys(events).flatMap((date) => {
+            return events[date].filter((gameOnDate) => {
+            return gameOnDate.queue && gameOnDate.officials.length === 5; // Only include games with 5 officials in the queue
+            });
+        });
     }, [events]);
     const officials = useAppSelector(state => state.officials.officialsList);
     const supervisors = useAppSelector(state => state.officials.supervisorsList);
