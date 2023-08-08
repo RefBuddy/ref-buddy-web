@@ -145,151 +145,186 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
     }
   };
 
+  const getFormattedTime = (isoTime: string) => {
+    const date = new Date(isoTime);
+    const options: Intl.DateTimeFormatOptions = { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        timeZoneName: 'short' 
+    };
+    return date.toLocaleTimeString('en-US', options);
+  };
+
+  console.log(game.time);
+
   return (
-    <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto mt-12">
-      <div className="py-4 px-3">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-        />
-      </div>
-      {sortedData.map((official: any, index) => {
-        const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
-        const blockedOffDatesAlready = gatherOfficialCalendarDataById(official.uid);
-        return (
-          <div
-            key={`official-${official.uid}`}
-            onMouseOver={() => setOfficialHovered(official.uid)}
-            onClick={(e) => handleClick(e, official.uid)}
-            className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
-          >
-            <div className="flex flex-row justify-between items-start gap-2 w-full">
-              <div className="flex flex-row items-center">
-                <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
-                    {official.firstName} {official.lastName}
-                  </p>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
-                    {official.city}
-                  </p>
+    <>
+      {/* teams and game time */}
+      {role != 'dashboard' ?
+        <div className="flex w-full -mt-6 -mb-3 items-center justify-between p-4">
+            <div className="flex flex-row items-center gap-3 ml-6">
+                <div className="flex flex-col items-center justify-center">
+                    <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
+                    <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
                 </div>
-  
-                {assignedGamesAlready && assignedGamesAlready.length > 0 && (
-                  <div className="flex-1">
-                    <p className={`ml-4 text-sm font-normal  ${assignedGamesAlready && assignedGamesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
-                      {assignedGamesAlready && assignedGamesAlready.length > 0 ? <strong>@ {assignedGamesAlready[0].home_team.abbreviation}</strong> : ''}
+                <div className="flex flex-col items-center justify-center">
+                    <div className="text-xl font-bold mt-2">@</div>
+                    <div className="text-xs font-semibold text-gray-800 dark:text-gray-500 mb-2">{getFormattedTime(game.time)}</div>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                    <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
+                    <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
+                </div>
+            </div>
+          </div> : <div className="w-full h-6 bg-white"></div>
+        }
+
+      {/* Main OfficialsList container */}
+      <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto">
+        <div className="py-4 px-3">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        {sortedData.map((official: any, index) => {
+          const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
+          const blockedOffDatesAlready = gatherOfficialCalendarDataById(official.uid);
+          return (
+            <div
+              key={`official-${official.uid}`}
+              onMouseOver={() => setOfficialHovered(official.uid)}
+              onClick={(e) => handleClick(e, official.uid)}
+              className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
+            >
+              <div className="flex flex-row justify-between items-start gap-2 w-full">
+                <div className="flex flex-row items-center">
+                  <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
+                      {official.firstName} {official.lastName}
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
+                      {official.city}
                     </p>
                   </div>
-                )}
-  
-                {blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
-                <div className="flex flex-col ml-6 -mb-6 -mt-2">
-                  {blockedOffDatesAlready.map((times, index) => (
-                    <React.Fragment key={index}>
-                      <div className="flex items-center">
-                        {times.startTime === '00:00' && times.endTime === '23:59' ? (
-                          <p className="h-6 w-6 text-warning-300 mr-2 mt-1">❌</p>
-                        ) : (
-                          <ExclamationTriangleIcon className="h-6 w-6 text-warning-300 mr-2 mt-1" />
-                        )}
-                        <div>
-                          <p className="mt-2 text-sm font-medium text-black">
-                            {times.startTime === '00:00' && times.endTime === '23:59' ? (
-                              <span className="text-gray-700">Not Available</span>
-                            ) : (
-                              <span className="text-gray-700">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
-                            )}
-                            <br />
-                            <span className="text-gray-700">Notes: {times.notes}</span>
-                          </p>
+
+                  {assignedGamesAlready && assignedGamesAlready.length > 0 && (
+                    <div className="flex-1">
+                      <p className={`ml-4 text-sm font-normal  ${assignedGamesAlready && assignedGamesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
+                        {assignedGamesAlready && assignedGamesAlready.length > 0 ? <strong>@ {assignedGamesAlready[0].home_team.abbreviation}</strong> : ''}
+                      </p>
+                    </div>
+                  )}
+
+                  {blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
+                  <div className="flex flex-col ml-6 -mb-6 -mt-2">
+                    {blockedOffDatesAlready.map((times, index) => (
+                      <React.Fragment key={index}>
+                        <div className="flex items-center">
+                          {times.startTime === '00:00' && times.endTime === '23:59' ? (
+                            <p className="h-6 w-6 text-warning-300 mr-2 mt-1">❌</p>
+                          ) : (
+                            <ExclamationTriangleIcon className="h-6 w-6 text-warning-300 mr-2 mt-1" />
+                          )}
+                          <div>
+                            <p className="mt-2 text-sm font-medium text-black">
+                              {times.startTime === '00:00' && times.endTime === '23:59' ? (
+                                <span className="text-gray-700">Not Available</span>
+                              ) : (
+                                <span className="text-gray-700">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
+                              )}
+                              <br />
+                              <span className="text-gray-700">Notes: {times.notes}</span>
+                            </p>
+                          </div>
                         </div>
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </div>                  
+                )}
+                </div>
+
+                <div className="flex flex-row items-center gap-2">
+                  {/* Display assigned games count */}
+                  <p className="text-sm border border-success-500 rounded-md px-2 py-1">
+                    {official.assignedCount ? official.assignedCount.toString() : '0'}
+                  </p>
+
+                  {/* Display queued games count */}
+                  <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
+                  {official.queueCount ? official.queueCount.toString() : '0'}
+                  </p>
+
+                  {isOfficialHovered(official.uid) && date != '2021-10-10' && (
+                    <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>Assign + </Button>
+                  )}
+                </div>
+              </div>
+
+              {officialClicked === official.uid && officialsData && (
+                <div className="mt-4 flex flex-col">
+                  {assignedGames && (
+                    <div className="flex flex-row flex-1 gap-4 justify-between">
+                      <div className="h-auto min-w-[300px]">
+                        <p className="text-xs mt-4 font-bold">Assigned Games</p>
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                          <thead>
+                            <tr className="text-xs font-medium text-black">
+                              <td>Date</td>
+                              <td>Game</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {assignedGames && Object.keys(assignedGames).map((dateKey) => (
+                              <>
+                                {assignedGames[dateKey].map((game) => (
+                                  <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
+                                    <td>{dateKey}</td>
+                                    <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
+                                  </tr>
+                                ))}
+                              </>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </div>                  
+                      <div className="h-auto min-w-[300px]">
+                        <p className="text-xs mt-4 font-bold">Queued Games</p>
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                          <thead>
+                            <tr className="text-xs font-medium text-black">
+                              <td>Date</td>
+                              <td>Game</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {queuedGames && Object.keys(queuedGames).map((dateKey) => (
+                              <>
+                                {queuedGames[dateKey].map((game) => (
+                                  <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
+                                    <td>{dateKey}</td>
+                                    <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
+                                  </tr>
+                                ))}
+                              </>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
-              </div>
-  
-              <div className="flex flex-row items-center gap-2">
-                {/* Display assigned games count */}
-                <p className="text-sm border border-success-500 rounded-md px-2 py-1">
-                  {official.assignedCount ? official.assignedCount.toString() : '0'}
-                </p>
-  
-                {/* Display queued games count */}
-                <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
-                {official.queueCount ? official.queueCount.toString() : '0'}
-                </p>
-  
-                {isOfficialHovered(official.uid) && date != '2021-10-10' && (
-                  <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>Assign + </Button>
-                )}
-              </div>
             </div>
-  
-            {officialClicked === official.uid && officialsData && (
-              <div className="mt-4 flex flex-col">
-                {assignedGames && (
-                  <div className="flex flex-row flex-1 gap-4 justify-between">
-                    <div className="h-auto min-w-[300px]">
-                      <p className="text-xs mt-4 font-bold">Assigned Games</p>
-                      <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
-                        <thead>
-                          <tr className="text-xs font-medium text-black">
-                            <td>Date</td>
-                            <td>Game</td>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {assignedGames && Object.keys(assignedGames).map((dateKey) => (
-                            <>
-                              {assignedGames[dateKey].map((game) => (
-                                <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
-                                  <td>{dateKey}</td>
-                                  <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
-                                </tr>
-                              ))}
-                            </>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="h-auto min-w-[300px]">
-                      <p className="text-xs mt-4 font-bold">Queued Games</p>
-                      <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
-                        <thead>
-                          <tr className="text-xs font-medium text-black">
-                            <td>Date</td>
-                            <td>Game</td>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {queuedGames && Object.keys(queuedGames).map((dateKey) => (
-                            <>
-                              {queuedGames[dateKey].map((game) => (
-                                <tr key={`games-${dateKey}`} className="text-xs font-body text-gray-700">
-                                  <td>{dateKey}</td>
-                                  <td>{game.visiting_team.abbreviation} @ {game.home_team.abbreviation}</td>
-                                </tr>
-                              ))}
-                            </>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );  
 };
 
