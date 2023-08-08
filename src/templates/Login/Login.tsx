@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../../firebaseOptions';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, getIdTokenResult } from 'firebase/auth';
 import Logo from '../../images/favicon.png';
 import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
@@ -22,13 +22,18 @@ const Login: React.FC<any> = () => {
   }, [isAuthenticated, loading])
 
   const handleLogin = async () => {
-
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password); // Change this line
-      // Redirect to your desired page after successful login
-      const id = response.user.uid;
-      // send them to the portal with their id.
-      navigate(`/portal/${id}/dashboard`);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      const tokenResult = await getIdTokenResult(response.user);
+      const claims = tokenResult.claims;
+
+      if (claims['role'] === 'admin') {
+        const id = response.user.uid;
+        navigate(`/portal/${id}/dashboard`);
+      } else {
+        console.error("Not an admin user");
+        // Here, you might want to show an error or redirect them elsewhere
+      }
     } catch (error) {
       console.error(error);
     }
