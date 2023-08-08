@@ -6,20 +6,22 @@ import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
 import { navigate } from 'gatsby';
 import { useAuthenticationStatus } from '../../components/hooks';
+import { toast } from 'react-toastify';
 
 const Login: React.FC<any> = () => {
   const [isAuthenticated, loading] = useAuthenticationStatus();
+  const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    if (isAuthenticated && !loading) {
+    if (isAuthenticated && !loading && isAdmin) {
       const id = auth.currentUser?.uid;
       if (id) {
         navigate(`/portal/${id}/dashboard`);
       }
     }
-  }, [isAuthenticated, loading])
+  }, [isAuthenticated, loading, isAdmin])
 
   const handleLogin = async () => {
     try {
@@ -29,10 +31,10 @@ const Login: React.FC<any> = () => {
 
       if (claims['role'] === 'admin') {
         const id = response.user.uid;
+        setIsAdmin(true);
         navigate(`/portal/${id}/dashboard`);
       } else {
-        console.error("Not an admin user");
-        // Here, you might want to show an error or redirect them elsewhere
+        toast.error("Not an admin user");
       }
     } catch (error) {
       console.error(error);
