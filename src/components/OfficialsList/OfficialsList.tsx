@@ -22,7 +22,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const season = useAppSelector(state => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
-  const label = role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman';
+  const label = isAssigned !== false ? isAssigned : (role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman');
+  role = role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman';
   
   const officials = role === 'supervisor' ? useAppSelector(state => state.officials.supervisorsList) : useAppSelector(state => state.officials.officialsList);
 
@@ -182,7 +183,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
           </div> : <div className="w-full h-6 bg-white"></div>
         }
         {role != 'dashboard' ?
-          <div className={`flex flex-col items-center justify-center border-2 rounded-md p-1 -mt-2 cursor-pointer relative min-h-12 flex-none w-36 shadow-md ${label === 'Referee' ? 'border-orange-500' : label === 'Linesman' ? 'border-black' : ''}`}>
+          <div className={`flex flex-col items-center justify-center border-2 rounded-md p-1 -mt-2 cursor-pointer relative min-h-12 flex-none w-36 shadow-md ${role === 'Referee' ? 'border-orange-500' : role === 'Linesman' ? 'border-black' : ''}`}>
             <div>{label}</div>
           </div> : <div className="mb-14 bg-white"></div>
         }
