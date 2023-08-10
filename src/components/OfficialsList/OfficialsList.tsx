@@ -181,9 +181,11 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
             </div>
           </div> : <div className="w-full h-6 bg-white"></div>
         }
-        <div className={`flex flex-col items-center justify-center border-2 rounded-md p-1 -mt-2 cursor-pointer relative min-h-12 flex-none w-36 shadow-md ${label === 'Referee' ? 'border-orange-500' : label === 'Linesman' ? 'border-black' : ''}`}>
-          <div>{label}</div>
-        </div>
+        {role != 'dashboard' ?
+          <div className={`flex flex-col items-center justify-center border-2 rounded-md p-1 -mt-2 cursor-pointer relative min-h-12 flex-none w-36 shadow-md ${label === 'Referee' ? 'border-orange-500' : label === 'Linesman' ? 'border-black' : ''}`}>
+            <div>{label}</div>
+          </div> : <div className="mb-14 bg-white"></div>
+        }
       </div>
 
       {/* Main OfficialsList container */}
