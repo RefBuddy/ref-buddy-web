@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { addToQueue } from '../../store/Games/actions';
 import { incrementQueueCount } from '../../store/OfficialsList/reducer';
+import { decrementCount } from '../../store/OfficialsList/reducer';
+import { removeFromGame } from '../../store/Games/actions';
 import { formatDate } from "../../utils/helpers";
 import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
@@ -59,6 +61,14 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   const handleAssignClick = async (e, uid) => {
     e.stopPropagation();
+
+    // If isAssigned is not false, remove the already assigned official
+    if (isAssigned) {
+      dispatch(removeFromGame({ uid: isAssigned.uid, date: date, gameNumber: gameNumber, league: 'bchl', season: '2023-2024' }));
+      dispatch(decrementCount(isAssigned.uid));
+      toast.success(`${isAssigned.name} removed from game.`);
+    }
+
     const gameData = {
       uid: uid,
       role: role,
@@ -67,23 +77,26 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       league: league,
       season: season,
     };
-  
+
     // Dispatch the addToQueue action and await for it to finish
     await dispatch(addToQueue(gameData));
-  
+
     // Increment the queue count for the official
     dispatch(incrementQueueCount(uid));
-    
+
     // callback function to close the modal
     close();
-      
+
     // Show toast message
-    if (officials[uid].firstName === 'No' && officials[uid].lastName === 'Supervisor') {
+    if (isAssigned) {
+      toast.success(`${officials[uid].firstName} ${officials[uid].lastName} replaced ${isAssigned.name}`);
+    } else if (officials[uid].firstName === 'No' && officials[uid].lastName === 'Supervisor') {
       toast.success(`Game has no supervisor.`);
     } else {
       toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
     }
-  };
+};
+
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
