@@ -64,7 +64,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
     // If isAssigned is not false, remove the already assigned official
     if (isAssigned) {
-      dispatch(removeFromGame({ uid: isAssigned.uid, date: date, gameNumber: gameNumber, league: 'bchl', season: '2023-2024' }));
+      dispatch(removeFromGame({ uid: isAssigned.uid, date: date, gameNumber: gameNumber, league: league, season: season }));
       dispatch(decrementCount(isAssigned.uid));
       toast.success(`${isAssigned.name} removed from game.`);
     }
