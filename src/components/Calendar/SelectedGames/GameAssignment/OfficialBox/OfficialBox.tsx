@@ -26,7 +26,7 @@ const UserProfile = ({ userData }) => {
   );
 };
 
-const OfficialBox = ({ gameData, official, role, label, color }) => {
+const OfficialBox = ({ gameData, official, role, label }) => {
   const dispatch = useAppDispatch();
   const assigningStatus = useAppSelector((state) => state.assigning.assigningStatus);
   const [isHovered, setIsHovered] = useState(false);
@@ -54,7 +54,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   return (
     <>
       <div 
-        className={`flex flex-col items-center justify-center border-2 rounded-md p-1 cursor-pointer relative min-h-14 flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
+        className={`flex flex-col items-center justify-center border-2 rounded-md p-1 cursor-pointer relative min-h-14 flex-none w-36 shadow-md ${label === 'Referee' ? 'border-orange-500' : label === 'Linesman' ? 'border-black' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={(event) => {
