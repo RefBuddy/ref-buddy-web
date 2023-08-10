@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchGamesByMonth, fetchOfficialsProfiles, addToQueue, removeFromGame, addGame } from './actions';
 import { formatDate } from '../../utils/helpers';
-import { add } from 'date-fns';
+import { releaseGame } from '../Assigning/actions';
 
 const league = 'bchl'; 
 const season = '2023-2024';
@@ -97,8 +97,13 @@ const gamesSlice = createSlice({
       if (payload) {
         const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
         state.selectedGames[gameIndex].officials = payload.updatedOfficials;
+        state.selectedGames[gameIndex].queue = true;
       }
     });
+    builder.addCase(releaseGame.fulfilled, (state, { meta }) => {
+        const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
+        state.selectedGames[gameIndex].queue = false;
+  });
     builder.addCase(addToQueue.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;

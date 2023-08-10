@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { fetchOfficialsProfiles, editGameDate } from '../../../store/Games/actions';
-import { setModalState } from '../../../store/Modal/reducer';
+import { releaseGame } from '../../../store/Assigning/actions';
+import { incrementAssignedCount } from '../../../store/OfficialsList/reducer';
 import Datepicker from "tailwind-datepicker-react"
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
@@ -24,8 +25,7 @@ const SelectedGames = () => {
       const gameId = game.id
       let officials = game.officials;
       dispatch(fetchOfficialsProfiles({ officials, gameId }));
-    })
-
+    });
   }, [selectedGames]);
 
   
@@ -156,6 +156,20 @@ const SelectedGames = () => {
       return { color: "border-gray-200" };
     }
   }  
+
+  const release = (game: GameData) => {
+    const timezone = game.homeTeam && game.homeTeam.abbreviation === 'CRA' ? 'America/Denver' : 'America/Los_Angeles';
+    const ISO = moment(game.time).tz(timezone).format("YYYY-MM-DD");
+    const data = {
+        uids: game.officials.map((off) => off.uid),
+        date: ISO,
+        gameNumber: game.gameNumber,
+        league: 'bchl',
+        season: '2023-2024',
+    } as ReleaseGameRequestData;
+    dispatch(releaseGame(data));
+    dispatch(incrementAssignedCount(data.uids));
+  }
   
   return (
     <div className="mt-6">
@@ -165,15 +179,16 @@ const SelectedGames = () => {
         key={game.id} 
         className={`w-full flex flex-col items-start justify-center gap-3 border-solid border rounded px-2.5 py-1 mx-4 ${getBorderColor(game).color}`}
       >
-        <div className="flex items-center w-full">
+        <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
             {editingGame && editingGame.id === game.id ? null : 
-              <p className="font-bold ">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} - {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)} - {game.venue}</p>
+              <p className="font-bold">{gameData && gameData.gameNumber === game.gameNumber ? gameData.newDate : game.date.slice(0, -6)} - {gameData && gameData.gameNumber === game.gameNumber ? formatTime(gameData.newISO) : formatTime(game.time)} - {game.venue}</p>
             }
             {editingGame && editingGame.id === game.id ? null : 
               <button className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => handleEditClick(game)}>Edit</button>
             }
           </div>
+          {game.queue && game.officials.length === 5 ? <Button onClick={() => release(game)}>Release</Button> : !game.queue && game.officials.length === 5 ? <p>Released ✅</p> : null}
         </div>
         {editingGame && editingGame.id === game.id && (
           <div className="flex items-center">

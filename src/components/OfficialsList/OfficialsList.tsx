@@ -32,7 +32,19 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   // this hook converts the officials object to an array and sorts it when the component mounts
   useEffect(() => {
     const officialsArray = Object.keys(officials).map(key => officials[key]);
-    const sortedOfficials = officialsArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
+    // const sortedOfficials = officialsArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
+    const sortedOfficials = officialsArray.sort((a, b) => {
+      if (a.lastName && b.lastName) {
+        return a.lastName.localeCompare(b.lastName);
+      } else if (a.lastName) {
+        return -1;  // a comes first if b.lastName is undefined
+      } else if (b.lastName) {
+        return 1;   // b comes first if a.lastName is undefined
+      } else {
+        return 0;   // both are undefined, so they are considered equal
+      }
+    });
+    
     setSortedData(sortedOfficials);
   }, []);
 
