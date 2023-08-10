@@ -94,7 +94,7 @@ const OfficialBox = ({ gameData, official, role, label }) => {
       </div>
       {showOfficialsList && (
         <Modal onClose={() => handleClick()}>
-          <OfficialsList game={gameData} role={role} close={handleClick} isAssigned={official ? official.firstName + ' ' + official.lastName : false} />
+          <OfficialsList game={gameData} role={role} close={handleClick} isAssigned={official ? {name: official.firstName + ' ' + official.lastName, uid: official.uid} : false} />
         </Modal>
       )}
     </>

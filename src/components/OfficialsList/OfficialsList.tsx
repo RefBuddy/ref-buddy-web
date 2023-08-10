@@ -22,7 +22,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const season = useAppSelector(state => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
-  const label = isAssigned !== false ? isAssigned : (role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman');
+  const label = isAssigned !== false ? isAssigned.name : (role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman');
   const roleDetails = role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman';
   
   const officials = role === 'supervisor' ? useAppSelector(state => state.officials.supervisorsList) : useAppSelector(state => state.officials.officialsList);
