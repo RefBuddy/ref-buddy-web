@@ -42,7 +42,8 @@ const OfficialBox = ({ gameData, official, role, label }) => {
     }
   };
 
-  const removeOfficialFromGame = () => {
+  const removeOfficialFromGame = (event) => {
+    event.stopPropagation();
     if (official && assigningStatus) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
       dispatch(decrementCount(official.uid));
@@ -81,7 +82,7 @@ const OfficialBox = ({ gameData, official, role, label }) => {
         )}
         {isHovered && official && (
           <button
-            onClick={removeOfficialFromGame}
+            onClick={(event) => removeOfficialFromGame(event)}
             className="absolute top-3 left-3 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
           >
             <XCircleIcon
