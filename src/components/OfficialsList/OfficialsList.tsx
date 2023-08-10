@@ -4,13 +4,15 @@ import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { addToQueue } from '../../store/Games/actions';
 import { incrementQueueCount } from '../../store/OfficialsList/reducer';
+import { decrementCount } from '../../store/OfficialsList/reducer';
+import { removeFromGame } from '../../store/Games/actions';
 import { formatDate } from "../../utils/helpers";
 import { getUserCalendarEvents, getAllOfficialsCalendarEvents, getOfficialsStats } from "../../store/User/actions";
 import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
-const OfficialsList = ({ game, role, close = () => {} }) => {
+const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortedData, setSortedData] = useState<any[]>([]);
@@ -22,13 +24,27 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
   const season = useAppSelector(state => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
+  const label = isAssigned !== false ? isAssigned.name : (role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman');
+  const roleDetails = role === 'referee1' || role === 'referee2' ? 'Referee' : role === 'supervisor' ? 'Supervisor' : 'Linesman';
   
   const officials = role === 'supervisor' ? useAppSelector(state => state.officials.supervisorsList) : useAppSelector(state => state.officials.officialsList);
 
   // this hook converts the officials object to an array and sorts it when the component mounts
   useEffect(() => {
     const officialsArray = Object.keys(officials).map(key => officials[key]);
-    const sortedOfficials = officialsArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
+    // const sortedOfficials = officialsArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
+    const sortedOfficials = officialsArray.sort((a, b) => {
+      if (a.lastName && b.lastName) {
+        return a.lastName.localeCompare(b.lastName);
+      } else if (a.lastName) {
+        return -1;  // a comes first if b.lastName is undefined
+      } else if (b.lastName) {
+        return 1;   // b comes first if a.lastName is undefined
+      } else {
+        return 0;   // both are undefined, so they are considered equal
+      }
+    });
+    
     setSortedData(sortedOfficials);
   }, []);
 
@@ -57,6 +73,13 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
 
   const handleAssignClick = async (e, uid) => {
     e.stopPropagation();
+
+    // If isAssigned is not false, remove the already assigned official
+    if (isAssigned) {
+      await dispatch(removeFromGame({ uid: isAssigned.uid, date: date, gameNumber: gameNumber, league: league, season: season }));
+      dispatch(decrementCount(isAssigned.uid));
+    }
+
     const gameData = {
       uid: uid,
       role: role,
@@ -65,23 +88,26 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
       league: league,
       season: season,
     };
-  
+
     // Dispatch the addToQueue action and await for it to finish
     await dispatch(addToQueue(gameData));
-  
+
     // Increment the queue count for the official
     dispatch(incrementQueueCount(uid));
-    
+
     // callback function to close the modal
     close();
-      
+
     // Show toast message
-    if (officials[uid].firstName === 'No' && officials[uid].lastName === 'Supervisor') {
+    if (isAssigned) {
+      toast.success(`${officials[uid].firstName} ${officials[uid].lastName} replaced ${isAssigned.name}`);
+    } else if (officials[uid].firstName === 'No' && officials[uid].lastName === 'Supervisor') {
       toast.success(`Game has no supervisor.`);
     } else {
       toast.success(`${officials[uid].firstName} ${officials[uid].lastName} added to queue.`);
     }
-  };
+};
+
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
@@ -134,12 +160,12 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
         setOfficialsData(filterOfficialProfile);
         setOfficialClicked(uid);
         dispatch(getUserCalendarEvents({ uid: uid }));
-        const statProps = {
-          league: 'bchl',
-          season: '2022-2023',
-          name: `${filterOfficialProfile.firstName} ${filterOfficialProfile.lastName}`
-        }
-        dispatch(getOfficialsStats(statProps));
+        // const statProps = {
+        //   league: 'bchl',
+        //   season: '2022-2023',
+        //   name: `${filterOfficialProfile.firstName} ${filterOfficialProfile.lastName}`
+        // }
+        // dispatch(getOfficialsStats(statProps));
       }
       
     }
@@ -155,29 +181,37 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
     return date.toLocaleTimeString('en-US', options);
   };
 
-  console.log(game.time);
-
   return (
     <>
       {/* teams and game time */}
-      {role != 'dashboard' ?
-        <div className="flex w-full -mt-6 -mb-3 items-center justify-between p-4">
-            <div className="flex flex-row items-center gap-3 ml-6">
-                <div className="flex flex-col items-center justify-center">
-                    <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
-                    <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                    <div className="text-xl font-bold mt-2">@</div>
-                    <div className="text-xs font-semibold text-gray-800 dark:text-gray-500 mb-2">{getFormattedTime(game.time)}</div>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                    <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
-                    <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
-                </div>
+      <div className="flex items-center justify-between w-full -mt-6 -mb-3">
+        {role != 'dashboard' ?
+          <div className="flex w-full items-center justify-start p-4">
+            <div className="flex flex-row items-center gap-2 ml-6">
+              <div className="flex flex-col items-center justify-center">
+                <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
+                <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-lg font-bold -mt-3">@</div>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
+                <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
+              </div>
+              <div className="flex flex-col mt-3">
+                <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">{getFormattedTime(game.time)}</div>
+                <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">{game.date.slice(0,-6)}</div>
+              </div>
             </div>
           </div> : <div className="w-full h-6 bg-white"></div>
         }
+        {role != 'dashboard' ?
+          <div className={`flex flex-col items-center justify-center border-2 rounded-md p-1 -mt-2 cursor-pointer relative min-h-12 flex-none w-36 shadow-md ${roleDetails === 'Referee' ? 'border-orange-500' : roleDetails === 'Linesman' ? 'border-black' : ''}`}>
+            <div>{label}</div>
+          </div> : <div className="mb-14 bg-white"></div>
+        }
+      </div>
 
       {/* Main OfficialsList container */}
       <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto">
@@ -261,7 +295,7 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
                   </p>
 
                   {isOfficialHovered(official.uid) && date != '2021-10-10' && (
-                    <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>Assign + </Button>
+                    <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>{isAssigned ? 'Replace Official' : 'Assign + '}</Button>
                   )}
                 </div>
               </div>

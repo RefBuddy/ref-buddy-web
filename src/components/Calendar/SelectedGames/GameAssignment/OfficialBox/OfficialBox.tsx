@@ -26,7 +26,7 @@ const UserProfile = ({ userData }) => {
   );
 };
 
-const OfficialBox = ({ gameData, official, role, label, color }) => {
+const OfficialBox = ({ gameData, official, role, label }) => {
   const dispatch = useAppDispatch();
   const assigningStatus = useAppSelector((state) => state.assigning.assigningStatus);
   const [isHovered, setIsHovered] = useState(false);
@@ -34,17 +34,17 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   const [showOfficialsList, setShowOfficialsList] = useState(false);
 
   const handleClick = () => {
-    if (!official && assigningStatus) {
+    if (assigningStatus) {
       setShowOfficialsList(!showOfficialsList);
       dispatch(setModalState({ selectedGames: { open: !showOfficialsList } }));
-    }
-    if (!assigningStatus) {
+    } else {
       toast.error('Assigning is disabled.');
     }
   };
 
-  const removeOfficialFromGame = () => {
-    if(official && assigningStatus) {
+  const removeOfficialFromGame = (event) => {
+    event.stopPropagation();
+    if (official && assigningStatus) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
       dispatch(decrementCount(official.uid));
       toast.success(`${official.firstName} ${official.lastName} removed from game.`);
@@ -54,7 +54,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
   return (
     <>
       <div 
-        className={`flex flex-col items-center justify-center border-2 rounded-md p-1 cursor-pointer relative min-h-14 flex-none w-36 shadow-md ${color === 'orange' ? 'border-orange-500' : color === 'black' ? 'border-black' : ''}`}
+        className={`flex flex-col items-center justify-center border-2 rounded-md p-1 cursor-pointer relative min-h-14 flex-none w-36 shadow-md ${label === 'Referee' ? 'border-orange-500' : label === 'Linesman' ? 'border-black' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={(event) => {
@@ -82,7 +82,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
         )}
         {isHovered && official && (
           <button
-            onClick={removeOfficialFromGame}
+            onClick={(event) => removeOfficialFromGame(event)}
             className="absolute top-3 left-3 transform translate-x-[-50%] translate-y-[-50%] bg-white rounded-full"
           >
             <XCircleIcon
@@ -94,7 +94,7 @@ const OfficialBox = ({ gameData, official, role, label, color }) => {
       </div>
       {showOfficialsList && (
         <Modal onClose={() => handleClick()}>
-          <OfficialsList game={gameData} role={role} close={handleClick} />
+          <OfficialsList game={gameData} role={role} close={handleClick} isAssigned={official ? {name: official.firstName + ' ' + official.lastName, uid: official.uid} : false} />
         </Modal>
       )}
     </>
