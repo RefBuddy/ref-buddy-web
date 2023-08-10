@@ -162,18 +162,21 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
       <div className="flex items-center justify-between w-full -mt-6 -mb-3">
         {role != 'dashboard' ?
           <div className="flex w-full items-center justify-start p-4">
-            <div className="flex flex-row items-center gap-4 ml-6">
+            <div className="flex flex-row items-center gap-2 ml-6">
               <div className="flex flex-col items-center justify-center">
                 <img width={40} height={40} src={game.visitingTeam.logo} alt="visiting team logo" />
                 <p className="text-sm text-black text-center min-w-24">{game.visitingTeam.city}</p>
               </div>
               <div className="flex flex-col items-center justify-center">
-                <div className="text-lg font-bold mt-2">@</div>
-                <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">{getFormattedTime(game.time)}</div>
+                <div className="text-lg font-bold -mt-3">@</div>
               </div>
               <div className="flex flex-col items-center justify-center">
                 <img width={40} height={40} src={game.homeTeam.logo} alt="home team logo" />
                 <p className="text-sm text-black text-center min-w-24">{game.homeTeam.city}</p>
+              </div>
+              <div className="flex flex-col mt-3">
+                <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">{getFormattedTime(game.time)}</div>
+                <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">{game.date.slice(0,-6)}</div>
               </div>
             </div>
           </div> : <div className="w-full h-6 bg-white"></div>
