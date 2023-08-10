@@ -10,7 +10,7 @@ import { Button } from "../Button";
 import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
-const OfficialsList = ({ game, role, close = () => {} }) => {
+const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortedData, setSortedData] = useState<any[]>([]);
@@ -270,7 +270,7 @@ const OfficialsList = ({ game, role, close = () => {} }) => {
                   </p>
 
                   {isOfficialHovered(official.uid) && date != '2021-10-10' && (
-                    <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>Assign + </Button>
+                    <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>{isAssigned ? 'Replace Official' : 'Assign + '}</Button>
                   )}
                 </div>
               </div>

@@ -36,7 +36,7 @@ const OverviewOfficials = () => {
 
       {showOfficialsList && (
         <Modal onClick={handleClick}>
-          <OfficialsList game={game} role='dashboard' />
+          <OfficialsList game={game} role='dashboard' isAssigned={false} />
         </Modal>
       )}
     </div>

@@ -34,17 +34,16 @@ const OfficialBox = ({ gameData, official, role, label }) => {
   const [showOfficialsList, setShowOfficialsList] = useState(false);
 
   const handleClick = () => {
-    if (!official && assigningStatus) {
+    if (assigningStatus) {
       setShowOfficialsList(!showOfficialsList);
       dispatch(setModalState({ selectedGames: { open: !showOfficialsList } }));
-    }
-    if (!assigningStatus) {
+    } else {
       toast.error('Assigning is disabled.');
     }
   };
 
   const removeOfficialFromGame = () => {
-    if(official && assigningStatus) {
+    if (official && assigningStatus) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
       dispatch(decrementCount(official.uid));
       toast.success(`${official.firstName} ${official.lastName} removed from game.`);
@@ -94,7 +93,7 @@ const OfficialBox = ({ gameData, official, role, label }) => {
       </div>
       {showOfficialsList && (
         <Modal onClose={() => handleClick()}>
-          <OfficialsList game={gameData} role={role} close={handleClick} />
+          <OfficialsList game={gameData} role={role} close={handleClick} isAssigned={!!official} />
         </Modal>
       )}
     </>
