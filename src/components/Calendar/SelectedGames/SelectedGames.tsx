@@ -147,20 +147,20 @@ const SelectedGames = () => {
 
   const getBorderColor = (game) => {
     if (game.officials && game.officials.length === 5 && game.officials.every((official) => official['status'].confirmed === true)) {
-      return { color: "border-success-500", priority: 3 };
+      return { color: "border-success-500" };
     } else if (game.officials && game.officials.length === 5 && game.officials.filter((official) => official['status'].confirmed === true).length < 5 && game.officials.every((official) => official['status'].declined === false)) {
-      return { color: "border-warning-300", priority: 2 };
+      return { color: "border-warning-300" };
     } else if (game.officials && game.officials.length < 5 || game.officials && game.officials.some((official) => official['status'].declined === true)) {
-      return { color: "border-error-400", priority: 1 };
+      return { color: "border-error-400" };
     } else {
-      return { color: "border-gray-200", priority: 4 };
+      return { color: "border-gray-200" };
     }
   }  
   
   return (
     <div className="mt-6">
       <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
-      {!showCreate && [...selectedGames].sort((a, b) => getBorderColor(a).priority - getBorderColor(b).priority).map(game => (
+      {!showCreate && [...selectedGames].map(game => (
       <div 
         key={game.id} 
         className={`w-full flex flex-col items-start justify-center gap-3 border-solid border rounded px-2.5 py-1 mx-4 ${getBorderColor(game).color}`}
