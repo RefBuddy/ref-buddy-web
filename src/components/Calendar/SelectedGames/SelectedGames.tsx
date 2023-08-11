@@ -147,7 +147,7 @@ const SelectedGames = () => {
 
   const getBorderColor = (game) => {
     if (game.officials && game.officials.length === 5 && game.officials.every((official) => official['status'].confirmed === true)) {
-      return { color: "border-success-500" };
+      return { color: "border-green-500" };
     } else if (game.officials && game.officials.length === 5 && game.officials.filter((official) => official['status'].confirmed === true).length < 5 && game.officials.every((official) => official['status'].declined === false)) {
       return { color: "border-warning-300" };
     } else if (game.officials && game.officials.length < 5 || game.officials && game.officials.some((official) => official['status'].declined === true)) {

@@ -285,7 +285,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
                 <div className="flex flex-row items-center gap-2">
                   {/* Display assigned games count */}
-                  <p className="text-sm border border-success-500 rounded-md px-2 py-1">
+                  <p className="text-sm border border-green-500 rounded-md px-2 py-1">
                     {official.assignedCount ? official.assignedCount.toString() : '0'}
                   </p>
 
