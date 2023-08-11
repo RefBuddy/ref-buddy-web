@@ -28,23 +28,18 @@ const UserProfile = ({ userData }) => {
 
 const OfficialBox = ({ gameData, official, role, label }) => {
   const dispatch = useAppDispatch();
-  const assigningStatus = useAppSelector((state) => state.assigning.assigningStatus);
   const [isHovered, setIsHovered] = useState(false);
   const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
   const [showOfficialsList, setShowOfficialsList] = useState(false);
 
   const handleClick = () => {
-    if (assigningStatus) {
       setShowOfficialsList(!showOfficialsList);
       dispatch(setModalState({ selectedGames: { open: !showOfficialsList } }));
-    } else {
-      toast.error('Assigning is disabled.');
-    }
   };
 
   const removeOfficialFromGame = (event) => {
     event.stopPropagation();
-    if (official && assigningStatus) {
+    if (official) {
       dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
       dispatch(decrementCount(official.uid));
       toast.success(`${official.firstName} ${official.lastName} removed from game.`);
