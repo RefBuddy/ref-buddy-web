@@ -37,7 +37,7 @@ const CustomEvent = ({ event }) => {
   return (
     <div className="text-red-500 flex flex-col flex-wrap">
       <div className="flex flex-row gap-1">
-        {greenEvents.map((_) => <span className="text-success-500 text-xs">●</span>)}
+        {greenEvents.map((_) => <span className="text-green-500 text-xs">●</span>)}
       </div>
       <div className="flex flex-row gap-1 flex-wrap">
         {yellowEvents.map((_) => <span className="text-warning-300 text-xs">●</span>)}
