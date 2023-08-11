@@ -101,9 +101,11 @@ const gamesSlice = createSlice({
       }
     });
     builder.addCase(releaseGame.fulfilled, (state, { meta }) => {
-        const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
-        state.selectedGames[gameIndex].queue = false;
-  });
+      const gameIndex = state.selectedGames.findIndex(game => game.gameNumber === meta.arg.gameNumber);
+      if (gameIndex !== -1 && state.selectedGames[gameIndex]?.queue) {
+          state.selectedGames[gameIndex].queue = false;
+      }
+    });  
     builder.addCase(addToQueue.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
