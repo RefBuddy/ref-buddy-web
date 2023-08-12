@@ -234,71 +234,82 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               onClick={(e) => handleClick(e, official.uid)}
               className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${index < sortedData.length - 1 ? 'border-b border-gray-200' : ''}`}
             >
-              <div className="flex flex-row justify-between items-start gap-2 w-full">
-                <div className="flex flex-row items-center">
-                  <img className="w-10 h-10 rounded-full mr-4" src={official.profilePictureUrl} alt="official" />
-                  <div className="flex flex-col">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
-                      {official.firstName} {official.lastName}
-                    </p>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
-                      {official.city}
-                    </p>
-                  </div>
+              <div className="grid grid-cols-5 gap-4 w-full items-center"> {/* Use grid with 3 columns */}
+                {/* First column: official details */}
+                <div className="flex items-center gap-2">
+                    <img className="w-10 h-10 rounded-full" src={official.profilePictureUrl} alt="official" />
+                    <div>
+                        <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
+                            {official.firstName} {official.lastName}
+                        </p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
+                            {official.city}
+                        </p>
+                    </div>
+                </div>
 
+                {/* Second column: @ already assigned abbreviation */}
+                <div>
                   {assignedGamesAlready && assignedGamesAlready.length > 0 && (
-                    <div className="flex-1">
-                      <p className={`ml-4 text-sm font-normal  ${assignedGamesAlready && assignedGamesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
-                        {assignedGamesAlready && assignedGamesAlready.length > 0 ? <strong>@ {assignedGamesAlready[0].home_team.abbreviation}</strong> : ''}
-                      </p>
+                    <div className="flex items-center gap-4">
+                        <p className={`text-sm font-normal ${assignedGamesAlready.length > 0 ? 'text-error-500' : 'text-gray-900'}`}>
+                            <strong>@ {assignedGamesAlready[0].home_team.abbreviation}</strong>
+                        </p>
                     </div>
                   )}
-
-                  {blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
-                  <div className="flex flex-col ml-6 -mb-6 -mt-2">
-                    {blockedOffDatesAlready.map((times, index) => (
-                      <React.Fragment key={index}>
-                        <div className="flex items-center">
-                          {times.startTime === '00:00' && times.endTime === '23:59' ? (
-                            <p className="h-6 w-6 text-warning-300 mr-2 mt-1">❌</p>
-                          ) : (
-                            <ExclamationTriangleIcon className="h-6 w-6 text-warning-300 mr-2 mt-1" />
-                          )}
-                          <div>
-                            <p className="mt-2 text-sm font-medium text-black">
-                              {times.startTime === '00:00' && times.endTime === '23:59' ? (
-                                <span className="text-gray-700">Not Available</span>
-                              ) : (
-                                <span className="text-gray-700">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
-                              )}
-                              <br />
-                              <span className="text-gray-700">Notes: {times.notes}</span>
-                            </p>
-                          </div>
-                        </div>
-                        <br />
-                      </React.Fragment>
-                    ))}
-                  </div>                  
-                )}
                 </div>
 
-                <div className="flex flex-row items-center gap-2">
-                  {/* Display assigned games count */}
-                  <p className="text-sm border border-green-500 rounded-md px-2 py-1">
-                    {official.assignedCount ? official.assignedCount.toString() : '0'}
-                  </p>
+                {/* Third column: assigned games and blocked off dates */}
+                <div>
+                    {blockedOffDatesAlready && blockedOffDatesAlready.length > 0 && (
+                      <div className="flex flex-col gap-2"> {/* Use flex-column for vertical alignment */}
+                          {blockedOffDatesAlready.map((times, index) => (
+                              <React.Fragment key={index}>
+                              <div className="flex items-center gap-2">
+                                {times.startTime === '00:00' && times.endTime === '23:59' ? (
+                                  <p className="h-6 w-6 text-warning-300">❌</p>
+                                ) : (
+                                  <ExclamationTriangleIcon className="h-6 w-6 text-warning-300" />
+                                )}
+                                <div>
+                                  <p className="text-sm font-medium text-black">
+                                    {times.startTime === '00:00' && times.endTime === '23:59' ? (
+                                      <span className="text-gray-700">Not Available</span>
+                                    ) : (
+                                      <span className="text-gray-700">{format24HourTime(times.startTime)} - {format24HourTime(times.endTime)}</span>
+                                    )}
+                                    <br />
+                                    <span className="text-gray-700">Notes: {times.notes}</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </React.Fragment>
+                          ))}
+                      </div>
+                    )}
+                </div>
 
-                  {/* Display queued games count */}
-                  <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
-                  {official.queueCount ? official.queueCount.toString() : '0'}
-                  </p>
+                {/* Fourth column: counts */}
+                <div className="flex flex-col items-start gap-2"> {/* Use flex-column for vertical alignment */}
+                    <div className="flex flex-row items-end gap-2">
+                        <p className="text-sm border border-green-500 rounded-md px-2 py-1">
+                            {official.assignedCount ? official.assignedCount.toString() : '0'}
+                        </p>
+                        <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
+                            {official.queueCount ? official.queueCount.toString() : '0'}
+                        </p>
+                    </div>
+                </div>
 
-                  {isOfficialHovered(official.uid) && date != '2021-10-10' && (
-                    <Button className="self-start" onClick={(e) => handleAssignClick(e, official.uid)}>{isAssigned ? 'Replace Official' : 'Assign + '}</Button>
+                {/* Fifth column: assign button */}
+                <div>
+                  {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
+                      <Button onClick={(e) => handleAssignClick(e, official.uid)}>
+                          {isAssigned ? 'Replace Official' : 'Assign + '}
+                      </Button>
                   )}
                 </div>
-              </div>
+            </div>
 
               {officialClicked === official.uid && officialsData && (
                 <div className="mt-4 flex flex-col">
