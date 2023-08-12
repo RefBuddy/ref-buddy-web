@@ -306,9 +306,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 index < sortedData.length - 1 ? 'border-b border-gray-200' : ''
               }`}
             >
-              <div className="grid grid-cols-5 gap-4 w-full items-center">
+              <div className="grid grid-cols-[.65fr,.25fr,.35fr,1fr,1fr] gap-4 w-full items-center">
                 {' '}
-                {/* Use grid with 3 columns */}
                 {/* First column: official details */}
                 <div className="flex items-center gap-2">
                   <img
@@ -328,7 +327,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 {/* Second column: @ already assigned abbreviation */}
                 <div>
                   {assignedGamesAlready && assignedGamesAlready.length > 0 && (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center">
                       <p
                         className={`text-sm font-normal ${
                           assignedGamesAlready.length > 0
@@ -343,7 +342,24 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                     </div>
                   )}
                 </div>
-                {/* Third column: blocked off dates */}
+                {/* Third column: counts */}
+                <div className="flex flex-col items-start gap-2">
+                  {' '}
+                  {/* Use flex-column for vertical alignment */}
+                  <div className="flex flex-row items-end gap-2">
+                    <p className="text-sm border border-green-500 rounded-md px-2 py-1">
+                      {official.assignedCount
+                        ? official.assignedCount.toString()
+                        : '0'}
+                    </p>
+                    <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
+                      {official.queueCount
+                        ? official.queueCount.toString()
+                        : '0'}
+                    </p>
+                  </div>
+                </div>
+                {/* Fourth column: blocked off dates */}
                 <div>
                   {blockedOffDatesAlready &&
                     blockedOffDatesAlready.length > 0 && (
@@ -374,7 +390,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                                   )}
                                   <br />
                                   <span className="text-gray-700">
-                                    Notes: {times.notes}
+                                    {times.notes}
                                   </span>
                                 </p>
                               </div>
@@ -384,25 +400,10 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                       </div>
                     )}
                 </div>
-                {/* Fourth column: counts */}
-                <div className="flex flex-col items-start gap-2">
-                  {' '}
-                  {/* Use flex-column for vertical alignment */}
-                  <div className="flex flex-row items-end gap-2">
-                    <p className="text-sm border border-green-500 rounded-md px-2 py-1">
-                      {official.assignedCount
-                        ? official.assignedCount.toString()
-                        : '0'}
-                    </p>
-                    <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
-                      {official.queueCount
-                        ? official.queueCount.toString()
-                        : '0'}
-                    </p>
-                  </div>
-                </div>
                 {/* Fifth column: assign button */}
-                <div>
+                <div className="justify-self-end mr-4">
+                  {' '}
+                  {/* Added justify-self-end */}
                   {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
                     <Button onClick={(e) => handleAssignClick(e, official.uid)}>
                       {isAssigned ? 'Replace Official' : 'Assign + '}
