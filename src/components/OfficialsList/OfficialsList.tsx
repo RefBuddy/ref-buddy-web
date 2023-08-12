@@ -251,12 +251,15 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   {game.homeTeam.city}
                 </p>
               </div>
-              <div className="flex flex-col mt-3">
+              <div className="flex flex-col -mb-2">
                 <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">
                   {getFormattedTime(game.time)}
                 </div>
                 <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">
                   {game.date.slice(0, -6)}
+                </div>
+                <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">
+                  {game.venue}
                 </div>
               </div>
             </div>
