@@ -424,7 +424,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 <div className="mt-4 flex flex-col">
                   {assignedGames && (
                     <div className="flex flex-row flex-1 justify-between">
-                      <div className="h-auto w-44">
+                      <div className="h-auto w-52">
                         <p className="text-xs mt-4 font-bold">Assigned Games</p>
                         <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
                           <thead>
@@ -454,7 +454,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                           </tbody>
                         </table>
                       </div>
-                      <div className="h-auto w-44">
+                      <div className="h-auto w-52">
                         <p className="text-xs mt-4 font-bold">Queued Games</p>
                         <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
                           <thead>
@@ -489,9 +489,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                         <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-full">
                           <thead>
                             <tr className="text-xs font-medium text-black">
-                              <td className="pr-14">Date</td>
-                              <td className="pr-16">Time</td>
-                              <td>Notes</td>
+                              <td className="w-24">Date</td>
+                              <td className="w-16">Time</td>
+                              <td className="pl-4">Notes</td>
                             </tr>
                           </thead>
                           <tbody>
@@ -506,9 +506,15 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                                       >
                                         <td>{dateKey}</td>
                                         <td>
-                                          {block.startTime} - {block.endTime}
+                                          {block.startTime === '00:00' && block.endTime === '23:59' ? (
+                                            <p className='pl-4'>❌</p>
+                                          ) : (
+                                            <span className="text-gray-700">
+                                              {format24HourTime(block.startTime)} - {format24HourTime(block.endTime)}
+                                            </span>
+                                          )}
                                         </td>
-                                        <td>{block.notes}</td>
+                                        <td className="pl-4">{block.notes}</td>
                                       </tr>
                                     ),
                                   )}
