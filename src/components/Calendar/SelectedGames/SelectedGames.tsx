@@ -203,18 +203,22 @@ const SelectedGames = () => {
     dispatch(incrementAssignedCount(data.uids));
   };
 
-  // Placeholder function for fetching the next games
-  const getNextGames = () => {
-    if (!events || !selectedGames.length) return; 
+  const getGamesByDirection = (direction: 'next' | 'prev') => {
+    if (!events || !selectedGames.length) return;
 
-    // Get the game with the latest time from selectedGames
-    const latestGame = selectedGames.reduce((prev, current) =>
-      prev.time > current.time ? prev : current,
+    // Determine the increment based on direction
+    const increment = direction === 'next' ? 1 : -1;
+
+    // Get the game with the relevant time from selectedGames based on direction
+    const relevantGame = selectedGames.reduce((prev, current) =>
+      direction === 'next'
+        ? (prev.time > current.time ? prev : current)
+        : (prev.time < current.time ? prev : current)
     );
 
-    // Calculate the day after the latest game's date
-    const startKeyDate = new Date(latestGame.time.slice(0, 10));
-    startKeyDate.setDate(startKeyDate.getDate() + 1);
+    // Calculate the day based on direction from the relevant game's date
+    const startKeyDate = new Date(relevantGame.time.slice(0, 10));
+    startKeyDate.setDate(startKeyDate.getDate() + increment);
     let startKey = format(startKeyDate, 'yyyy-MM-dd');
 
     let gamesDuringSlots: GameData[] = [];
@@ -233,33 +237,27 @@ const SelectedGames = () => {
       });
 
       if (gamesDuringSlots.length === 0) {
-        startKeyDate.setDate(startKeyDate.getDate() + 1);
+        startKeyDate.setDate(startKeyDate.getDate() + increment);
         startKey = format(startKeyDate, 'yyyy-MM-dd');
       }
     }
 
     dispatch(setSelectedGames(gamesDuringSlots));
-  };
-
-  // Placeholder function for fetching the previous games
-  const getPreviousGames = () => {
-    console.log('Fetching previous games...');
-    // Replace this with the logic or API call to fetch the previous games
-  };
+};
 
   return (
     <div className="mt-6">
       <div className="flex justify-between items-center mb-4 -mt-6">
         <button
-          className="border border-gray-300 rounded-md py-1 px-2.5 ml-10 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          onClick={getPreviousGames}
+          className="border border-gray-300 rounded-md py-1 px-2.5 ml-16 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          onClick={() => getGamesByDirection('prev')}
         >
           <ChevronLeftIcon className="h-6 w-6" />
         </button>
         <p className="text-lg font-bold">Selected Games</p>
         <button
-          className="border border-gray-300 rounded-md py-1 px-2.5 mr-10 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          onClick={getNextGames}
+          className="border border-gray-300 rounded-md py-1 px-2.5 mr-16 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          onClick={() => getGamesByDirection('next')}
         >
           <ChevronRightIcon className="h-6 w-6" />
         </button>
