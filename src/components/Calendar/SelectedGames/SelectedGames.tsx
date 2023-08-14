@@ -170,9 +170,36 @@ const SelectedGames = () => {
     dispatch(releaseGame(data));
     dispatch(incrementAssignedCount(data.uids));
   }
+
+  // Placeholder function for fetching the next games
+  const getNextGames = () => {
+    console.log("Fetching next games...");
+    // Replace this with the logic or API call to fetch the next games
+  };
+
+  // Placeholder function for fetching the previous games
+  const getPreviousGames = () => {
+    console.log("Fetching previous games...");
+    // Replace this with the logic or API call to fetch the previous games
+  };
   
   return (
     <div className="mt-6">
+      <div className="flex justify-between items-center mb-4 -mt-6">
+        <button
+          className="border border-gray-300 rounded-md py-1 px-2.5 ml- text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          onClick={getPreviousGames}
+        >
+          <ChevronLeftIcon className="h-6 w-6"/>
+        </button>
+        <p className="text-lg font-bold">Selected Games</p>
+        <button
+          className="border border-gray-300 rounded-md py-1 px-2.5 mr- text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          onClick={getNextGames}
+        >
+          <ChevronRightIcon className="h-6 w-6"/>
+        </button>
+      </div>
       <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
       {!showCreate && [...selectedGames].map(game => (
       <div 
