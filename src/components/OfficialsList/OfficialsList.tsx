@@ -23,8 +23,13 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
-  const { officialsCalendarData, assignedGames, queuedGames, officialsStats } =
-    useAppSelector((state) => state.user);
+  const {
+    officialsCalendarData,
+    assignedGames,
+    queuedGames,
+    blockedOffTimes,
+    officialsStats,
+  } = useAppSelector((state) => state.user);
   const league = useAppSelector((state) => state.games.currentLeague);
   const season = useAppSelector((state) => state.games.currentSeason);
   const date = game.time.slice(0, 10);
@@ -418,10 +423,10 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               {officialClicked === official.uid && officialsData && (
                 <div className="mt-4 flex flex-col">
                   {assignedGames && (
-                    <div className="flex flex-row flex-1 gap-4 justify-between">
-                      <div className="h-auto min-w-[300px]">
+                    <div className="flex flex-row flex-1 justify-between">
+                      <div className="h-auto w-44">
                         <p className="text-xs mt-4 font-bold">Assigned Games</p>
-                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
                           <thead>
                             <tr className="text-xs font-medium text-black">
                               <td>Date</td>
@@ -449,9 +454,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                           </tbody>
                         </table>
                       </div>
-                      <div className="h-auto min-w-[300px]">
+                      <div className="h-auto w-44">
                         <p className="text-xs mt-4 font-bold">Queued Games</p>
-                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
                           <thead>
                             <tr className="text-xs font-medium text-black">
                               <td>Date</td>
@@ -474,6 +479,39 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                                       </td>
                                     </tr>
                                   ))}
+                                </>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="h-auto">
+                        <p className="text-xs mt-4 font-bold">Dark Days</p>
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-full">
+                          <thead>
+                            <tr className="text-xs font-medium text-black">
+                              <td className="pr-14">Date</td>
+                              <td className="pr-16">Time</td>
+                              <td>Notes</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {blockedOffTimes &&
+                              Object.keys(blockedOffTimes).map((dateKey) => (
+                                <>
+                                  {blockedOffTimes[dateKey].map(
+                                    (block, index) => (
+                                      <tr
+                                        key={`block-${dateKey}-${index}`}
+                                        className="text-xs font-body text-gray-700"
+                                      >
+                                        <td>{dateKey}</td>
+                                        <td>
+                                          {block.startTime} - {block.endTime}
+                                        </td>
+                                        <td>{block.notes}</td>
+                                      </tr>
+                                    ),
+                                  )}
                                 </>
                               ))}
                           </tbody>
