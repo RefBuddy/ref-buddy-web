@@ -23,12 +23,18 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
-  const { officialsCalendarData, assignedGames, queuedGames, officialsStats } =
-    useAppSelector((state) => state.user);
+  const {
+    officialsCalendarData,
+    assignedGames,
+    queuedGames,
+    blockedOffTimes,
+    officialsStats,
+  } = useAppSelector((state) => state.user);
   const league = useAppSelector((state) => state.games.currentLeague);
   const season = useAppSelector((state) => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
+  const currentDate = useAppSelector((state) => state.games.currentDate);
   const label =
     isAssigned !== false
       ? isAssigned.name
@@ -217,6 +223,17 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       timeZoneName: 'short',
     };
     return date.toLocaleTimeString('en-US', options);
+  };
+
+  const extractMonthYear = (dateStr) => {
+    if (dateStr === '2021-10-10') {
+      dateStr = currentDate;
+    }
+    const dateObj = new Date(dateStr);
+    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
+      2,
+      '0',
+    )}`;
   };
 
   return (
@@ -418,10 +435,10 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               {officialClicked === official.uid && officialsData && (
                 <div className="mt-4 flex flex-col">
                   {assignedGames && (
-                    <div className="flex flex-row flex-1 gap-4 justify-between">
-                      <div className="h-auto min-w-[300px]">
+                    <div className="flex flex-row flex-1 justify-between">
+                      <div className="h-auto w-52">
                         <p className="text-xs mt-4 font-bold">Assigned Games</p>
-                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
                           <thead>
                             <tr className="text-xs font-medium text-black">
                               <td>Date</td>
@@ -449,9 +466,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                           </tbody>
                         </table>
                       </div>
-                      <div className="h-auto min-w-[300px]">
+                      <div className="h-auto w-52">
                         <p className="text-xs mt-4 font-bold">Queued Games</p>
-                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto min-w-[300px]">
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
                           <thead>
                             <tr className="text-xs font-medium text-black">
                               <td>Date</td>
@@ -476,6 +493,60 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                                   ))}
                                 </>
                               ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="h-auto">
+                        <p className="text-xs mt-4 font-bold">Dark Days</p>
+                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-full">
+                          <thead>
+                            <tr className="text-xs font-medium text-black">
+                              <td className="w-24">Date</td>
+                              <td className="w-16">Time</td>
+                              <td className="pl-4">Notes</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {blockedOffTimes &&
+                              Object.keys(blockedOffTimes)
+                                .filter(
+                                  (dateKey) =>
+                                    extractMonthYear(dateKey) ===
+                                    extractMonthYear(date),
+                                )
+                                .map((dateKey) => (
+                                  <>
+                                    {blockedOffTimes[dateKey].map(
+                                      (block, index) => (
+                                        <tr
+                                          key={`block-${dateKey}-${index}`}
+                                          className="text-xs font-body text-gray-700"
+                                        >
+                                          <td>{dateKey}</td>
+                                          <td>
+                                            {block.startTime === '00:00' &&
+                                            block.endTime === '23:59' ? (
+                                              <p className="pl-4">❌</p>
+                                            ) : (
+                                              <span className="text-gray-700">
+                                                {format24HourTime(
+                                                  block.startTime,
+                                                )}{' '}
+                                                -{' '}
+                                                {format24HourTime(
+                                                  block.endTime,
+                                                )}
+                                              </span>
+                                            )}
+                                          </td>
+                                          <td className="pl-4">
+                                            {block.notes}
+                                          </td>
+                                        </tr>
+                                      ),
+                                    )}
+                                  </>
+                                ))}
                           </tbody>
                         </table>
                       </div>
