@@ -34,6 +34,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const season = useAppSelector((state) => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
+  const currentDate = useAppSelector((state) => state.games.currentDate);
   const label =
     isAssigned !== false
       ? isAssigned.name
@@ -222,6 +223,17 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       timeZoneName: 'short',
     };
     return date.toLocaleTimeString('en-US', options);
+  };
+
+  const extractMonthYear = (dateStr) => {
+    if (dateStr === '2021-10-10') {
+      dateStr = currentDate;
+    }
+    const dateObj = new Date(dateStr);
+    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
+      2,
+      '0',
+    )}`;
   };
 
   return (
@@ -496,30 +508,45 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                           </thead>
                           <tbody>
                             {blockedOffTimes &&
-                              Object.keys(blockedOffTimes).map((dateKey) => (
-                                <>
-                                  {blockedOffTimes[dateKey].map(
-                                    (block, index) => (
-                                      <tr
-                                        key={`block-${dateKey}-${index}`}
-                                        className="text-xs font-body text-gray-700"
-                                      >
-                                        <td>{dateKey}</td>
-                                        <td>
-                                          {block.startTime === '00:00' && block.endTime === '23:59' ? (
-                                            <p className='pl-4'>❌</p>
-                                          ) : (
-                                            <span className="text-gray-700">
-                                              {format24HourTime(block.startTime)} - {format24HourTime(block.endTime)}
-                                            </span>
-                                          )}
-                                        </td>
-                                        <td className="pl-4">{block.notes}</td>
-                                      </tr>
-                                    ),
-                                  )}
-                                </>
-                              ))}
+                              Object.keys(blockedOffTimes)
+                                .filter(
+                                  (dateKey) =>
+                                    extractMonthYear(dateKey) ===
+                                    extractMonthYear(date),
+                                )
+                                .map((dateKey) => (
+                                  <>
+                                    {blockedOffTimes[dateKey].map(
+                                      (block, index) => (
+                                        <tr
+                                          key={`block-${dateKey}-${index}`}
+                                          className="text-xs font-body text-gray-700"
+                                        >
+                                          <td>{dateKey}</td>
+                                          <td>
+                                            {block.startTime === '00:00' &&
+                                            block.endTime === '23:59' ? (
+                                              <p className="pl-4">❌</p>
+                                            ) : (
+                                              <span className="text-gray-700">
+                                                {format24HourTime(
+                                                  block.startTime,
+                                                )}{' '}
+                                                -{' '}
+                                                {format24HourTime(
+                                                  block.endTime,
+                                                )}
+                                              </span>
+                                            )}
+                                          </td>
+                                          <td className="pl-4">
+                                            {block.notes}
+                                          </td>
+                                        </tr>
+                                      ),
+                                    )}
+                                  </>
+                                ))}
                           </tbody>
                         </table>
                       </div>
