@@ -29,9 +29,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     queuedGames,
     blockedOffTimes,
     officialsStats,
+    currentLeague,
+    currentSeason,
   } = useAppSelector((state) => state.user);
-  const league = useAppSelector((state) => state.games.currentLeague);
-  const season = useAppSelector((state) => state.games.currentSeason);
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
   const currentDate = useAppSelector((state) => state.games.currentDate);
@@ -109,8 +109,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
           uid: isAssigned.uid,
           date: date,
           gameNumber: gameNumber,
-          league: league,
-          season: season,
+          league: currentLeague,
+          season: currentSeason,
         }),
       );
       dispatch(decrementCount(isAssigned.uid));
@@ -121,8 +121,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       role: role,
       date: date,
       gameNumber: gameNumber,
-      league: league,
-      season: season,
+      league: currentLeague,
+      season: currentSeason,
     };
 
     // Dispatch the addToQueue action and await for it to finish

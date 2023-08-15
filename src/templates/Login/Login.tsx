@@ -32,6 +32,7 @@ const Login: React.FC<any> = () => {
       if (claims['role'] === 'admin') {
         const id = response.user.uid;
         setIsAdmin(true);
+        // get user doc
         navigate(`/portal/${id}/dashboard`);
       } else {
         toast.error("Not an admin user");

@@ -24,7 +24,7 @@ import { toast } from 'react-toastify';
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector((state) => state.games.selectedGames);
-  const league = useAppSelector((state) => state.games.currentLeague);
+  const league = useAppSelector((state) => state.user.currentLeague);
 
   useEffect(() => {
     // Dispatch action to fetch officials data

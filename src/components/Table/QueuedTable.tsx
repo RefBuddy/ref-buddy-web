@@ -12,7 +12,7 @@ import { setReleaseSuccessful } from '../../store/Assigning/reducer';
 const QueuedTable = () => {
     const dispatch = useAppDispatch();
     const events = useAppSelector(state => state.games.monthGameData);
-    const league = useAppSelector((state) => state.games.currentLeague);
+    const league = useAppSelector((state) => state.user.currentLeague);
     const queuedGames = useMemo(() => {
         if (!events) return [];
         return Object.keys(events).flatMap((date) => {

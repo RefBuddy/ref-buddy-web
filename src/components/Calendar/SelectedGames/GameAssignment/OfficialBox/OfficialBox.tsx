@@ -28,7 +28,7 @@ const UserProfile = ({ userData }) => {
 
 const OfficialBox = ({ gameData, official, role, label }) => {
   const dispatch = useAppDispatch();
-  const league = useAppSelector((state) => state.games.currentLeague);
+  const league = useAppSelector((state) => state.user.currentLeague);
   const [isHovered, setIsHovered] = useState(false);
   const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
   const [showOfficialsList, setShowOfficialsList] = useState(false);
