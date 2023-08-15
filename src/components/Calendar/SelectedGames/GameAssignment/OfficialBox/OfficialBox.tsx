@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { XCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import {
+  XCircleIcon,
+  ExclamationTriangleIcon,
+} from '@heroicons/react/24/solid';
 import { toast } from 'react-toastify';
 import OfficialsList from '../../../../OfficialsList/OfficialsList';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
@@ -28,29 +31,49 @@ const UserProfile = ({ userData }) => {
 
 const OfficialBox = ({ gameData, official, role, label }) => {
   const dispatch = useAppDispatch();
-  const league = useAppSelector((state) => state.user.currentLeague);
+  const { currentLeague, currentSeason } = useAppSelector(
+    (state) => state.user,
+  );
   const [isHovered, setIsHovered] = useState(false);
-  const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
+  const officialStatus =
+    official &&
+    gameData.officials?.find((off) => off.uid === official.uid)?.status;
   const [showOfficialsList, setShowOfficialsList] = useState(false);
 
   const handleClick = () => {
-      setShowOfficialsList(!showOfficialsList);
-      dispatch(setModalState({ selectedGames: { open: !showOfficialsList } }));
+    setShowOfficialsList(!showOfficialsList);
+    dispatch(setModalState({ selectedGames: { open: !showOfficialsList } }));
   };
 
   const removeOfficialFromGame = (event) => {
     event.stopPropagation();
     if (official) {
-      dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: league, season: '2023-2024' }));
+      dispatch(
+        removeFromGame({
+          uid: official.uid,
+          date: gameData.time.slice(0, 10),
+          gameNumber: gameData.gameNumber,
+          league: currentLeague,
+          season: currentSeason,
+        }),
+      );
       dispatch(decrementCount(official.uid));
-      toast.success(`${official.firstName} ${official.lastName} removed from game.`);
+      toast.success(
+        `${official.firstName} ${official.lastName} removed from game.`,
+      );
     }
   };
 
   return (
     <>
-      <div 
-        className={`flex flex-col items-center justify-center border-2 rounded-md p-1 cursor-pointer relative min-h-14 flex-none w-36 shadow-md ${label === 'Referee' ? 'border-orange-500' : label === 'Linesman' ? 'border-black' : ''}`}
+      <div
+        className={`flex flex-col items-center justify-center border-2 rounded-md p-1 cursor-pointer relative min-h-14 flex-none w-36 shadow-md ${
+          label === 'Referee'
+            ? 'border-orange-500'
+            : label === 'Linesman'
+            ? 'border-black'
+            : ''
+        }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={(event) => {
@@ -58,9 +81,11 @@ const OfficialBox = ({ gameData, official, role, label }) => {
           handleClick();
         }}
       >
-        {official ?
-          <UserProfile userData={official} /> :
-          <div>Add {label}</div>}
+        {official ? (
+          <UserProfile userData={official} />
+        ) : (
+          <div>Add {label}</div>
+        )}
         {official && (
           <>
             {officialStatus && officialStatus.declined && (
@@ -68,12 +93,14 @@ const OfficialBox = ({ gameData, official, role, label }) => {
                 ❌
               </p>
             )}
-            {officialStatus && !officialStatus.confirmed && !officialStatus.declined && (
-              <ExclamationTriangleIcon
-                className="w-5 h-5 text-warning-300 absolute top-0.5 right-0.5"
-                aria-hidden="true"
-              />
-            )}
+            {officialStatus &&
+              !officialStatus.confirmed &&
+              !officialStatus.declined && (
+                <ExclamationTriangleIcon
+                  className="w-5 h-5 text-warning-300 absolute top-0.5 right-0.5"
+                  aria-hidden="true"
+                />
+              )}
           </>
         )}
         {isHovered && official && (
@@ -90,11 +117,23 @@ const OfficialBox = ({ gameData, official, role, label }) => {
       </div>
       {showOfficialsList && (
         <Modal onClose={() => handleClick()}>
-          <OfficialsList game={gameData} role={role} close={handleClick} isAssigned={official ? {name: official.firstName + ' ' + official.lastName, uid: official.uid} : false} />
+          <OfficialsList
+            game={gameData}
+            role={role}
+            close={handleClick}
+            isAssigned={
+              official
+                ? {
+                    name: official.firstName + ' ' + official.lastName,
+                    uid: official.uid,
+                  }
+                : false
+            }
+          />
         </Modal>
       )}
     </>
-  );  
+  );
 };
 
 export default OfficialBox;
