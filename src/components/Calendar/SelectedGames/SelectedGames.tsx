@@ -24,6 +24,7 @@ import { toast } from 'react-toastify';
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector((state) => state.games.selectedGames);
+  const league = useAppSelector((state) => state.games.currentLeague);
 
   useEffect(() => {
     // Dispatch action to fetch officials data
@@ -94,7 +95,7 @@ const SelectedGames = () => {
       }
 
       const updatedGameData: GameDateRequestData = {
-        league: 'bchl',
+        league: league,
         season: '2023-2024',
         date: game.time.slice(0, 10),
         gameNumber: game.gameNumber,
@@ -197,7 +198,7 @@ const SelectedGames = () => {
       uids: game.officials.map((off) => off.uid),
       date: ISO,
       gameNumber: game.gameNumber,
-      league: 'bchl',
+      league: league,
       season: '2023-2024',
     } as ReleaseGameRequestData;
     dispatch(releaseGame(data));

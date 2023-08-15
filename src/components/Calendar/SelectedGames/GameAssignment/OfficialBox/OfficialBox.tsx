@@ -28,6 +28,7 @@ const UserProfile = ({ userData }) => {
 
 const OfficialBox = ({ gameData, official, role, label }) => {
   const dispatch = useAppDispatch();
+  const league = useAppSelector((state) => state.games.currentLeague);
   const [isHovered, setIsHovered] = useState(false);
   const officialStatus = official && gameData.officials?.find((off) => off.uid === official.uid)?.status;
   const [showOfficialsList, setShowOfficialsList] = useState(false);
@@ -40,7 +41,7 @@ const OfficialBox = ({ gameData, official, role, label }) => {
   const removeOfficialFromGame = (event) => {
     event.stopPropagation();
     if (official) {
-      dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: 'bchl', season: '2023-2024' }));
+      dispatch(removeFromGame({ uid: official.uid, date: gameData.time.slice(0, 10), gameNumber: gameData.gameNumber, league: league, season: '2023-2024' }));
       dispatch(decrementCount(official.uid));
       toast.success(`${official.firstName} ${official.lastName} removed from game.`);
     }

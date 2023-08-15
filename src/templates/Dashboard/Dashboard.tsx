@@ -14,10 +14,11 @@ const Dashboard: React.FC<any> = () => {
   const loading = useAppSelector(state => state.games.loading || state.user.loading || state.officials.loading);
   const { refetchCalendarEvents } = useAppSelector(state => state.games);
   const dispatch = useAppDispatch();
+  const league = useAppSelector((state) => state.games.currentLeague);
 
   // store list of officials in redux
   useEffect(() => {
-    dispatch(getOfficialsList({ league: 'bchl' }));
+    dispatch(getOfficialsList({ league: league }));
   }, []);
 
   useEffect(() => {
