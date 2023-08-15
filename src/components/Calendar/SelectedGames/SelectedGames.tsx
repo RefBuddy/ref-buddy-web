@@ -19,6 +19,7 @@ import { Button } from '../../Button';
 import CreateGame from '../CreateGame/CreateGame';
 import { resetSavedGameState } from '../../../store/Games/reducer';
 import { format } from 'date-fns';
+import { toast } from 'react-toastify';
 
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
@@ -212,8 +213,12 @@ const SelectedGames = () => {
     // Get the game with the relevant time from selectedGames based on direction
     const relevantGame = selectedGames.reduce((prev, current) =>
       direction === 'next'
-        ? (prev.time > current.time ? prev : current)
-        : (prev.time < current.time ? prev : current)
+        ? prev.time > current.time
+          ? prev
+          : current
+        : prev.time < current.time
+        ? prev
+        : current,
     );
 
     // Calculate the day based on direction from the relevant game's date
@@ -221,13 +226,14 @@ const SelectedGames = () => {
     startKeyDate.setDate(startKeyDate.getDate() + increment);
     let startKey = format(startKeyDate, 'yyyy-MM-dd');
 
+    
     let gamesDuringSlots: GameData[] = [];
     while (gamesDuringSlots.length === 0) {
       const allEventsDuringSlots = Object.keys(events).filter((key) => {
         const keyDate = new Date(key);
         return keyDate.getTime() === startKeyDate.getTime();
       });
-
+      
       gamesDuringSlots = [];
       allEventsDuringSlots.forEach((key) => {
         const gamesOnDate = events[key] as GameData[];
@@ -235,15 +241,23 @@ const SelectedGames = () => {
           gamesDuringSlots.push(game);
         });
       });
-
+      
       if (gamesDuringSlots.length === 0) {
         startKeyDate.setDate(startKeyDate.getDate() + increment);
         startKey = format(startKeyDate, 'yyyy-MM-dd');
+        
+        // check if the new date is in the same month as the current date
+        const currentMonth = new Date(relevantGame.time.slice(0, 7));
+        const newMonth = new Date(startKey.slice(0, 7));
+        if (currentMonth.getTime() !== newMonth.getTime()) {
+          toast.error('Can only quick change date within the same month');
+          return;
+        }
       }
     }
 
     dispatch(setSelectedGames(gamesDuringSlots));
-};
+  };
 
   return (
     <div className="mt-6">
