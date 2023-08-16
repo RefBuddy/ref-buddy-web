@@ -76,7 +76,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   useEffect(() => {
     if (role !== 'dashboard') {
-      dispatch(getAllOfficialsCalendarEvents({ gameDate: date }));
+      dispatch(getAllOfficialsCalendarEvents({ gameDate: date, league: currentLeague }));
     }
   }, []);
 
@@ -153,6 +153,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
+      console.log('herer');
       return null;
     }
 
