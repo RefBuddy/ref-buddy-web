@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../store';
 import { auth } from '../../firebaseOptions';
 import { signInWithEmailAndPassword, getIdTokenResult } from 'firebase/auth';
 import Logo from '../../images/favicon.png';
@@ -7,21 +8,32 @@ import { Button } from '../../components/Button';
 import { navigate } from 'gatsby';
 import { useAuthenticationStatus } from '../../components/hooks';
 import { toast } from 'react-toastify';
+import { setCurrentLeague } from '../../store/User/reducer';
+import { getUserLeagues } from '../../store/User/actions';
 
 const Login: React.FC<any> = () => {
+  const dispatch = useAppDispatch();
   const [isAuthenticated, loading] = useAuthenticationStatus();
-  const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const user = useAppSelector((state) => state.user);
+  const [justLoggedIn, setJustLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated && !loading && isAdmin) {
-      const id = auth.currentUser?.uid;
-      if (id) {
-        navigate(`/portal/${id}/dashboard`);
+    if (isAuthenticated && !loading && justLoggedIn && user.currentLeague) {
+      dispatch(setCurrentLeague(user.currentLeague));
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        navigate(`/portal/${uid}/dashboard`);
       }
+      // Reset justLoggedIn to false after handling
+      setJustLoggedIn(false);
     }
-  }, [isAuthenticated, loading, isAdmin])
+  }, [isAuthenticated, loading, justLoggedIn, user, dispatch]);
+
+  const getLeague = async (uid) => {
+    await dispatch(getUserLeagues(uid));
+  };
 
   const handleLogin = async () => {
     try {
@@ -30,12 +42,12 @@ const Login: React.FC<any> = () => {
       const claims = tokenResult.claims;
 
       if (claims['role'] === 'admin') {
-        const id = response.user.uid;
-        setIsAdmin(true);
+        const uid = response.user.uid;
         // get user doc
-        navigate(`/portal/${id}/dashboard`);
+        await getLeague(uid);
+        setJustLoggedIn(true);
       } else {
-        toast.error("Not an admin user");
+        toast.error('Not an admin user');
       }
     } catch (error) {
       console.error(error);
@@ -61,14 +73,11 @@ const Login: React.FC<any> = () => {
         setValue={(value) => setPassword(value)}
         type="password"
       />
-      <Button
-        className="mt-4 w-full"
-        onClick={() => handleLogin()}
-      >
+      <Button className="mt-4 w-full" onClick={() => handleLogin()}>
         Login
       </Button>
     </div>
   );
-}
+};
 
 export default Login;
