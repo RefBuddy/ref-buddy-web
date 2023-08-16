@@ -5,13 +5,14 @@ const URL = process.env.GATSBY_API_URL;
 export const fetchGamesByMonth = createAsyncThunk('games/fetchGamesByMonth', async (_, { rejectWithValue, getState }) => {
   // get games state from our global redux store
   const { games } = getState() as { games: GamesState };
+  const { user } = getState() as { user: UserState };
   // set the default
   try {
     const data = {
       data: {
         Date: games.currentDate,
-        league: games.currentLeague,
-        season: games.currentSeason,
+        league: user.currentLeague,
+        season: user.currentSeason,
       }
     };
 

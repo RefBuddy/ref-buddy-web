@@ -24,6 +24,9 @@ import { toast } from 'react-toastify';
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector((state) => state.games.selectedGames);
+  const { currentLeague, currentSeason } = useAppSelector(
+    (state) => state.user,
+  );
 
   useEffect(() => {
     // Dispatch action to fetch officials data
@@ -94,8 +97,8 @@ const SelectedGames = () => {
       }
 
       const updatedGameData: GameDateRequestData = {
-        league: 'bchl',
-        season: '2023-2024',
+        league: currentLeague,
+        season: currentSeason,
         date: game.time.slice(0, 10),
         gameNumber: game.gameNumber,
         newDate: selectedDate.toLocaleDateString('en-US', {
@@ -197,8 +200,8 @@ const SelectedGames = () => {
       uids: game.officials.map((off) => off.uid),
       date: ISO,
       gameNumber: game.gameNumber,
-      league: 'bchl',
-      season: '2023-2024',
+      league: currentLeague,
+      season: currentSeason,
     } as ReleaseGameRequestData;
     dispatch(releaseGame(data));
     dispatch(incrementAssignedCount(data.uids));
@@ -226,14 +229,13 @@ const SelectedGames = () => {
     startKeyDate.setDate(startKeyDate.getDate() + increment);
     let startKey = format(startKeyDate, 'yyyy-MM-dd');
 
-    
     let gamesDuringSlots: GameData[] = [];
     while (gamesDuringSlots.length === 0) {
       const allEventsDuringSlots = Object.keys(events).filter((key) => {
         const keyDate = new Date(key);
         return keyDate.getTime() === startKeyDate.getTime();
       });
-      
+
       gamesDuringSlots = [];
       allEventsDuringSlots.forEach((key) => {
         const gamesOnDate = events[key] as GameData[];
@@ -241,11 +243,11 @@ const SelectedGames = () => {
           gamesDuringSlots.push(game);
         });
       });
-      
+
       if (gamesDuringSlots.length === 0) {
         startKeyDate.setDate(startKeyDate.getDate() + increment);
         startKey = format(startKeyDate, 'yyyy-MM-dd');
-        
+
         // check if the new date is in the same month as the current date
         const currentMonth = new Date(relevantGame.time.slice(0, 7));
         const newMonth = new Date(startKey.slice(0, 7));
