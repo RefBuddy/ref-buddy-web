@@ -55,6 +55,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       ? useAppSelector((state) => state.officials.supervisorsList)
       : useAppSelector((state) => state.officials.officialsList);
 
+  // State to decide if save button should be shown
+  const [showSaveButton, setShowSaveButton] = useState(false);
+
   // this hook converts the officials object to an array and sorts it when the component mounts
   useEffect(() => {
     const officialsArray = Object.keys(officials).map((key) => officials[key]);
@@ -210,6 +213,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
         setOfficialsData(filterOfficialProfile);
         setOfficialClicked(uid);
         dispatch(getUserCalendarEvents({ uid: uid }));
+        setShowSaveButton(false);
         // const statProps = {
         //   league: 'bchl',
         //   season: '2022-2023',
@@ -240,9 +244,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       '0',
     )}`;
   };
-
-  // State to decide if save button should be shown
-  const [showSaveButton, setShowSaveButton] = useState(false);
 
   // Original states
   const originalRefereeState = false; // Example initial state
