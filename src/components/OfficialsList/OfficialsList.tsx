@@ -22,7 +22,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const [sortedData, setSortedData] = useState<any[]>([]);
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
-  const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
+  const [officialsData, setOfficialsData] = useState<OfficialData>();
   const {
     officialsCalendarData,
     assignedGames,
@@ -76,7 +76,12 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   useEffect(() => {
     if (role !== 'dashboard') {
-      dispatch(getAllOfficialsCalendarEvents({ gameDate: date, league: currentLeague }));
+      dispatch(
+        getAllOfficialsCalendarEvents({
+          gameDate: date,
+          league: currentLeague,
+        }),
+      );
     }
   }, []);
 
@@ -153,7 +158,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
-      console.log('herer');
       return null;
     }
 
@@ -235,6 +239,35 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       2,
       '0',
     )}`;
+  };
+
+  // State to decide if save button should be shown
+  const [showSaveButton, setShowSaveButton] = useState(false);
+
+  // Original states
+  const originalRefereeState = false; // Example initial state
+  const originalLinesmanState = false; // Example initial state
+
+  const handlePreferredSideChange = (e, role) => {
+    if(!officialsData) return;
+    // Directly updating the officialsData's role
+    const updatedRole = { ...officialsData?.role, [role]: e.target.checked };
+    const updatedOfficialsData = { ...officialsData, role: updatedRole };
+
+    setOfficialsData(updatedOfficialsData);
+
+    // Check if the state differs from the original state for either checkbox
+    if (
+      (role === 'referee' && e.target.checked !== originalRefereeState) ||
+      (role === 'linesman' && e.target.checked !== originalLinesmanState)
+    ) {
+      setShowSaveButton(true);
+    } else {
+      setShowSaveButton(
+        updatedOfficialsData.role.referee !== originalRefereeState ||
+          updatedOfficialsData.role.linesman !== originalLinesmanState,
+      );
+    }
   };
 
   return (
@@ -436,7 +469,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               {officialClicked === official.uid && officialsData && (
                 <div className="mt-4 flex flex-col">
                   {assignedGames && (
-                    <div className="flex flex-row flex-1 justify-between">
+                    <div className="flex flex-row flex-1 justify-between items-start">
                       <div className="h-auto w-52">
                         <p className="text-xs mt-4 font-bold">Assigned Games</p>
                         <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
@@ -550,6 +583,46 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                                 ))}
                           </tbody>
                         </table>
+                      </div>
+                      <div className="h-auto flex-shrink-0 ml-64 mt-2">
+                        <div className="mt-2 flex flex-row gap-2">
+                          <div className="flex flex-row gap-1 items-center">
+                            <input
+                              type="checkbox"
+                              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                              checked={officialsData.role.referee}
+                              onChange={(e) =>
+                                handlePreferredSideChange(e, 'referee')
+                              }
+                            />
+                            <label className="text-xs font-medium text-black">
+                              R
+                            </label>
+                          </div>
+                          <div className="flex flex-row gap-1 items-center">
+                            <input
+                              type="checkbox"
+                              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                              checked={officialsData.role.linesman}
+                              onChange={(e) =>
+                                handlePreferredSideChange(e, 'linesman')
+                              }
+                            />
+                            <label className="text-xs font-medium text-black">
+                              L
+                            </label>
+                          </div>
+                        </div>
+                        {showSaveButton && (
+                          <button
+                            className="mt-2 transition-opacity duration-300 opacity-100 hover:opacity-100"
+                            onClick={() => {
+                              // Handle save logic here
+                            }}
+                          >
+                            Save
+                          </button>
+                        )}
                       </div>
                     </div>
                   )}
