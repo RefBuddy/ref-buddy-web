@@ -586,7 +586,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                         </table>
                       </div>
                       <div className="h-auto flex-shrink-0 ml-64 mt-2">
-                        <div className="mt-2 flex flex-row gap-2">
+                        <div className="mt-2 flex flex-row gap-3">
                           <div className="flex flex-row gap-1 items-center">
                             <input
                               type="checkbox"
@@ -615,14 +615,14 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                           </div>
                         </div>
                         {showSaveButton && (
-                          <button
-                            className="mt-2 transition-opacity duration-300 opacity-100 hover:opacity-100"
+                          <Button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-md mt-2 ml-1 text-xs"
                             onClick={() => {
                               // Handle save logic here
                             }}
                           >
                             Save
-                          </button>
+                          </Button>
                         )}
                       </div>
                     </div>
