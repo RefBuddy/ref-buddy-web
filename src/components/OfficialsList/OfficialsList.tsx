@@ -27,7 +27,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData>();
-  const [showSaveButton, setShowSaveButton] = useState(false); // State to decide if save button should be shown
+  const [showSaveButton, setShowSaveButton] = useState(false);
+  const [showReferees, setShowReferees] = useState(true);
+  const [showLinesmen, setShowLinesmen] = useState(true);
 
   // Extract necessary data from global state
   const {
@@ -91,22 +93,43 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   }, [role, date, currentLeague, dispatch]);
 
   // Handle search input change
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    const searchTermLowerCase = e.target.value.toLowerCase();
+  const filterOfficials = (referees: boolean, linesmen: boolean) => {
+    const searchTermLowerCase = searchTerm.toLowerCase();
     const officialsArray = Object.keys(officials).map((key) => officials[key]);
 
     const filtered = officialsArray.filter(
       (official) =>
-        official.firstName.toLowerCase().includes(searchTermLowerCase) ||
-        official.lastName.toLowerCase().includes(searchTermLowerCase) ||
-        official.city.toLowerCase().includes(searchTermLowerCase),
+        ((referees && official.role.Referee) ||
+          (linesmen && official.role.Linesman)) &&
+        (official.firstName.toLowerCase().includes(searchTermLowerCase) ||
+          official.lastName.toLowerCase().includes(searchTermLowerCase) ||
+          official.city.toLowerCase().includes(searchTermLowerCase)),
     );
 
     const sortedOfficials = filtered.sort((a, b) =>
       a.lastName.localeCompare(b.lastName),
     );
+
     setSortedData(sortedOfficials);
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    filterOfficials(showReferees, showLinesmen);
+  };
+
+  const handleRefereeCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setShowReferees(e.target.checked);
+    filterOfficials(e.target.checked, showLinesmen); // pass the updated state
+  };
+
+  const handleLinesmanCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setShowLinesmen(e.target.checked);
+    filterOfficials(showReferees, e.target.checked); // pass the updated state
   };
 
   // Handle assigning officials to games
@@ -364,6 +387,27 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">
                   {game.venue}
                 </div>
+              </div>
+            </div>
+            {/* Adding the R and L checkboxes here */}
+            <div className="flex flex-row gap-3 ml-52">
+              <div className="flex flex-row gap-1 items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                  checked={showReferees}
+                  onChange={handleRefereeCheckboxChange}
+                />
+                <label className="text-xs font-medium text-black">R</label>
+              </div>
+              <div className="flex flex-row gap-1 items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                  checked={showLinesmen}
+                  onChange={handleLinesmanCheckboxChange}
+                />
+                <label className="text-xs font-medium text-black">L</label>
               </div>
             </div>
           </div>
