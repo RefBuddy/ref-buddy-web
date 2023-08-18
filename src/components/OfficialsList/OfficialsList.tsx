@@ -214,7 +214,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       if (filteredOfficialProfileInfoKey.length > 0) {
         const filterOfficialProfile =
           officials[filteredOfficialProfileInfoKey[0]];
-        console.log('filterOfficialProfile', filterOfficialProfile);
         setOfficialsData(filterOfficialProfile);
         setOfficialClicked(uid);
         dispatch(getUserCalendarEvents({ uid: uid }));
