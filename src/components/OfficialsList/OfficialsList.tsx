@@ -301,6 +301,10 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       setOfficialsData(updatedOfficialProfile);
 
       dispatch(getOfficialsList({ league: currentLeague }));
+
+      toast.success('Role updated successfully');
+    } else {
+      toast.error('Error updating role');
     }
   };
 
