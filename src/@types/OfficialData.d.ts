@@ -10,4 +10,8 @@ interface OfficialData {
     uid: string;
     queueCount?: number;
     assignedCount?: number;
+    role: {
+        Referee: boolean;
+        Linesman: boolean;
+    }
 }

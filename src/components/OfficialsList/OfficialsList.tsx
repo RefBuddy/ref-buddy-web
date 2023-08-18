@@ -2,27 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { parseISO } from 'date-fns';
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
-import { addToQueue } from '../../store/Games/actions';
-import { incrementQueueCount } from '../../store/OfficialsList/reducer';
-import { decrementCount } from '../../store/OfficialsList/reducer';
-import { removeFromGame } from '../../store/Games/actions';
-import { formatDate } from '../../utils/helpers';
+import { addToQueue, removeFromGame } from '../../store/Games/actions';
+import {
+  incrementQueueCount,
+  decrementCount,
+} from '../../store/OfficialsList/reducer';
+import { getOfficialsList } from '../../store/OfficialsList/actions';
+import { formatDate, format24HourTime } from '../../utils/helpers';
 import {
   getUserCalendarEvents,
   getAllOfficialsCalendarEvents,
   getOfficialsStats,
+  updateOfficialRole,
 } from '../../store/User/actions';
 import { Button } from '../Button';
-import { format24HourTime } from '../../utils/helpers';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
 const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const dispatch = useAppDispatch();
+
+  // State initialization
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortedData, setSortedData] = useState<any[]>([]);
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
-  const [officialsData, setOfficialsData] = useState<OfficialData | null>(null);
+  const [officialsData, setOfficialsData] = useState<OfficialData>();
+  const [showSaveButton, setShowSaveButton] = useState(false); // State to decide if save button should be shown
+
+  // Extract necessary data from global state
   const {
     officialsCalendarData,
     assignedGames,
@@ -49,60 +56,63 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       : role === 'supervisor'
       ? 'Supervisor'
       : 'Linesman';
-
   const officials =
     role === 'supervisor'
       ? useAppSelector((state) => state.officials.supervisorsList)
       : useAppSelector((state) => state.officials.officialsList);
 
-  // this hook converts the officials object to an array and sorts it when the component mounts
+  // Convert officials object to an array and sort it when the component mounts
   useEffect(() => {
     const officialsArray = Object.keys(officials).map((key) => officials[key]);
-    // const sortedOfficials = officialsArray.sort((a, b) => a.lastName.localeCompare(b.lastName));
     const sortedOfficials = officialsArray.sort((a, b) => {
       if (a.lastName && b.lastName) {
         return a.lastName.localeCompare(b.lastName);
       } else if (a.lastName) {
-        return -1; // a comes first if b.lastName is undefined
+        return -1;
       } else if (b.lastName) {
-        return 1; // b comes first if a.lastName is undefined
+        return 1;
       } else {
-        return 0; // both are undefined, so they are considered equal
+        return 0;
       }
     });
 
     setSortedData(sortedOfficials);
-  }, []);
+  }, [officials]);
 
   useEffect(() => {
     if (role !== 'dashboard') {
-      dispatch(getAllOfficialsCalendarEvents({ gameDate: date, league: currentLeague }));
+      dispatch(
+        getAllOfficialsCalendarEvents({
+          gameDate: date,
+          league: currentLeague,
+        }),
+      );
     }
-  }, []);
+  }, [role, date, currentLeague, dispatch]);
 
+  // Handle search input change
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     const searchTermLowerCase = e.target.value.toLowerCase();
-
     const officialsArray = Object.keys(officials).map((key) => officials[key]);
 
     const filtered = officialsArray.filter(
-      (official: any) =>
+      (official) =>
         official.firstName.toLowerCase().includes(searchTermLowerCase) ||
         official.lastName.toLowerCase().includes(searchTermLowerCase) ||
         official.city.toLowerCase().includes(searchTermLowerCase),
     );
 
-    const sortedOfficials = filtered.sort((a: any, b: any) =>
+    const sortedOfficials = filtered.sort((a, b) =>
       a.lastName.localeCompare(b.lastName),
     );
     setSortedData(sortedOfficials);
   };
 
+  // Handle assigning officials to games
   const handleAssignClick = async (e, uid) => {
     e.stopPropagation();
 
-    // If isAssigned is not false, remove the already assigned official
     if (isAssigned) {
       await dispatch(
         removeFromGame({
@@ -125,16 +135,18 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       season: currentSeason,
     };
 
-    // Dispatch the addToQueue action and await for it to finish
     await dispatch(addToQueue(gameData));
-
-    // Increment the queue count for the official
     dispatch(incrementQueueCount(uid));
 
-    // callback function to close the modal
-    close();
+    // Provide feedback to user
+    toastFeedback(uid);
 
-    // Show toast message
+    // Close modal
+    close();
+  };
+
+  // Provide feedback via toast notifications
+  const toastFeedback = (uid) => {
     if (isAssigned) {
       toast.success(
         `${officials[uid].firstName} ${officials[uid].lastName} replaced ${isAssigned.name}`,
@@ -153,7 +165,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
-      console.log('herer');
       return null;
     }
 
@@ -206,6 +217,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
         setOfficialsData(filterOfficialProfile);
         setOfficialClicked(uid);
         dispatch(getUserCalendarEvents({ uid: uid }));
+        setShowSaveButton(false);
         // const statProps = {
         //   league: 'bchl',
         //   season: '2022-2023',
@@ -236,6 +248,79 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       '0',
     )}`;
   };
+
+  const originalRefereeState = false;
+  const originalLinesmanState = false;
+
+  const handlePreferredSideChange = (e, role) => {
+    if (!officialsData) return;
+    // Directly updating the officialsData's role
+    const updatedRole = { ...officialsData?.role, [role]: e.target.checked };
+    const updatedOfficialsData = { ...officialsData, role: updatedRole };
+
+    console.log('updatedOfficialsData', updatedOfficialsData);
+
+    setOfficialsData(updatedOfficialsData);
+
+    // Check if the state differs from the original state for either checkbox
+    if (
+      (role === 'Referee' && e.target.checked !== originalRefereeState) ||
+      (role === 'Linesman' && e.target.checked !== originalLinesmanState)
+    ) {
+      setShowSaveButton(true);
+    } else {
+      setShowSaveButton(
+        updatedOfficialsData.role.Referee !== originalRefereeState ||
+          updatedOfficialsData.role.Linesman !== originalLinesmanState,
+      );
+    }
+  };
+
+  const updateUserRole = async (uid) => {
+    if (!officialsData) return;
+
+    const filteredOfficialProfileInfoKey = Object.keys(officials).filter(
+      (key) => key === uid,
+    );
+
+    if (filteredOfficialProfileInfoKey.length > 0) {
+      const updatedOfficialProfile = {
+        ...officials[filteredOfficialProfileInfoKey[0]],
+      };
+
+      // Ensure that the official's role is updated in the fetched data before dispatching the update action
+      updatedOfficialProfile.role = {
+        ...updatedOfficialProfile.role,
+        Linesman: officialsData.role.Linesman,
+        Referee: officialsData.role.Referee,
+      };
+
+      await handleRoleChange(uid, updatedOfficialProfile.role);
+
+      setOfficialsData(updatedOfficialProfile);
+
+      dispatch(getOfficialsList({ league: currentLeague }));
+
+      toast.success('Role updated successfully');
+    } else {
+      toast.error('Error updating role');
+    }
+  };
+
+  async function handleRoleChange(uid: string, role: any) {
+    try {
+      await dispatch(
+        updateOfficialRole({
+          uid: uid,
+          role: role,
+          league: currentLeague,
+        }),
+      );
+      console.log('Role updated successfully');
+    } catch (error) {
+      console.error('Error updating role:', error);
+    }
+  }
 
   return (
     <>
@@ -436,7 +521,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               {officialClicked === official.uid && officialsData && (
                 <div className="mt-4 flex flex-col">
                   {assignedGames && (
-                    <div className="flex flex-row flex-1 justify-between">
+                    <div className="flex flex-row flex-1 justify-between items-start">
                       <div className="h-auto w-52">
                         <p className="text-xs mt-4 font-bold">Assigned Games</p>
                         <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
@@ -550,6 +635,48 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                                 ))}
                           </tbody>
                         </table>
+                      </div>
+                      <div className="h-auto flex-shrink-0 ml-64 mt-2">
+                        <div className="mt-2 flex flex-row gap-3">
+                          <div className="flex flex-row gap-1 items-center">
+                            <input
+                              type="checkbox"
+                              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                              checked={officialsData?.role?.Referee || false}
+                              onChange={(e) =>
+                                handlePreferredSideChange(e, 'Referee')
+                              }
+                            />
+
+                            <label className="text-xs font-medium text-black">
+                              R
+                            </label>
+                          </div>
+                          <div className="flex flex-row gap-1 items-center">
+                            <input
+                              type="checkbox"
+                              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                              checked={officialsData?.role?.Linesman || false}
+                              onChange={(e) =>
+                                handlePreferredSideChange(e, 'Linesman')
+                              }
+                            />
+
+                            <label className="text-xs font-medium text-black">
+                              L
+                            </label>
+                          </div>
+                        </div>
+                        {showSaveButton && (
+                          <Button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-md mt-2 ml-1 text-xs"
+                            onClick={() => {
+                              updateUserRole(official.uid);
+                            }}
+                          >
+                            Save
+                          </Button>
+                        )}
                       </div>
                     </div>
                   )}
