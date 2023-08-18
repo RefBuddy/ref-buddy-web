@@ -5,6 +5,7 @@ import {
   getOfficialsStats,
   getAllOfficialsCalendarEvents,
   getUserLeagues,
+  updateOfficialRole,
 } from './actions';
 
 export interface ResolvedGame {
@@ -95,6 +96,18 @@ const userSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(getUserLeagues.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(updateOfficialRole.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateOfficialRole.fulfilled, (state, { payload }) => {
+      console.log('done');
+      state.error = false;
+      state.loading = false;
+    });
+    builder.addCase(updateOfficialRole.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
     });

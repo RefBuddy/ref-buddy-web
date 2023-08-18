@@ -11,7 +11,7 @@ interface OfficialData {
     queueCount?: number;
     assignedCount?: number;
     role: {
-        referee: boolean;
-        linesman: boolean;
+        Referee: boolean;
+        Linesman: boolean;
     }
 }
