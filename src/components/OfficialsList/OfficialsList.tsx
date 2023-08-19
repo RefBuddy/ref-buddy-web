@@ -28,8 +28,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData>();
   const [showSaveButton, setShowSaveButton] = useState(false);
-  const [showReferees, setShowReferees] = useState(true);
-  const [showLinesmen, setShowLinesmen] = useState(true);
 
   // Extract necessary data from global state
   const {
@@ -63,10 +61,23 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       ? useAppSelector((state) => state.officials.supervisorsList)
       : useAppSelector((state) => state.officials.officialsList);
 
-  // Convert officials object to an array and sort it when the component mounts
+  const [showReferees, setShowReferees] = useState(
+    roleDetails === 'Referee' || role === 'dashboard',
+  );
+  const [showLinesmen, setShowLinesmen] = useState(
+    roleDetails === 'Linesman' || role === 'dashboard',
+  );
+
   useEffect(() => {
     const officialsArray = Object.keys(officials).map((key) => officials[key]);
-    const sortedOfficials = officialsArray.sort((a, b) => {
+
+    const filtered = officialsArray.filter(
+      (official) =>
+        (showReferees && official.role.Referee) ||
+        (showLinesmen && official.role.Linesman),
+    );
+
+    const sortedOfficials = filtered.sort((a, b) => {
       if (a.lastName && b.lastName) {
         return a.lastName.localeCompare(b.lastName);
       } else if (a.lastName) {
@@ -79,7 +90,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     });
 
     setSortedData(sortedOfficials);
-  }, [officials]);
+  }, [officials, showReferees, showLinesmen]);
 
   useEffect(() => {
     if (role !== 'dashboard') {
@@ -347,7 +358,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   return (
     <>
-      {/* teams and game time */}
+      {/* teams, game time, checkboxes */}
       <div className="flex items-center justify-between w-full -mt-6 -mb-3">
         {role != 'dashboard' ? (
           <div className="flex w-full items-center justify-start p-4">
@@ -389,31 +400,31 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 </div>
               </div>
             </div>
-            {/* Adding the R and L checkboxes here */}
-            <div className="flex flex-row gap-3 ml-52">
-              <div className="flex flex-row gap-1 items-center">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                  checked={showReferees}
-                  onChange={handleRefereeCheckboxChange}
-                />
-                <label className="text-xs font-medium text-black">R</label>
-              </div>
-              <div className="flex flex-row gap-1 items-center">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                  checked={showLinesmen}
-                  onChange={handleLinesmanCheckboxChange}
-                />
-                <label className="text-xs font-medium text-black">L</label>
-              </div>
-            </div>
           </div>
         ) : (
           <div className="w-full h-6 bg-white"></div>
         )}
+        {/* Adding the R and L checkboxes here */}
+        <div className="flex flex-row gap-3 mr-16">
+          <div className="flex flex-row gap-1 items-center">
+            <input
+              type="checkbox"
+              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+              checked={showReferees}
+              onChange={handleRefereeCheckboxChange}
+            />
+            <label className="text-xs font-medium text-black">R</label>
+          </div>
+          <div className="flex flex-row gap-1 items-center">
+            <input
+              type="checkbox"
+              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+              checked={showLinesmen}
+              onChange={handleLinesmanCheckboxChange}
+            />
+            <label className="text-xs font-medium text-black">L</label>
+          </div>
+        </div>
         {role != 'dashboard' ? (
           <div
             className={`flex flex-col items-center justify-center border-2 rounded-md p-1 -mt-2 cursor-pointer relative min-h-12 flex-none w-36 shadow-md ${
