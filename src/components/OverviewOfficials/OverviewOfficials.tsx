@@ -20,7 +20,8 @@ const OverviewOfficials = () => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56"
+    <div
+      className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56"
       onClick={handleClick}
     >
       <div className="flex flex-col justify-between w-full">
@@ -36,7 +37,7 @@ const OverviewOfficials = () => {
 
       {showOfficialsList && (
         <Modal onClick={handleClick}>
-          <OfficialsList game={game} role='dashboard' isAssigned={false} />
+          <OfficialsList game={game} role="dashboard" isAssigned={false} />
         </Modal>
       )}
     </div>
