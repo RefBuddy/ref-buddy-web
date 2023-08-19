@@ -5,7 +5,6 @@ import MyCalendar from '../../components/Calendar';
 import { Loading } from '../../components/Loading';
 import OverviewOfficials from '../../components/OverviewOfficials/OverviewOfficials';
 import OverviewGameReports from '../../components/OverviewGameReports/OverviewGameReports';
-import OverviewTravel from '../../components/OverviewTravel/OverviewTravel';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
 import { resetCalendarEventsFetch } from '../../store/Games/reducer';
 import QueuedTable from '../../components/Table/QueuedTable';

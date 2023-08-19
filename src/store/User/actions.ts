@@ -121,9 +121,9 @@ export const getUserLeagues = createAsyncThunk(
         },
         body: JSON.stringify({
           data: {
-            uid: uid
-          }
-        })
+            uid: uid,
+          },
+        }),
       });
 
       if (response.ok) {
@@ -143,3 +143,36 @@ export const getUserLeagues = createAsyncThunk(
   },
 );
 
+export const updateOfficialRole = createAsyncThunk(
+  'user/updateOfficialRole', 
+  async (updateData: UpdateOfficialRoleRequestData, { rejectWithValue }) => {
+    try {
+      console.log("Sending data:", JSON.stringify({ data: updateData }));
+
+      const response = await fetch(`${URL}/updateOfficialRole`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: updateData,
+        }),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        console.log("Server Response:", json);
+        return json.data;
+      } else {
+        return rejectWithValue(`HTTP error! Status: ${response.status}`);
+      }
+    } catch (err) {
+      const typedErr: any = err;
+      if (typedErr.response && typedErr.response.status !== 401) {
+        return rejectWithValue(
+          `HTTP Error! Status: ${typedErr.response.status}`,
+        );
+      }
+    }
+  },
+);

@@ -5,6 +5,7 @@ import {
   getOfficialsStats,
   getAllOfficialsCalendarEvents,
   getUserLeagues,
+  updateOfficialRole,
 } from './actions';
 
 export interface ResolvedGame {
@@ -38,7 +39,6 @@ const userSlice = createSlice({
       state.currentSeason = payload;
     },
     setCurrentLeague: (state, { payload }) => {
-      console.log('payload', payload);
       state.currentLeague = payload;
     },
   },
@@ -47,7 +47,6 @@ const userSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getUserCalendarEvents.fulfilled, (state, { payload }) => {
-      console.log('payload', payload);
       state.assignedGames = payload.assignedGames;
       state.queuedGames = payload.queuedGames;
       state.blockedOffTimes = payload.blockedOffTimes;
@@ -76,8 +75,6 @@ const userSlice = createSlice({
     builder.addCase(
       getAllOfficialsCalendarEvents.fulfilled,
       (state, { payload }) => {
-        console.log('hiiii');
-        console.log('payload', payload);
         state.officialsCalendarData = payload;
         state.error = false;
         state.loading = false;
@@ -97,9 +94,20 @@ const userSlice = createSlice({
       state.currentLeague = payload.leagues[0];
       state.error = false;
       state.loading = false;
-      console.log('state.currentLeague', state.currentLeague);
     });
     builder.addCase(getUserLeagues.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(updateOfficialRole.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateOfficialRole.fulfilled, (state, { payload }) => {
+      console.log('done');
+      state.error = false;
+      state.loading = false;
+    });
+    builder.addCase(updateOfficialRole.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
     });
