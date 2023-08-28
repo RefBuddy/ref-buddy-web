@@ -273,7 +273,12 @@ const SelectedGames = () => {
         season: currentSeason,
       }),
     );
-    setShowChatForGame(game.id);
+    if (showChatForGame === game.id) {
+      setShowChatForGame(null);
+    } else {
+      setShowChatForGame(game.id);
+    }
+    return;
   };
 
   return (
