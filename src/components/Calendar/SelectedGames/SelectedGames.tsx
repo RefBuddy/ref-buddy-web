@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import {
   fetchOfficialsProfiles,
   editGameDate,
+  getGameMessages,
 } from '../../../store/Games/actions';
 import { releaseGame } from '../../../store/Assigning/actions';
 import { incrementAssignedCount } from '../../../store/OfficialsList/reducer';
@@ -261,6 +262,17 @@ const SelectedGames = () => {
     dispatch(setSelectedGames(gamesDuringSlots));
   };
 
+  const displayMessages = (game) => {
+    dispatch(
+      getGameMessages({
+        gameNumber: game.gameNumber,
+        date: game['time'].toString().substring(0, 10),
+        league: currentLeague,
+        season: currentSeason,
+      }),
+    );
+  };
+
   return (
     <div className="mt-6">
       <div className="flex justify-between items-center mb-4 -mt-6">
@@ -310,6 +322,14 @@ const SelectedGames = () => {
                     </button>
                   )}
                 </div>
+                <button
+                  className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-3 ml-auto text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  onClick={() => {
+                    displayMessages(game);
+                  }}
+                >
+                  Messages
+                </button>
                 {game.queue && game.officials.length === 5 ? (
                   <Button onClick={() => release(game)}>Release</Button>
                 ) : !game.queue && game.officials.length === 5 ? (
