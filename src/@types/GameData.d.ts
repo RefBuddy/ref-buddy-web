@@ -8,4 +8,5 @@ interface GameData {
   visitingTeam: Team;
   venue: string;
   queue: boolean;
+  messages: Message[];
 }

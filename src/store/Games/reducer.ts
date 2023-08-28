@@ -5,6 +5,7 @@ import {
   addToQueue,
   removeFromGame,
   addGame,
+  getGameMessages,
 } from './actions';
 import { formatDate } from '../../utils/helpers';
 import { releaseGame } from '../Assigning/actions';
@@ -154,6 +155,22 @@ const gamesSlice = createSlice({
     builder.addCase(addGame.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
+    });
+    builder.addCase(getGameMessages.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getGameMessages.fulfilled, (state, { payload, meta }) => {
+      state.error = null;
+      state.loading = false;
+      if (payload) {
+        const gameIndex = state.selectedGames.findIndex(
+          (game) => game.gameNumber === meta.arg.gameNumber,
+        );
+
+        if (gameIndex !== -1) {
+          state.selectedGames[gameIndex].messages = payload;
+        }
+      }
     });
   },
 });
