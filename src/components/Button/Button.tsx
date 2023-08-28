@@ -9,7 +9,7 @@ export interface ButtonProps {
   href?: string;
   loading?: boolean;
   'data-testid'?: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
   [x: string | number | symbol]: unknown;
 }
 
@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   href,
   loading = false,
-  onClick = () => {},
+  onClick = (e) => {},
   ...props
 }) => {
   const ElementType = useMemo(() => (href ? 'a' : 'button'), [href]);
