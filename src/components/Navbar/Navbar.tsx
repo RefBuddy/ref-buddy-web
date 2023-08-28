@@ -19,13 +19,14 @@ const Navbar: React.FC<any> = () => {
         <div className="flex items-center">
           <img src={Logo} alt="logo" className="h-12 w-12 mr-2" />
         </div>
-        <button onClick={handleLogout} className="border-white border bg-white text-black cursor-pointer px-1">
+        <button
+          onClick={handleLogout}
+          className="border-white border bg-white text-black cursor-pointer px-1"
+        >
           Logout
         </button>
       </nav>
-      <div className="flex-grow bg-white">
-        {/* Add your content here */}
-      </div>
+      <div className="flex-grow bg-white">{/* Add your content here */}</div>
     </div>
   );
 };

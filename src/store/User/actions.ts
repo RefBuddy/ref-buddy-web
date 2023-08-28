@@ -144,10 +144,10 @@ export const getUserLeagues = createAsyncThunk(
 );
 
 export const updateOfficialRole = createAsyncThunk(
-  'user/updateOfficialRole', 
+  'user/updateOfficialRole',
   async (updateData: UpdateOfficialRoleRequestData, { rejectWithValue }) => {
     try {
-      console.log("Sending data:", JSON.stringify({ data: updateData }));
+      console.log('Sending data:', JSON.stringify({ data: updateData }));
 
       const response = await fetch(`${URL}/updateOfficialRole`, {
         method: 'POST',
@@ -161,7 +161,7 @@ export const updateOfficialRole = createAsyncThunk(
 
       if (response.ok) {
         const json = await response.json();
-        console.log("Server Response:", json);
+        console.log('Server Response:', json);
         return json.data;
       } else {
         return rejectWithValue(`HTTP error! Status: ${response.status}`);

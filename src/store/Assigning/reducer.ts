@@ -13,7 +13,7 @@ export const assigningSlice = createSlice({
   reducers: {
     setReleaseSuccessful: (state, { payload }) => {
       state.releaseSuccessful = payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(releaseGame.pending, (state) => {
@@ -28,7 +28,7 @@ export const assigningSlice = createSlice({
       state.error = `There was an error releasing the game`;
     });
   },
-})
+});
 
 export const { setReleaseSuccessful } = assigningSlice.actions;
 

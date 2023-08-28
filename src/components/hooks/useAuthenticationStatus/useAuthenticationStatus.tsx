@@ -38,7 +38,5 @@ export default function useAuthenticationStatus(): [boolean, boolean] {
     })();
   }, []);
 
-  
-
   return [isAuthenticated, loading];
 }

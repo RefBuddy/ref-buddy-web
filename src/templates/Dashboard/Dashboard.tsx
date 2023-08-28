@@ -10,8 +10,11 @@ import { resetCalendarEventsFetch } from '../../store/Games/reducer';
 import QueuedTable from '../../components/Table/QueuedTable';
 
 const Dashboard: React.FC<any> = () => {
-  const loading = useAppSelector(state => state.games.loading || state.user.loading || state.officials.loading);
-  const { refetchCalendarEvents } = useAppSelector(state => state.games);
+  const loading = useAppSelector(
+    (state) =>
+      state.games.loading || state.user.loading || state.officials.loading,
+  );
+  const { refetchCalendarEvents } = useAppSelector((state) => state.games);
   const dispatch = useAppDispatch();
   const league = useAppSelector((state) => state.user.currentLeague);
 
@@ -22,9 +25,9 @@ const Dashboard: React.FC<any> = () => {
 
   useEffect(() => {
     if (refetchCalendarEvents) {
-      dispatch(resetCalendarEventsFetch())
+      dispatch(resetCalendarEventsFetch());
     }
-  }, [refetchCalendarEvents])
+  }, [refetchCalendarEvents]);
 
   return (
     <div style={{ display: 'flex' }}>
@@ -40,14 +43,12 @@ const Dashboard: React.FC<any> = () => {
             <MyCalendar />
           </div>
           <div className="xl:w-2/5 w-auto ml-4">
-            {!loading ? (
-              <QueuedTable />
-            ) : <></>}
+            {!loading ? <QueuedTable /> : <></>}
           </div>
         </div>
       </main>
     </div>
   );
-}
+};
 
 export default Dashboard;

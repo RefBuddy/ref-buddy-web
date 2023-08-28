@@ -4,12 +4,7 @@ import {
   Event as CalendarEvent,
   dateFnsLocalizer,
 } from 'react-big-calendar';
-import {
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-} from "date-fns";
+import { format, parse, startOfWeek, getDay } from 'date-fns';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useAuthenticationStatus } from '../../components/hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -21,36 +16,47 @@ import { SelectedGames } from '../../components/Calendar/SelectedGames';
 import Modal from '../../components/Modal/Modal';
 
 const CustomEvent = ({ event }) => {
-  const greenEvents = event.events.filter((event) => 
-    event.officials.length === 5 && 
-    event.officials.every((official) => official.status.confirmed === true)
+  const greenEvents = event.events.filter(
+    (event) =>
+      event.officials.length === 5 &&
+      event.officials.every((official) => official.status.confirmed === true),
   );
-  const yellowEvents = event.events.filter((event) => 
-    event.officials.length === 5 && 
-    event.officials.filter((official) => official.status.confirmed === true).length < 5 &&
-    event.officials.every((official) => official.status.declined === false)
+  const yellowEvents = event.events.filter(
+    (event) =>
+      event.officials.length === 5 &&
+      event.officials.filter((official) => official.status.confirmed === true)
+        .length < 5 &&
+      event.officials.every((official) => official.status.declined === false),
   );
-  const redEvents = event.events.filter((event) => event.officials.length < 5 ||
-    event.officials.some((official) => official.status.declined === true)
+  const redEvents = event.events.filter(
+    (event) =>
+      event.officials.length < 5 ||
+      event.officials.some((official) => official.status.declined === true),
   );
-  
+
   return (
     <div className="text-red-500 flex flex-col flex-wrap">
       <div className="flex flex-row gap-1">
-        {greenEvents.map((_) => <span className="text-green-500 text-xs">●</span>)}
+        {greenEvents.map((_) => (
+          <span className="text-green-500 text-xs">●</span>
+        ))}
       </div>
       <div className="flex flex-row gap-1 flex-wrap">
-        {yellowEvents.map((_) => <span className="text-warning-300 text-xs">●</span>)}
+        {yellowEvents.map((_) => (
+          <span className="text-warning-300 text-xs">●</span>
+        ))}
       </div>
       <div className="flex flex-row gap-1 flex-wrap">
-        {redEvents.map((_) => <span className="text-error-500 text-xs">●</span>)}
+        {redEvents.map((_) => (
+          <span className="text-error-500 text-xs">●</span>
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const locales = {
-	"en-US": require("date-fns")
+  'en-US': require('date-fns'),
 };
 
 const localizer = dateFnsLocalizer({
@@ -63,11 +69,11 @@ const localizer = dateFnsLocalizer({
 
 const convertEvents = (events: MonthGameData[]): CalendarEvent[] => {
   const groupedEvents: { [date: string]: CalendarEvent } = {};
-  
-  Object.keys(events).forEach(key => {
+
+  Object.keys(events).forEach((key) => {
     const eventsOnDate = events[key] as GameData[];
-    eventsOnDate.forEach(event => {
-      const eventDate = format(new Date(event.time), "yyyy-MM-dd");
+    eventsOnDate.forEach((event) => {
+      const eventDate = format(new Date(event.time), 'yyyy-MM-dd');
       if (groupedEvents[eventDate]) {
         groupedEvents[eventDate].allDay = true;
         groupedEvents[eventDate].events.push(event);
@@ -83,13 +89,13 @@ const convertEvents = (events: MonthGameData[]): CalendarEvent[] => {
     });
   });
   return Object.values(groupedEvents);
-}
+};
 
 const MyCalendar: FC = () => {
   const dispatch = useAppDispatch();
   const [isAuthenticated, loading] = useAuthenticationStatus();
-  const events = useAppSelector(state => state.games.monthGameData);
-  const currentDate = useAppSelector(state => state.games.currentDate);
+  const events = useAppSelector((state) => state.games.monthGameData);
+  const currentDate = useAppSelector((state) => state.games.currentDate);
   const [showSelectedGames, setShowSelectedGames] = useState(false);
 
   const handleClick = () => {
@@ -108,75 +114,71 @@ const MyCalendar: FC = () => {
     const slots = slotInfo.slots;
     const startTime = slots[0];
     const endTime = slots[slots.length - 1];
-    const startKey = format(new Date(startTime), "yyyy-MM-dd");
-    const endKey = format(new Date(endTime), "yyyy-MM-dd");
+    const startKey = format(new Date(startTime), 'yyyy-MM-dd');
+    const endKey = format(new Date(endTime), 'yyyy-MM-dd');
 
-    const allEventsDuringSlots = Object.keys(events).filter(key => {
+    const allEventsDuringSlots = Object.keys(events).filter((key) => {
       const keyDate = new Date(key);
       if (keyDate >= new Date(startKey) && keyDate <= new Date(endKey)) {
         return true;
       }
       return false;
-    })
+    });
 
     const gamesDuringSlots: GameData[] = [];
-    allEventsDuringSlots.forEach(key => {
+    allEventsDuringSlots.forEach((key) => {
       const gamesOnDate = events[key] as GameData[];
-      gamesOnDate.forEach(game => {
+      gamesOnDate.forEach((game) => {
         gamesDuringSlots.push(game);
-      })
+      });
     });
 
     dispatch(setSelectedGames(gamesDuringSlots));
     handleClick();
-  }
+  };
 
-  const convertedEvents = convertEvents(events || [] as any);
+  const convertedEvents = convertEvents(events || ([] as any));
 
   return (
     <div>
       {isAuthenticated ? (
-        <div className="flex items-center justify-center gap-0 border-gray-200 border-solid border rounded-lg shadow-sm px-4 ml-4" >
+        <div className="flex items-center justify-center gap-0 border-gray-200 border-solid border rounded-lg shadow-sm px-4 ml-4">
           <Calendar
             localizer={localizer}
             defaultDate={new Date()}
             defaultView="month"
             events={convertedEvents}
-            style={{ height: "60vh", width: "50vw", margin: "0 auto 2rem" }}
+            style={{ height: '60vh', width: '50vw', margin: '0 auto 2rem' }}
             selectable
             // onSelectEvent={event => selectEvent(event)}
-            onSelectSlot={slotInfo => selectSlot(slotInfo)}
-            views={["month"]}
+            onSelectSlot={(slotInfo) => selectSlot(slotInfo)}
+            views={['month']}
             components={{
               toolbar: CustomToolbar,
               eventWrapper: CustomEvent,
             }}
-            eventPropGetter={
-              (event) => {
-                let newStyle = {
-                  backgroundColor: "transparent",
-                  color: "#10b981", 
-                  fontSize: ".5rem",
-                };
-          
-                return {
-                  className: "",
-                  style: newStyle
-                };
-              }
-            }
-            
+            eventPropGetter={(event) => {
+              let newStyle = {
+                backgroundColor: 'transparent',
+                color: '#10b981',
+                fontSize: '.5rem',
+              };
+
+              return {
+                className: '',
+                style: newStyle,
+              };
+            }}
           />
           {showSelectedGames && (
-              <Modal onClose={() => handleClick()}>
-                <SelectedGames />
-              </Modal>
-            )}
+            <Modal onClose={() => handleClick()}>
+              <SelectedGames />
+            </Modal>
+          )}
         </div>
       ) : (
         <p>Please log in to view the calendar</p>
       )}
-      
     </div>
   );
 };
