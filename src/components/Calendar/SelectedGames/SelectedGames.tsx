@@ -19,8 +19,9 @@ import { GameAssignment } from './GameAssignment';
 import { Button } from '../../Button';
 import CreateGame from '../CreateGame/CreateGame';
 import { resetSavedGameState } from '../../../store/Games/reducer';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { toast } from 'react-toastify';
+import { Chat } from './Chat';
 
 const SelectedGames = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ const SelectedGames = () => {
   const { currentLeague, currentSeason } = useAppSelector(
     (state) => state.user,
   );
+  const [showChatForGame, setShowChatForGame] = useState<string | null>(null);
 
   useEffect(() => {
     // Dispatch action to fetch officials data
@@ -271,6 +273,7 @@ const SelectedGames = () => {
         season: currentSeason,
       }),
     );
+    setShowChatForGame(game.id);
   };
 
   return (
@@ -400,6 +403,11 @@ const SelectedGames = () => {
                   )}
                 </div>
               </div>
+              {showChatForGame === game.id && (
+                <div className="w-full">
+                  <Chat />
+                </div>
+              )}
             </div>
           ))}
         {showCreate && <CreateGame onClose={() => onCreateGameClose()} />}
