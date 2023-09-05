@@ -4,4 +4,5 @@ interface OfficialsData {
   official3: OfficialInfo;
   official4: OfficialInfo;
   official5: OfficialInfo;
+  official6: OfficialInfo;
 }
