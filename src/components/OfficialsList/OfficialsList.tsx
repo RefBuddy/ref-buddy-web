@@ -568,7 +568,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   {/* Added justify-self-end */}
                   {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
                     <Button onClick={(e) => handleAssignClick(e, official.uid)}>
-                      {isAssigned ? 'Replace Official' : 'Assign + '}
+                      {isAssigned && role != 'supervisor'
+                        ? 'Replace Official'
+                        : 'Assign + '}
                     </Button>
                   )}
                 </div>
