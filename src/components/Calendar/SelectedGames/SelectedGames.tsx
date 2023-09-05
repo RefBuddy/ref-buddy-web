@@ -410,7 +410,7 @@ const SelectedGames = () => {
               </div>
               {showChatForGame === game.id && (
                 <div className="w-full">
-                  <Chat />
+                  <Chat gameData={game} />
                 </div>
               )}
             </div>

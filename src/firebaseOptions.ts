@@ -1,6 +1,7 @@
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFunctions } from 'firebase/functions';
+import { getAuth, Auth } from 'firebase/auth';
+import { getFunctions, Functions } from 'firebase/functions';
+import { getFirestore, Firestore } from 'firebase/firestore';
 
 interface Config {
   apiKey: string | undefined;
@@ -22,11 +23,15 @@ const firebaseConfig: Config = {
   appId: process.env.GATSBY_FIREBASE_APP_ID,
 };
 
-let app: FirebaseApp | undefined;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
+let app: FirebaseApp;
+if (getApps().length > 0) {
+  app = getApps()[0]; // Use the already initialized app
+} else {
+  app = initializeApp(firebaseConfig); // Initialize a new app
 }
-const auth = getAuth(app);
-const functions = getFunctions(app);
 
-export { auth, functions };
+const auth: Auth = getAuth(app);
+const functions: Functions = getFunctions(app);
+const firestore: Firestore = getFirestore(app);
+
+export { auth, functions, firestore };

@@ -1,5 +1,5 @@
 interface Message {
   message: string;
   uid: string;
-  timestamp: string;
+  timestamp: firebase.firestore.Timestamp;
 }
