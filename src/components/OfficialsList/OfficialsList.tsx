@@ -74,7 +74,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     const filtered = officialsArray.filter(
       (official) =>
         (showReferees && official.role.Referee) ||
-        (showLinesmen && official.role.Linesman),
+        (showLinesmen && official.role.Linesman) ||
+        role === 'supervisor',
     );
 
     const sortedOfficials = filtered.sort((a, b) => {
@@ -567,7 +568,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   {/* Added justify-self-end */}
                   {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
                     <Button onClick={(e) => handleAssignClick(e, official.uid)}>
-                      {isAssigned ? 'Replace Official' : 'Assign + '}
+                      {isAssigned && role != 'supervisor'
+                        ? 'Replace Official'
+                        : 'Assign + '}
                     </Button>
                   )}
                 </div>
