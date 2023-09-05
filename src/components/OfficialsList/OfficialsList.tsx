@@ -74,7 +74,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     const filtered = officialsArray.filter(
       (official) =>
         (showReferees && official.role.Referee) ||
-        (showLinesmen && official.role.Linesman),
+        (showLinesmen && official.role.Linesman) ||
+        role === 'supervisor',
     );
 
     const sortedOfficials = filtered.sort((a, b) => {
