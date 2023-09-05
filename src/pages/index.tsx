@@ -5,7 +5,7 @@ import { Login } from '../templates';
 
 const IndexPage = () => (
   <Layout>
-    <Login/>
+    <Login />
   </Layout>
 );
 

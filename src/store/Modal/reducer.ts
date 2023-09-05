@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   selectedGames: {
     open: false,
-  }, 
+  },
   assignGame: {
     open: false,
   },
@@ -18,12 +18,10 @@ const modalSlice = createSlice({
   reducers: {
     setModalState: (state, action) => {
       state[action.payload.key] = action.payload.value;
-}
+    },
   },
 });
 
-export const {
-  setModalState
-} = modalSlice.actions;
+export const { setModalState } = modalSlice.actions;
 
 export default modalSlice.reducer;

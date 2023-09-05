@@ -45,7 +45,8 @@ const TextInput: React.FC<TextInputProps> = ({
         className={cn(
           'relative flex items-center gap-1 pb-2 px-3 transition-all border rounded shadow-primary-700 focus-within:shadow',
           {
-            'border-gray-400 text-gray-400 focus-within:text-primary-700 focus-within:border-primary-700': !error,
+            'border-gray-400 text-gray-400 focus-within:text-primary-700 focus-within:border-primary-700':
+              !error,
             'border-error-700 text-error-700': error,
             'pt-3': label,
             'pt-2': !label,
@@ -54,7 +55,9 @@ const TextInput: React.FC<TextInputProps> = ({
       >
         {label && (
           <span
-            className={cn('absolute px-1 text-xs font-normal bg-white left-2 font-body -top-2')}
+            className={cn(
+              'absolute px-1 text-xs font-normal bg-white left-2 font-body -top-2',
+            )}
             data-testid="TextInput__label"
           >
             {label}
@@ -83,7 +86,9 @@ const TextInput: React.FC<TextInputProps> = ({
         {icon}
       </div>
 
-      {error && <p className="mt-1 text-xs text-right text-error-700">{error}</p>}
+      {error && (
+        <p className="mt-1 text-xs text-right text-error-700">{error}</p>
+      )}
     </label>
   );
 };

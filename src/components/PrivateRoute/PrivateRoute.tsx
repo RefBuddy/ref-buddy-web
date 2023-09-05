@@ -18,7 +18,7 @@ const PrivateRoute = (props: PrivateRouteProps) => {
     // If user not authenticated redirect to auth gateway
     if (!isAuthenticated) {
       if (typeof window !== 'undefined') {
-       navigate('/');
+        navigate('/');
       }
     }
   }, [isAuthenticated, loading]);

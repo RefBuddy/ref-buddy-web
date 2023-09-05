@@ -4,8 +4,8 @@ import { OfficialBox } from './OfficialBox';
 
 const GameAssignment = ({ gameData }) => {
   // Fetch officialsData from the global state
-  const officialsData = useAppSelector(state => state.games.officialsData);
-  
+  const officialsData = useAppSelector((state) => state.games.officialsData);
+
   // Retrieve the officials for this specific game
   const gameOfficialsData = officialsData ? officialsData[gameData.id] : null;
 
@@ -26,11 +26,36 @@ const GameAssignment = ({ gameData }) => {
 
   return (
     <div className="flex flex-row flex-wrap w-full gap-1">
-      <OfficialBox official={officialsByRole["referee1"]} gameData={gameData} role="referee1" label="Referee" />
-      <OfficialBox official={officialsByRole["referee2"]} gameData={gameData} role="referee2" label="Referee" />
-      <OfficialBox official={officialsByRole["linesman1"]} gameData={gameData} role="linesman1" label="Linesman" />
-      <OfficialBox official={officialsByRole["linesman2"]} gameData={gameData} role="linesman2" label="Linesman" />
-      <OfficialBox official={officialsByRole["supervisor"]} gameData={gameData} role="supervisor" label="Supervisor" />
+      <OfficialBox
+        official={officialsByRole['referee1']}
+        gameData={gameData}
+        role="referee1"
+        label="Referee"
+      />
+      <OfficialBox
+        official={officialsByRole['referee2']}
+        gameData={gameData}
+        role="referee2"
+        label="Referee"
+      />
+      <OfficialBox
+        official={officialsByRole['linesman1']}
+        gameData={gameData}
+        role="linesman1"
+        label="Linesman"
+      />
+      <OfficialBox
+        official={officialsByRole['linesman2']}
+        gameData={gameData}
+        role="linesman2"
+        label="Linesman"
+      />
+      <OfficialBox
+        official={officialsByRole['supervisor']}
+        gameData={gameData}
+        role="supervisor"
+        label="Supervisor"
+      />
     </div>
   );
 };

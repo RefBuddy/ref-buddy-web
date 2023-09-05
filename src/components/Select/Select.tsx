@@ -4,7 +4,10 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
 const Select = ({ field, value, onChange }) => (
   <div>
-    <label className="block text-xs mb-2 font-medium text-gray-500" htmlFor={field.key}>
+    <label
+      className="block text-xs mb-2 font-medium text-gray-500"
+      htmlFor={field.key}
+    >
       {`${field.label}${field.required ? ' *' : ''}`}
     </label>
     <div className="relative">
@@ -20,7 +23,11 @@ const Select = ({ field, value, onChange }) => (
           -- Select an option --
         </option>
         {field.options.map((option: any) => (
-          <option key={option} value={option} data-testid={`${field.key}-${option}`}>
+          <option
+            key={option}
+            value={option}
+            data-testid={`${field.key}-${option}`}
+          >
             {option}
           </option>
         ))}

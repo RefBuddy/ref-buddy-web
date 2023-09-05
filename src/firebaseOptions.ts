@@ -1,6 +1,6 @@
-import { FirebaseApp, getApps, initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFunctions } from "firebase/functions";
+import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFunctions } from 'firebase/functions';
 
 interface Config {
   apiKey: string | undefined;
