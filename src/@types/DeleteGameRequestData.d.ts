@@ -1,0 +1,3 @@
+interface DeleteGameRequestData {
+  officials: RemoveGameRequestData[];
+}

@@ -218,3 +218,42 @@ export const addGame = createAsyncThunk(
     }
   },
 );
+
+export const deleteGame = createAsyncThunk(
+  'games/deleteGame',
+  async (gameData: DeleteGameRequestData, { rejectWithValue }) => {
+    try {
+      const data = {
+        data: gameData.officials,
+      };
+
+      const response = await fetch(`${URL}/deleteGame`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        console.log('calling json');
+        const json = await response.json();
+        console.log(json);
+
+        return json.data;
+      } else {
+        return rejectWithValue(`HTTP error! Status: ${response.status}`);
+      }
+    } catch (err) {
+      const typedErr: any = err;
+      if (typedErr.response && typedErr.response.status !== 401) {
+        return rejectWithValue(
+          `HTTP Error! Status: ${typedErr.response.status}`,
+        );
+      } else {
+        return rejectWithValue(
+          `Unexpected error occurred: ${typedErr.message}`,
+        );
+      }
+    }
+  },
+);
