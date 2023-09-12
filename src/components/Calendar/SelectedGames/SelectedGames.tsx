@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import {
   fetchOfficialsProfiles,
   editGameDate,
+  deleteGame,
 } from '../../../store/Games/actions';
 import { releaseGame } from '../../../store/Assigning/actions';
 import { incrementAssignedCount } from '../../../store/OfficialsList/reducer';
@@ -78,6 +79,20 @@ const SelectedGames = () => {
 
   const handleDeleteGameClick = () => {
     console.log('delete game', gameToDelete);
+
+    if (gameToDelete) {
+      const deleteGameData: DeleteGameRequestData = {
+        officials: gameToDelete.officials.map((official) => ({
+          uid: official.uid,
+          date: gameToDelete.time.slice(0, 10),
+          gameNumber: gameToDelete.gameNumber,
+          league: currentLeague,
+          season: currentSeason,
+        })),
+      };
+
+      dispatch(deleteGame(deleteGameData));
+    }
     setShowDeleteGameModal(false);
   };
 

@@ -5,6 +5,7 @@ import {
   addToQueue,
   removeFromGame,
   addGame,
+  deleteGame,
 } from './actions';
 import { formatDate } from '../../utils/helpers';
 import { releaseGame } from '../Assigning/actions';
@@ -152,6 +153,26 @@ const gamesSlice = createSlice({
       }
     });
     builder.addCase(addGame.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(deleteGame.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteGame.fulfilled, (state, { payload, meta }) => {
+      console.log('delete game fulfilled');
+      state.error = null;
+      state.loading = false;
+      state.refetchCalendarEvents = true;
+      if (payload) {
+        // const gameIndex = state.selectedGames.findIndex(
+        //   (game) => game.gameNumber === meta.arg.gameNumber,
+        // );
+        // state.selectedGames.splice(gameIndex, 1);
+        state.savedNewGame = true;
+      }
+    });
+    builder.addCase(deleteGame.rejected, (state, { error }) => {
       state.error = error;
       state.loading = false;
     });
