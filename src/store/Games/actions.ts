@@ -235,9 +235,7 @@ export const deleteGame = createAsyncThunk(
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        console.log('calling json');
         const json = await response.json();
-        console.log(json);
 
         return json.data;
       } else {
