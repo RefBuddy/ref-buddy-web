@@ -39,7 +39,8 @@ const SelectedGames = () => {
 
   const officialsData = useAppSelector((state) => state.games.officialsData);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [editingGame, setEditingGame] = useState<any | null>(null);
+  const [editingGame, setEditingGame] = useState<GameData | null>(null);
+  const [gameToDelete, setGameToDelete] = useState<GameData | null>(null);
   // Time picker state
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [gameData, setGameData] = useState<GameDateRequestData | null>(null);
@@ -75,8 +76,9 @@ const SelectedGames = () => {
     }
   };
 
-  const handleDeleteGameClick = (game) => {
-    setShowDeleteGameModal(true);
+  const handleDeleteGameClick = () => {
+    console.log('delete game', gameToDelete);
+    setShowDeleteGameModal(false);
   };
 
   const handleSaveClick = (game) => {
@@ -318,7 +320,10 @@ const SelectedGames = () => {
                   {!isEditing && (
                     <button
                       className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      onClick={() => handleDeleteGameClick(gameData)}
+                      onClick={() => {
+                        setGameToDelete(game);
+                        setShowDeleteGameModal(true);
+                      }}
                     >
                       Delete Game
                     </button>
@@ -427,7 +432,7 @@ const SelectedGames = () => {
                         className="text-lg leading-6 font-medium text-gray-900"
                         id="modal-headline"
                       >
-                        This action cannot be undone.
+                        This action cannot be undone
                       </h3>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
@@ -448,7 +453,7 @@ const SelectedGames = () => {
                   <button
                     type="button"
                     className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-success-400 hover:bg-success-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    onClick={() => setShowDeleteGameModal(false)}
+                    onClick={handleDeleteGameClick}
                   >
                     Delete
                   </button>
