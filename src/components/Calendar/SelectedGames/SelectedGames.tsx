@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import {
   fetchOfficialsProfiles,
   editGameDate,
+  deleteGame,
 } from '../../../store/Games/actions';
 import { releaseGame } from '../../../store/Assigning/actions';
 import { incrementAssignedCount } from '../../../store/OfficialsList/reducer';
@@ -16,17 +17,23 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './App.css';
 import { GameAssignment } from './GameAssignment';
 import { Button } from '../../Button';
-import CreateGame from '../CreateGame/CreateGame';
 import { resetSavedGameState } from '../../../store/Games/reducer';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
+import { Loading } from '../../../components/Loading';
 
-const SelectedGames = () => {
+const SelectedGames = ({ onClose }) => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector((state) => state.games.selectedGames);
   const { currentLeague, currentSeason } = useAppSelector(
     (state) => state.user,
   );
+  const isLoading = useAppSelector((state) => state.games.loading);
+  const handleCloseSelectedGames = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
 
   useEffect(() => {
     // Dispatch action to fetch officials data
@@ -39,7 +46,8 @@ const SelectedGames = () => {
 
   const officialsData = useAppSelector((state) => state.games.officialsData);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [editingGame, setEditingGame] = useState<any | null>(null);
+  const [editingGame, setEditingGame] = useState<GameData | null>(null);
+  const [gameToDelete, setGameToDelete] = useState<GameData | null>(null);
   // Time picker state
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [gameData, setGameData] = useState<GameDateRequestData | null>(null);
@@ -47,6 +55,8 @@ const SelectedGames = () => {
   const events = useAppSelector((state) => state.games.monthGameData);
   // Show the create view
   const [showCreate, setShowCreate] = useState<boolean>(false);
+  const [showDeleteGameModal, setShowDeleteGameModal] =
+    useState<boolean>(false);
 
   // Function for handling time changes
   const handleTimeChange = (value) => {
@@ -58,8 +68,8 @@ const SelectedGames = () => {
   };
 
   const handleEditClick = (game) => {
-    setEditingGame(game);
     setIsEditing(true);
+    setEditingGame(game);
     if (gameData && gameData.gameNumber === game.gameNumber) {
       // If there is gameData for this game, initialize the selectedDate and selectedTime with the new date and time
       setSelectedDate(new Date(gameData.newDate));
@@ -70,6 +80,45 @@ const SelectedGames = () => {
       // Otherwise, initialize with the original date and time
       setSelectedDate(new Date(game.date));
       setSelectedTime(moment(game.time) && moment(game.time).toDate());
+    }
+  };
+
+  const handleDeleteGameClick = async () => {
+    if (gameToDelete) {
+      try {
+        const deleteGameData: DeleteGameRequestData = gameToDelete.officials
+          .length
+          ? {
+              officials: gameToDelete.officials.map((official) => ({
+                uid: official.uid,
+                date: gameToDelete.time.slice(0, 10),
+                gameNumber: gameToDelete.gameNumber,
+                league: currentLeague,
+                season: currentSeason,
+              })),
+            }
+          : {
+              officials: [
+                {
+                  uid: '',
+                  date: gameToDelete.time.slice(0, 10),
+                  gameNumber: gameToDelete.gameNumber,
+                  league: currentLeague,
+                  season: currentSeason,
+                },
+              ],
+            };
+        setShowDeleteGameModal(false);
+        await dispatch(deleteGame(deleteGameData));
+        handleCloseSelectedGames();
+        setGameToDelete(null);
+
+        toast.success('Game successfully deleted');
+      } catch (error) {
+        toast.error('Error deleting game');
+      }
+    } else {
+      toast.error('Error deleting game');
     }
   };
 
@@ -157,11 +206,6 @@ const SelectedGames = () => {
     datepickerClassNames: 'center-datepicker',
     defaultDate: selectedDate,
     language: 'en',
-  };
-
-  const onCreateGameClose = () => {
-    setShowCreate(false);
-    dispatch(resetSavedGameState());
   };
 
   const getBorderColor = (game) => {
@@ -262,132 +306,206 @@ const SelectedGames = () => {
   };
 
   return (
-    <div className="mt-6">
-      <div className="flex justify-between items-center mb-4 -mt-6">
-        <button
-          className="border border-gray-300 rounded-md py-1 px-2.5 ml-16 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          onClick={() => getGamesByDirection('prev')}
-        >
-          <ChevronLeftIcon className="h-6 w-6" />
-        </button>
-        <p className="text-lg font-bold">Selected Games</p>
-        <button
-          className="border border-gray-300 rounded-md py-1 px-2.5 mr-16 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          onClick={() => getGamesByDirection('next')}
-        >
-          <ChevronRightIcon className="h-6 w-6" />
-        </button>
-      </div>
-      <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
-        {!showCreate &&
-          [...selectedGames].map((game) => (
-            <div
-              key={game.id}
-              className={`w-full flex flex-col items-start justify-center gap-3 border-solid border rounded px-2.5 py-1 mx-4 ${
-                getBorderColor(game).color
-              }`}
-            >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2">
-                  {editingGame && editingGame.id === game.id ? null : (
-                    <p className="font-bold">
-                      {gameData && gameData.gameNumber === game.gameNumber
-                        ? gameData.newDate
-                        : game.date.slice(0, -6)}{' '}
-                      -{' '}
-                      {gameData && gameData.gameNumber === game.gameNumber
-                        ? formatTime(gameData.newISO)
-                        : formatTime(game.time)}{' '}
-                      - {game.venue}
-                    </p>
-                  )}
-                  {editingGame && editingGame.id === game.id ? null : (
-                    <button
-                      className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      onClick={() => handleEditClick(game)}
+    <>
+      <div className="mt-6">
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <div className="flex justify-between items-center mb-4 -mt-6">
+              <button
+                className="border border-gray-300 rounded-md py-1 px-2.5 ml-16 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={() => getGamesByDirection('prev')}
+              >
+                <ChevronLeftIcon className="h-6 w-6" />
+              </button>
+              <p className="text-lg font-bold">Selected Games</p>
+              <button
+                className="border border-gray-300 rounded-md py-1 px-2.5 mr-16 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={() => getGamesByDirection('next')}
+              >
+                <ChevronRightIcon className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="flex flex-row items-center gap-2 flex-wrap max-w-2/3 w-full">
+              {!showCreate &&
+                [...selectedGames].map((game) => (
+                  <div
+                    key={game.id}
+                    className={`w-full flex flex-col items-start justify-center gap-3 border-solid border rounded px-2.5 py-1 mx-4 ${
+                      getBorderColor(game).color
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-2">
+                        {editingGame && editingGame.id === game.id ? null : (
+                          <p className="font-bold">
+                            {gameData && gameData.gameNumber === game.gameNumber
+                              ? gameData.newDate
+                              : game.date.slice(0, -6)}{' '}
+                            -{' '}
+                            {gameData && gameData.gameNumber === game.gameNumber
+                              ? formatTime(gameData.newISO)
+                              : formatTime(game.time)}{' '}
+                            - {game.venue}
+                          </p>
+                        )}
+                        {editingGame && editingGame.id === game.id ? null : (
+                          <button
+                            className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            onClick={() => handleEditClick(game)}
+                          >
+                            Edit
+                          </button>
+                        )}
+                        {!isEditing && (
+                          <button
+                            className="border border-gray-300 rounded-md py-0.5 px-1.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            onClick={() => {
+                              setGameToDelete(game);
+                              setShowDeleteGameModal(true);
+                            }}
+                          >
+                            Delete Game
+                          </button>
+                        )}
+                      </div>
+                      {game.queue && game.officials.length === 5 ? (
+                        <Button onClick={() => release(game)}>Release</Button>
+                      ) : !game.queue && game.officials.length === 5 ? (
+                        <p>Released ✅</p>
+                      ) : null}
+                    </div>
+                    {editingGame && editingGame.id === game.id && (
+                      <div className="flex items-center">
+                        <Datepicker
+                          options={options}
+                          onChange={handleDateChange}
+                          show={show}
+                          setShow={handleClose}
+                        />
+                        <TimePicker
+                          className="-ml-12"
+                          onChange={handleTimeChange}
+                          value={
+                            selectedTime ? moment(selectedTime) : undefined
+                          }
+                          showSecond={false}
+                          format="h:mm a"
+                          use12Hours={true}
+                        />
+                        <button
+                          className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={() => handleSaveClick(game)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={() => handleCancelClick()}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                    <div className="flex w-full -mt-2 items-center justify-between">
+                      <div className="flex flex-row items-center">
+                        <div className="flex flex-col items-center justify-center">
+                          <img
+                            width={40}
+                            height={40}
+                            src={game.visitingTeam.logo}
+                            alt="visiting team logo"
+                          />
+                          <p className="text-sm text-black text-center min-w-24">
+                            {game.visitingTeam.city}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="text-xl font-bold mb-5">@</div>
+                        </div>
+                        <div className="flex flex-col items-center justify-center">
+                          <img
+                            width={40}
+                            height={40}
+                            src={game.homeTeam.logo}
+                            alt="home team logo"
+                          />
+                          <p className="text-sm text-black text-center min-w-24">
+                            {game.homeTeam.city}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="w-auto pb-1">
+                        {officialsData && officialsData[game.id] && (
+                          <GameAssignment gameData={game} />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              {showDeleteGameModal && !isEditing && (
+                <div className="fixed z-10 inset-0 overflow-y-auto">
+                  <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <div
+                      className="fixed inset-0 transition-opacity"
+                      aria-hidden="true"
                     >
-                      Edit
-                    </button>
-                  )}
-                </div>
-                {game.queue && game.officials.length === 5 ? (
-                  <Button onClick={() => release(game)}>Release</Button>
-                ) : !game.queue && game.officials.length === 5 ? (
-                  <p>Released ✅</p>
-                ) : null}
-              </div>
-              {editingGame && editingGame.id === game.id && (
-                <div className="flex items-center">
-                  <Datepicker
-                    options={options}
-                    onChange={handleDateChange}
-                    show={show}
-                    setShow={handleClose}
-                  />
-                  <TimePicker
-                    className="-ml-12"
-                    onChange={handleTimeChange}
-                    value={selectedTime ? moment(selectedTime) : undefined}
-                    showSecond={false}
-                    format="h:mm a"
-                    use12Hours={true}
-                  />
-                  <button
-                    className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    onClick={() => handleSaveClick(game)}
-                  >
-                    Save
-                  </button>
-                  <button
-                    className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    onClick={() => handleCancelClick()}
-                  >
-                    Cancel
-                  </button>
+                      <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+                    </div>
+                    <span
+                      className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                      aria-hidden="true"
+                    ></span>
+                    &#8203;
+                    <div
+                      className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-1/4"
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="modal-headline"
+                    >
+                      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div className="sm:flex sm:items-start">
+                          <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3
+                              className="text-lg leading-6 font-medium text-gray-900"
+                              id="modal-headline"
+                            >
+                              This action cannot be undone
+                            </h3>
+                            <div className="mt-2">
+                              <p className="text-sm text-gray-500">
+                                Are you sure you want to delete this game?
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-3 sm:px-6 flex justify-end">
+                        <button
+                          type="button"
+                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-error-400 hover:bg-error-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
+                          onClick={() => setShowDeleteGameModal(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-success-400 hover:bg-success-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={handleDeleteGameClick}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
-              <div className="flex w-full -mt-2 items-center justify-between">
-                <div className="flex flex-row items-center">
-                  <div className="flex flex-col items-center justify-center">
-                    <img
-                      width={40}
-                      height={40}
-                      src={game.visitingTeam.logo}
-                      alt="visiting team logo"
-                    />
-                    <p className="text-sm text-black text-center min-w-24">
-                      {game.visitingTeam.city}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="text-xl font-bold mb-5">@</div>
-                  </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <img
-                      width={40}
-                      height={40}
-                      src={game.homeTeam.logo}
-                      alt="home team logo"
-                    />
-                    <p className="text-sm text-black text-center min-w-24">
-                      {game.homeTeam.city}
-                    </p>
-                  </div>
-                </div>
-                <div className="w-auto pb-1">
-                  {officialsData && officialsData[game.id] && (
-                    <GameAssignment gameData={game} />
-                  )}
-                </div>
-              </div>
             </div>
-          ))}
-        {showCreate && <CreateGame onClose={() => onCreateGameClose()} />}
-        {!showCreate && (
-          <Button onClick={() => setShowCreate(true)}>Create New Game</Button>
+          </>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

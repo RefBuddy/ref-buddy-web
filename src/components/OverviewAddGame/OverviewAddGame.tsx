@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import CreateGame from '../Calendar/CreateGame/CreateGame';
 import { useAppDispatch } from '../../store';
-import { UsersIcon } from '@heroicons/react/24/solid';
-import OfficialsList from '../OfficialsList/OfficialsList';
-import { setModalState } from '../../store/Modal/reducer';
+import { resetSavedGameState } from '../../store/Games/reducer';
 import { Modal } from '../Modal';
 
-const OverviewOfficials = () => {
+const OverviewAddGame = () => {
   const dispatch = useAppDispatch();
-  const [showOfficialsList, setShowOfficialsList] = useState(false);
+  const [showCreate, setShowCreate] = useState<boolean>(false);
 
   const handleClick = () => {
-    setShowOfficialsList(!showOfficialsList);
-    dispatch(setModalState({ officialsList: { open: !showOfficialsList } }));
+    setShowCreate(!showCreate);
   };
 
-  const game = {
-    time: '2021-10-10T01:00:00.000Z',
-    gameNumber: 1,
+  const onCreateGameClose = () => {
+    setShowCreate(false);
+    dispatch(resetSavedGameState());
   };
 
   return (
@@ -27,21 +26,21 @@ const OverviewOfficials = () => {
       <div className="flex flex-col justify-between w-full">
         <div className="flex justify-start items-center w-full">
           <h6 className="text-gray-700 text-sm font-medium uppercase mt-10">
-            Officials
+            Add New Game
           </h6>
         </div>
         <div className="flex justify-end items-end w-full mt-12">
-          <UsersIcon className="w-12 h-12 text-black" />
+          <PlusCircleIcon className="w-12 h-12 text-black" />
         </div>
       </div>
 
-      {showOfficialsList && (
+      {showCreate && (
         <Modal onClick={handleClick}>
-          <OfficialsList game={game} role="dashboard" isAssigned={false} />
+          <CreateGame onClose={() => onCreateGameClose()} />
         </Modal>
       )}
     </div>
   );
 };
 
-export default OverviewOfficials;
+export default OverviewAddGame;

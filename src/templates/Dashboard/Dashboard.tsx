@@ -4,7 +4,8 @@ import Navbar from '../../components/Navbar';
 import MyCalendar from '../../components/Calendar';
 import { Loading } from '../../components/Loading';
 import OverviewOfficials from '../../components/OverviewOfficials/OverviewOfficials';
-import OverviewGameReports from '../../components/OverviewGameReports/OverviewGameReports';
+import OverviewAddGame from '../../components/OverviewAddGame/OverviewAddGame';
+import OverviewLogout from '../../components/OverviewLogout/OverviewLogout';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
 import { resetCalendarEventsFetch } from '../../store/Games/reducer';
 import QueuedTable from '../../components/Table/QueuedTable';
@@ -32,18 +33,27 @@ const Dashboard: React.FC<any> = () => {
   return (
     <div style={{ display: 'flex' }}>
       <Navbar />
-      <main style={{ flex: 1 }}>
-        {loading ? <Loading /> : <></>}
-        <div className="flex items-center p-5">
-          <OverviewGameReports progress={44} value="4 / 9" />
+      <main className="flex flex-col items-center flex-1">
+        {loading ? <Loading /> : null}
+
+        {/* Overviews Row */}
+        <div className="flex justify-start items-start w-full p-5 pb-0">
+          <OverviewAddGame />
           <OverviewOfficials />
+          {/* <OverviewLogout /> */}
         </div>
-        <div className="flex flex-1 xl:flex-row flex-col items-start xl:gap-2 gap-4 p-5 mr-4">
-          <div className="xl:w-3/5 w-full">
+
+        {/* Calendar and Table Row */}
+        <div className="flex flex-col lg:flex-row justify-center items-start w-full xl:gap-2 gap-4 p-5">
+          <div className="xl:w-3/5 w-full mb-4 lg:mb-0">
+            {' '}
+            {/* Add margin-bottom for smaller screens */}
             <MyCalendar />
           </div>
-          <div className="xl:w-2/5 w-auto ml-4">
-            {!loading ? <QueuedTable /> : <></>}
+          <div className="xl:w-2/5 w-auto ml-0 lg:ml-4">
+            {' '}
+            {/* Remove left margin for smaller screens */}
+            {!loading ? <QueuedTable /> : null}
           </div>
         </div>
       </main>

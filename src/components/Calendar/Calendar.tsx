@@ -148,7 +148,7 @@ const MyCalendar: FC = () => {
             defaultDate={new Date()}
             defaultView="month"
             events={convertedEvents}
-            style={{ height: '60vh', width: '50vw', margin: '0 auto 2rem' }}
+            style={{ height: '63vh', width: '50vw', margin: '0 auto 2rem' }}
             selectable
             // onSelectEvent={event => selectEvent(event)}
             onSelectSlot={(slotInfo) => selectSlot(slotInfo)}
@@ -172,7 +172,7 @@ const MyCalendar: FC = () => {
           />
           {showSelectedGames && (
             <Modal onClose={() => handleClick()}>
-              <SelectedGames />
+              <SelectedGames onClose={() => handleClick()} />
             </Modal>
           )}
         </div>
