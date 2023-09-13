@@ -159,18 +159,13 @@ const gamesSlice = createSlice({
     builder.addCase(deleteGame.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(deleteGame.fulfilled, (state, { payload, meta }) => {
-      console.log('delete game fulfilled');
+    builder.addCase(deleteGame.fulfilled, (state) => {
       state.error = null;
       state.loading = false;
-      state.refetchCalendarEvents = true;
-      if (payload) {
-        // const gameIndex = state.selectedGames.findIndex(
-        //   (game) => game.gameNumber === meta.arg.gameNumber,
-        // );
-        // state.selectedGames.splice(gameIndex, 1);
-        state.savedNewGame = true;
-      }
+      // state.refetchCalendarEvents = true;
+      // if (payload) {
+      //   state.savedNewGame = true;
+      // }
     });
     builder.addCase(deleteGame.rejected, (state, { error }) => {
       state.error = error;
