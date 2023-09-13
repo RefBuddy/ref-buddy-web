@@ -37,7 +37,7 @@ const Dashboard: React.FC<any> = () => {
         {loading ? <Loading /> : null}
 
         {/* Overviews Row */}
-        <div className="flex justify-start items-start w-full p-5">
+        <div className="flex justify-start items-start w-full p-5 pb-0">
           <OverviewAddGame />
           <OverviewOfficials />
           {/* <OverviewLogout /> */}
