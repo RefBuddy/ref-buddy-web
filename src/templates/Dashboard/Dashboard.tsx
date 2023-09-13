@@ -37,20 +37,22 @@ const Dashboard: React.FC<any> = () => {
         {loading ? <Loading /> : null}
 
         {/* Overviews Row */}
-        <div className="flex justify-start items-start w-full p-5 pb-0">
+        <div className="flex justify-start items-start w-full p-5">
           <OverviewAddGame />
           <OverviewOfficials />
-          {/* <div className="ml-auto">
-            <OverviewLogout />
-          </div> */}
+          {/* <OverviewLogout /> */}
         </div>
 
         {/* Calendar and Table Row */}
-        <div className="flex justify-center items-start w-full xl:gap-2 gap-4 p-5">
-          <div className="xl:w-3/5 w-full">
+        <div className="flex flex-col lg:flex-row justify-center items-start w-full xl:gap-2 gap-4 p-5">
+          <div className="xl:w-3/5 w-full mb-4 lg:mb-0">
+            {' '}
+            {/* Add margin-bottom for smaller screens */}
             <MyCalendar />
           </div>
-          <div className="xl:w-2/5 w-auto ml-4">
+          <div className="xl:w-2/5 w-auto ml-0 lg:ml-4">
+            {' '}
+            {/* Remove left margin for smaller screens */}
             {!loading ? <QueuedTable /> : null}
           </div>
         </div>
