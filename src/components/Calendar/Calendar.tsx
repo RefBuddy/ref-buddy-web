@@ -172,7 +172,7 @@ const MyCalendar: FC = () => {
           />
           {showSelectedGames && (
             <Modal onClose={() => handleClick()}>
-              <SelectedGames />
+              <SelectedGames onClose={() => handleClick()} />
             </Modal>
           )}
         </div>

@@ -23,13 +23,18 @@ import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import { Loading } from '../../../components/Loading';
 
-const SelectedGames = () => {
+const SelectedGames = ({ onClose }) => {
   const dispatch = useAppDispatch();
   const selectedGames = useAppSelector((state) => state.games.selectedGames);
   const { currentLeague, currentSeason } = useAppSelector(
     (state) => state.user,
   );
   const isLoading = useAppSelector((state) => state.games.loading);
+  const handleCloseSelectedGames = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
 
   useEffect(() => {
     // Dispatch action to fetch officials data
@@ -80,22 +85,29 @@ const SelectedGames = () => {
   };
 
   const handleDeleteGameClick = () => {
-    console.log('delete game', gameToDelete);
-
     if (gameToDelete) {
-      const deleteGameData: DeleteGameRequestData = {
-        officials: gameToDelete.officials.map((official) => ({
-          uid: official.uid,
-          date: gameToDelete.time.slice(0, 10),
-          gameNumber: gameToDelete.gameNumber,
-          league: currentLeague,
-          season: currentSeason,
-        })),
-      };
+      try {
+        const deleteGameData: DeleteGameRequestData = {
+          officials: gameToDelete.officials.map((official) => ({
+            uid: official.uid,
+            date: gameToDelete.time.slice(0, 10),
+            gameNumber: gameToDelete.gameNumber,
+            league: currentLeague,
+            season: currentSeason,
+          })),
+        };
+        dispatch(deleteGame(deleteGameData));
+        setGameToDelete(null);
 
-      dispatch(deleteGame(deleteGameData));
+        setShowDeleteGameModal(false);
+        handleCloseSelectedGames();
+        toast.success('Game successfully deleted');
+      } catch (error) {
+        toast.error('Error deleting game');
+      }
+    } else {
+      toast.error('Error deleting game');
     }
-    setShowDeleteGameModal(false);
   };
 
   const handleSaveClick = (game) => {
@@ -438,7 +450,7 @@ const SelectedGames = () => {
                       className="fixed inset-0 transition-opacity"
                       aria-hidden="true"
                     >
-                      <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                      <div className="absolute inset-0 bg-black bg-opacity-70"></div>
                     </div>
                     <span
                       className="hidden sm:inline-block sm:align-middle sm:h-screen"
