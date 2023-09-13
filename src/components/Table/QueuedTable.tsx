@@ -73,7 +73,7 @@ const QueuedTable = () => {
   }
 
   return (
-    <div className="w-full flex flex-col border border-gray-200 rounded-lg p-4 border-solid">
+    <div className="w-full flex flex-col border border-gray-200 rounded-lg p-4 border-solid overflow-y-auto max-h-[506px]">
       <h4>
         Queued Games{' '}
         <span className="mx-8">
