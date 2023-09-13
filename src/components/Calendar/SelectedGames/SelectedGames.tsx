@@ -352,7 +352,7 @@ const SelectedGames = ({ onClose }) => {
                         )}
                         {editingGame && editingGame.id === game.id ? null : (
                           <button
-                            className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             onClick={() => handleEditClick(game)}
                           >
                             Edit
@@ -360,7 +360,7 @@ const SelectedGames = ({ onClose }) => {
                         )}
                         {!isEditing && (
                           <button
-                            className="border border-gray-300 rounded-md py-0.5 px-1.5 mx-1 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="border border-gray-300 rounded-md py-0.5 px-1.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             onClick={() => {
                               setGameToDelete(game);
                               setShowDeleteGameModal(true);
