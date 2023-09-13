@@ -30,7 +30,7 @@ const OverviewAddGame = () => {
           </h6>
         </div>
         <div className="flex justify-end items-end w-full mt-12">
-          <PlusCircleIcon className="w-14 h-14 text-black" />
+          <PlusCircleIcon className="w-12 h-12 text-black" />
         </div>
       </div>
 

@@ -21,7 +21,7 @@ const OverviewOfficials = () => {
 
   return (
     <div
-      className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56"
+      className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56 cursor-pointer"
       onClick={handleClick}
     >
       <div className="flex flex-col justify-between w-full">
@@ -31,7 +31,7 @@ const OverviewOfficials = () => {
           </h6>
         </div>
         <div className="flex justify-end items-end w-full mt-12">
-          <UsersIcon className="w-14 h-14 text-black" />
+          <UsersIcon className="w-12 h-12 text-black" />
         </div>
       </div>
 
