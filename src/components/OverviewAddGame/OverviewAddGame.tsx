@@ -1,11 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import CreateGame from '../Calendar/CreateGame/CreateGame';
 import { useAppDispatch } from '../../store';
 import { resetSavedGameState } from '../../store/Games/reducer';
 import { Modal } from '../Modal';
 
-const OverviewGameReports = () => {
+const OverviewAddGame = () => {
   const dispatch = useAppDispatch();
   const [showCreate, setShowCreate] = useState<boolean>(false);
 
@@ -43,4 +43,4 @@ const OverviewGameReports = () => {
   );
 };
 
-export default OverviewGameReports;
+export default OverviewAddGame;
