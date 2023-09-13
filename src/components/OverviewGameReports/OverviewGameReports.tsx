@@ -1,34 +1,44 @@
-import React, { FC } from 'react';
-import { ClipboardIcon } from '@heroicons/react/24/solid';
+import React, { FC, useState } from 'react';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import CreateGame from '../Calendar/CreateGame/CreateGame';
+import { useAppDispatch } from '../../store';
+import { resetSavedGameState } from '../../store/Games/reducer';
+import { Modal } from '../Modal';
 
-interface OverviewGameReportsProps {
-  progress: number;
-  value: string;
-}
+const OverviewGameReports = () => {
+  const dispatch = useAppDispatch();
+  const [showCreate, setShowCreate] = useState<boolean>(false);
 
-const OverviewGameReports: FC<OverviewGameReportsProps> = ({
-  progress,
-  value,
-}) => {
+  const handleClick = () => {
+    setShowCreate(!showCreate);
+  };
+
+  const onCreateGameClose = () => {
+    setShowCreate(false);
+    dispatch(resetSavedGameState());
+  };
+
   return (
-    <div className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56">
-      <div className="flex flex-1 flex-col items-start justify-center gap-3">
-        <div className="flex justify-between items-center w-full">
-          <h6 className="text-gray-700 text-sm font-medium uppercase">
-            Game Reports
+    <div
+      className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56 cursor-pointer"
+      onClick={handleClick}
+    >
+      <div className="flex flex-col justify-between w-full">
+        <div className="flex justify-start items-center w-full">
+          <h6 className="text-gray-700 text-sm font-medium uppercase mt-10">
+            Add New Game
           </h6>
-          <ClipboardIcon className="w-14 h-14 text-black" />
         </div>
-        <h4 className="text-lg font-semibold">{value}</h4>
-        <div className="mt-3 w-full">
-          <div className="h-1 w-full bg-gray-300 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-green-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+        <div className="flex justify-end items-end w-full mt-12">
+          <PlusCircleIcon className="w-14 h-14 text-black" />
         </div>
       </div>
+
+      {showCreate && (
+        <Modal onClick={handleClick}>
+          <CreateGame onClose={() => onCreateGameClose()} />
+        </Modal>
+      )}
     </div>
   );
 };

@@ -17,7 +17,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './App.css';
 import { GameAssignment } from './GameAssignment';
 import { Button } from '../../Button';
-import CreateGame from '../CreateGame/CreateGame';
 import { resetSavedGameState } from '../../../store/Games/reducer';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
@@ -84,23 +83,36 @@ const SelectedGames = ({ onClose }) => {
     }
   };
 
-  const handleDeleteGameClick = () => {
+  const handleDeleteGameClick = async () => {
     if (gameToDelete) {
       try {
-        const deleteGameData: DeleteGameRequestData = {
-          officials: gameToDelete.officials.map((official) => ({
-            uid: official.uid,
-            date: gameToDelete.time.slice(0, 10),
-            gameNumber: gameToDelete.gameNumber,
-            league: currentLeague,
-            season: currentSeason,
-          })),
-        };
-        dispatch(deleteGame(deleteGameData));
+        const deleteGameData: DeleteGameRequestData = gameToDelete.officials
+          .length
+          ? {
+              officials: gameToDelete.officials.map((official) => ({
+                uid: official.uid,
+                date: gameToDelete.time.slice(0, 10),
+                gameNumber: gameToDelete.gameNumber,
+                league: currentLeague,
+                season: currentSeason,
+              })),
+            }
+          : {
+              officials: [
+                {
+                  uid: '',
+                  date: gameToDelete.time.slice(0, 10),
+                  gameNumber: gameToDelete.gameNumber,
+                  league: currentLeague,
+                  season: currentSeason,
+                },
+              ],
+            };
+        setShowDeleteGameModal(false);
+        await dispatch(deleteGame(deleteGameData));
+        handleCloseSelectedGames();
         setGameToDelete(null);
 
-        setShowDeleteGameModal(false);
-        handleCloseSelectedGames();
         toast.success('Game successfully deleted');
       } catch (error) {
         toast.error('Error deleting game');
@@ -194,11 +206,6 @@ const SelectedGames = ({ onClose }) => {
     datepickerClassNames: 'center-datepicker',
     defaultDate: selectedDate,
     language: 'en',
-  };
-
-  const onCreateGameClose = () => {
-    setShowCreate(false);
-    dispatch(resetSavedGameState());
   };
 
   const getBorderColor = (game) => {
@@ -437,12 +444,6 @@ const SelectedGames = ({ onClose }) => {
                     </div>
                   </div>
                 ))}
-              {showCreate && <CreateGame onClose={() => onCreateGameClose()} />}
-              {!showCreate && (
-                <Button onClick={() => setShowCreate(true)}>
-                  Create New Game
-                </Button>
-              )}
               {showDeleteGameModal && !isEditing && (
                 <div className="fixed z-10 inset-0 overflow-y-auto">
                   <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

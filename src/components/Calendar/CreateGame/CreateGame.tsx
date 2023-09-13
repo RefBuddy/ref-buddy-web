@@ -49,20 +49,6 @@ const VisitingTeamField = {
   options: [...Object.keys(teamNames)],
 };
 
-const League = {
-  key: 'league',
-  label: 'League',
-  required: true,
-  options: ['bchl'],
-};
-
-const Season = {
-  key: 'season',
-  label: 'Season',
-  required: true,
-  options: ['2023-2024', '2022-2023'],
-};
-
 const CreateGame = ({ onClose }: { onClose: () => void }) => {
   const dispatch = useAppDispatch();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
@@ -73,8 +59,9 @@ const CreateGame = ({ onClose }: { onClose: () => void }) => {
   const [visitingTeam, setVisitingTeam] = useState<Team | null>(
     teamNames[VisitingTeamField.options[1]],
   );
-  const [league, setLeague] = useState<string | null>(League.options[0]);
-  const [season, setSeason] = useState<string | null>(Season.options[0]);
+  const { currentLeague, currentSeason } = useAppSelector(
+    (state) => state.user,
+  );
   const [show, setShow] = useState(false);
 
   const successfullyAddedGame = useAppSelector(
@@ -122,8 +109,8 @@ const CreateGame = ({ onClose }: { onClose: () => void }) => {
     }
 
     const data: AddGameRequestData = {
-      league: league!,
-      season: season!,
+      league: currentLeague!,
+      season: currentSeason!,
       homeTeam: homeTeam!,
       visitingTeam: visitingTeam!,
       dateISO8601: ISO,
@@ -133,15 +120,8 @@ const CreateGame = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="flex flex-col gap-3 mx-auto py-8">
-      <div
-        className="flex flex-row items-center gap-2 w-full"
-        onClick={onClose}
-      >
-        <ChevronLeftIcon className="h-6 w-6 bg-black text-white rounded-full" />
-        Back
-      </div>
-      <h1>Create and schedule a new game</h1>
+    <div className="flex flex-col gap-3 mx-auto">
+      <h2 className="text-center">New Game</h2>
       <Select
         field={HomeTeamField}
         value={homeTeam ? homeTeam.team_name : ''}
@@ -172,26 +152,9 @@ const CreateGame = ({ onClose }: { onClose: () => void }) => {
         format="h:mm a"
         use12Hours={true}
       />
-      <Select
-        field={League}
-        value={league ? league : ''}
-        onChange={(value) => setLeague(value)}
-      />
-      <Select
-        field={Season}
-        value={season ? season : ''}
-        onChange={(value) => setSeason(value)}
-      />
 
       <Button
-        disabled={
-          !league ||
-          !season ||
-          !homeTeam ||
-          !visitingTeam ||
-          !selectedDate ||
-          !selectedTime
-        }
+        disabled={!homeTeam || !visitingTeam || !selectedDate || !selectedTime}
         onClick={onSave}
       >
         Create New Game
