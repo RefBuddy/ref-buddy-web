@@ -501,9 +501,9 @@ const SelectedGames = ({ onClose }) => {
                             </h3>
                             <div className="mt-2">
                               <p className="text-sm text-gray-500">
-                                Deleting this game will remove and notify
-                                everyone assigned to it, and remove it from the
-                                calendar.
+                                Everyone assigned to this game will be notified
+                                that they have been removed and the game will be
+                                deleted.
                               </p>
                             </div>
                           </div>
