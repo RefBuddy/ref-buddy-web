@@ -72,6 +72,19 @@ const QueuedTable = () => {
     return null;
   }
 
+  const groupByDate = (games) => {
+    return games.reduce((acc, game) => {
+      (acc[game.date] = acc[game.date] || []).push(game);
+      return acc;
+    }, {});
+  };
+
+  const releaseAll = (gamesOnDate) => {
+    gamesOnDate.forEach((game) => release(game));
+  };
+
+  const groupedGames = groupByDate(queuedGames);
+
   return (
     <div className="w-full flex flex-col border border-gray-200 rounded-lg p-4 border-solid overflow-y-auto max-h-[529px]">
       <h4>
@@ -91,46 +104,59 @@ const QueuedTable = () => {
           </tr>
         </thead>
         <tbody>
-          {queuedGames.map((game, idx) => {
-            const officialsInGame = game.officials.filter(
-              (off) => off.role !== 'supervisor',
-            );
-            const supervisor = game.officials.find(
-              (off) => off.role === 'supervisor',
-            );
-
-            const officialNames = officialsInGame
-              .map((off) =>
-                officials[off.uid]
-                  ? `${officials[off.uid].firstName} ${
-                      officials[off.uid].lastName
-                    }`
-                  : 'Unknown official',
-              )
-              .join(', ');
-
-            const supervisorName =
-              supervisor && supervisors[supervisor.uid]
-                ? `${supervisors[supervisor.uid].firstName} ${
-                    supervisors[supervisor.uid].lastName
-                  }`
-                : 'empty';
-
-            return (
-              <tr key={`queued-${idx}`} className={getBackgroundColor(idx)}>
-                <td className="text-xs p-2">{game.date}</td>
-                <td className="text-xs p-2">
-                  {game.homeTeam.abbreviation} vs.{' '}
-                  {game.visitingTeam.abbreviation}
-                </td>
-                <td className="text-xs p-2">{officialNames}</td>
-                <td className="text-xs p-2">{supervisorName}</td>
-                <td className="text-xs p-2">
-                  <Button onClick={() => release(game)}>Release</Button>
+          {Object.keys(groupedGames).map((date) => (
+            <React.Fragment key={date}>
+              <tr>
+                <td className="p-2" colSpan={5}>
+                  <div className="bg-white p-2 rounded-md flex justify-end">
+                    <Button onClick={() => releaseAll(groupedGames[date])}>
+                      Release {date.substring(date.indexOf(', ') + 2)}
+                    </Button>
+                  </div>
                 </td>
               </tr>
-            );
-          })}
+              {groupedGames[date].map((game, idx) => {
+                const officialsInGame = game.officials.filter(
+                  (off) => off.role !== 'supervisor',
+                );
+                const supervisor = game.officials.find(
+                  (off) => off.role === 'supervisor',
+                );
+
+                const officialNames = officialsInGame
+                  .map((off) =>
+                    officials[off.uid]
+                      ? `${officials[off.uid].firstName} ${
+                          officials[off.uid].lastName
+                        }`
+                      : 'Unknown official',
+                  )
+                  .join(', ');
+
+                const supervisorName =
+                  supervisor && supervisors[supervisor.uid]
+                    ? `${supervisors[supervisor.uid].firstName} ${
+                        supervisors[supervisor.uid].lastName
+                      }`
+                    : 'empty';
+
+                return (
+                  <tr key={`queued-${idx}`} className={getBackgroundColor(idx)}>
+                    <td className="text-xs p-2">{game.date}</td>
+                    <td className="text-xs p-2">
+                      {game.visitingTeam.abbreviation} @{' '}
+                      {game.homeTeam.abbreviation}
+                    </td>
+                    <td className="text-xs p-2">{officialNames}</td>
+                    <td className="text-xs p-2">{supervisorName}</td>
+                    <td className="text-xs p-2">
+                      <Button onClick={() => release(game)}>Release</Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </React.Fragment>
+          ))}
         </tbody>
       </table>
     </div>
