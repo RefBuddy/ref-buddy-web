@@ -388,7 +388,7 @@ const SelectedGames = ({ onClose }) => {
                       ) : null}
                     </div>
                     {editingGame && editingGame.id === game.id && (
-                      <div className="flex items-center">
+                      <div className="flex items-center -mt-4">
                         <Datepicker
                           options={options}
                           onChange={handleDateChange}
@@ -396,7 +396,7 @@ const SelectedGames = ({ onClose }) => {
                           setShow={handleClose}
                         />
                         <TimePicker
-                          className="-ml-12"
+                          className="-ml-20 w-48"
                           onChange={handleTimeChange}
                           value={
                             selectedTime ? moment(selectedTime) : undefined
@@ -406,7 +406,7 @@ const SelectedGames = ({ onClose }) => {
                           use12Hours={true}
                         />
                         <TextInput
-                          className="ml-2"
+                          className="ml-5"
                           label="Venue"
                           placeholder="Venue"
                           value={editingGame?.venue}
