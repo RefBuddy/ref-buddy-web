@@ -111,6 +111,7 @@ const MyCalendar: FC = () => {
 
   const selectSlot = (slotInfo: { slots: Date[] }) => {
     if (!events) return;
+
     const slots = slotInfo.slots;
     const startTime = slots[0];
     const endTime = slots[slots.length - 1];
@@ -119,10 +120,7 @@ const MyCalendar: FC = () => {
 
     const allEventsDuringSlots = Object.keys(events).filter((key) => {
       const keyDate = new Date(key);
-      if (keyDate >= new Date(startKey) && keyDate <= new Date(endKey)) {
-        return true;
-      }
-      return false;
+      return keyDate >= new Date(startKey) && keyDate <= new Date(endKey);
     });
 
     const gamesDuringSlots: GameData[] = [];
@@ -133,8 +131,15 @@ const MyCalendar: FC = () => {
       });
     });
 
-    dispatch(setSelectedGames(gamesDuringSlots));
-    handleClick();
+    if (gamesDuringSlots.length > 0) {
+      dispatch(setSelectedGames(gamesDuringSlots));
+      handleClick();
+    } else {
+      if (showSelectedGames) {
+        // Hide the modal if it's already showing
+        handleClick();
+      }
+    }
   };
 
   const convertedEvents = convertEvents(events || ([] as any));
