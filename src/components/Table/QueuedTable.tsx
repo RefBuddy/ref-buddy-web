@@ -110,7 +110,11 @@ const QueuedTable = () => {
                 <td className="p-2" colSpan={5}>
                   <div className="bg-white p-2 rounded-md flex justify-end">
                     <Button onClick={() => releaseAll(groupedGames[date])}>
-                      Release {date.substring(date.indexOf(', ') + 2)}
+                      Release{' '}
+                      {date.substring(
+                        date.indexOf(', ') + 2,
+                        date.indexOf(',', date.indexOf(',') + 1),
+                      )}
                     </Button>
                   </div>
                 </td>
