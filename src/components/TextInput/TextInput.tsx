@@ -43,9 +43,9 @@ const TextInput: React.FC<TextInputProps> = ({
     >
       <div
         className={cn(
-          'relative flex items-center gap-1 pb-2 px-3 transition-all border rounded shadow-primary-700 focus-within:shadow',
+          'relative flex items-center gap-1 pb-2 px-3 transition-all border rounded shadow-black focus-within:shadow',
           {
-            'border-gray-400 text-gray-400 focus-within:text-primary-700 focus-within:border-primary-700':
+            'border-gray-400 text-gray-400 focus-within:text-black focus-within:border-black':
               !error,
             'border-error-700 text-error-700': error,
             'pt-3': label,

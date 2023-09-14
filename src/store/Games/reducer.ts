@@ -36,7 +36,7 @@ const gamesSlice = createSlice({
       state.selectedGames = payload;
     },
     editGameDate: (state, { payload }) => {
-      const { gameId, newDate, newISO } = payload;
+      const { gameId, newDate, newISO, venue } = payload;
       const gameIndex = state.selectedGames.findIndex(
         (game) => game.id === gameId,
       );
@@ -45,6 +45,7 @@ const gamesSlice = createSlice({
           ...state.selectedGames[gameIndex],
           date: newDate,
           time: newISO,
+          venue: venue,
         };
         state.selectedGames[gameIndex] = updatedGame;
       }
