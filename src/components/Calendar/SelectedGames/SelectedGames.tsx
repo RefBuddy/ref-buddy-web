@@ -21,6 +21,7 @@ import { resetSavedGameState } from '../../../store/Games/reducer';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import { Loading } from '../../../components/Loading';
+import { TextInput } from '../../../components/TextInput';
 
 const SelectedGames = ({ onClose }) => {
   const dispatch = useAppDispatch();
@@ -157,6 +158,7 @@ const SelectedGames = ({ onClose }) => {
           day: 'numeric',
         }),
         newISO: ISO,
+        venue: editingGame?.venue ?? game.venue,
       };
       setGameData(updatedGameData);
       dispatch(editGameDate(updatedGameData));
@@ -164,6 +166,10 @@ const SelectedGames = ({ onClose }) => {
       setSelectedDate(null);
       setSelectedTime(null);
       setIsEditing(false);
+
+      toast.success('Game successfully updated');
+    } else {
+      toast.error('Error updating game');
     }
   };
 
@@ -347,7 +353,12 @@ const SelectedGames = ({ onClose }) => {
                             {gameData && gameData.gameNumber === game.gameNumber
                               ? formatTime(gameData.newISO)
                               : formatTime(game.time)}{' '}
-                            - {game.venue}
+                            -{' '}
+                            {gameData &&
+                            gameData.gameNumber === game.gameNumber &&
+                            gameData.venue
+                              ? gameData.venue
+                              : game.venue}
                           </p>
                         )}
                         {editingGame && editingGame.id === game.id ? null : (
@@ -394,9 +405,24 @@ const SelectedGames = ({ onClose }) => {
                           format="h:mm a"
                           use12Hours={true}
                         />
+                        <TextInput
+                          className="ml-2"
+                          label="Venue"
+                          placeholder="Venue"
+                          value={editingGame?.venue}
+                          setValue={(value) => {
+                            if (editingGame) {
+                              const updatedGame = {
+                                ...editingGame,
+                                venue: value,
+                              };
+                              setEditingGame(updatedGame);
+                            }
+                          }}
+                        />
                         <button
                           className="border border-gray-300 rounded-md py-0.5 px-1.5 ml-4 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onClick={() => handleSaveClick(game)}
+                          onClick={() => handleSaveClick(editingGame ?? game)}
                         >
                           Save
                         </button>
@@ -475,7 +501,8 @@ const SelectedGames = ({ onClose }) => {
                             </h3>
                             <div className="mt-2">
                               <p className="text-sm text-gray-500">
-                                Are you sure you want to delete this game?
+                                Deleting this game will remove and notify
+                                everyone assigned to it.
                               </p>
                             </div>
                           </div>
