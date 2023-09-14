@@ -20,10 +20,10 @@ const OverviewAddGame = () => {
 
   return (
     <div
-      className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56 cursor-pointer"
+      className="flex items-center justify-center gap-3 border-gray-200 border-solid border rounded-lg shadow-sm px-4 mx-4 h-48 w-56"
       onClick={handleClick}
     >
-      <div className="flex flex-col justify-between w-full">
+      <div className="flex flex-col justify-between w-full cursor-pointer">
         <div className="flex justify-start items-center w-full">
           <h6 className="text-gray-700 text-sm font-medium uppercase mt-10">
             Add New Game

@@ -242,6 +242,16 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   const handleClick = (e, uid) => {
     e.stopPropagation();
+
+    // Check if the clicked official is already being displayed
+    if (officialClicked === uid) {
+      // Clear the data
+      setOfficialsData(undefined);
+      setOfficialClicked('');
+      setShowSaveButton(false);
+      return;
+    }
+
     if (isOfficialHovered(uid)) {
       const filteredOfficialProfileInfoKey = Object.keys(officials).filter(
         (key) => key === uid,
