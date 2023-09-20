@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store';
+import {
+  browserLocalPersistence,
+  setPersistence,
+  onAuthStateChanged,
+} from 'firebase/auth';
 import { auth } from '../../firebaseOptions';
 import { signInWithEmailAndPassword, getIdTokenResult } from 'firebase/auth';
 import Logo from '../../images/favicon.png';
@@ -35,8 +40,29 @@ const Login: React.FC<any> = () => {
     await dispatch(getUserLeagues(uid));
   };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const tokenResult = await getIdTokenResult(user);
+        const claims = tokenResult.claims;
+
+        if (claims['role'] === 'admin') {
+          const uid = user.uid;
+          await getLeague(uid);
+          setJustLoggedIn(true);
+        } else {
+          toast.error('Not an admin user');
+        }
+      }
+    });
+
+    // Cleanup the listener on component unmount
+    return () => unsubscribe();
+  }, []);
+
   const handleLogin = async () => {
     try {
+      await setPersistence(auth, browserLocalPersistence);
       const response = await signInWithEmailAndPassword(auth, email, password);
       const tokenResult = await getIdTokenResult(response.user);
       const claims = tokenResult.claims;

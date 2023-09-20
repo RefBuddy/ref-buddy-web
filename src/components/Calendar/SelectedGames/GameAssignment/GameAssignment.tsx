@@ -42,13 +42,13 @@ const GameAssignment = ({ gameData }) => {
         official={officialsByRole['linesman1']}
         gameData={gameData}
         role="linesman1"
-        label="Linesman"
+        label="Linesperson"
       />
       <OfficialBox
         official={officialsByRole['linesman2']}
         gameData={gameData}
         role="linesman2"
-        label="Linesman"
+        label="Linesperson"
       />
       <OfficialBox
         official={officialsByRole['supervisor']}
