@@ -8,4 +8,6 @@ interface Team {
   powerplay_goals: number;
   shots: number;
   team_name: string;
+  age_group: string;
+  location: string;
 }
