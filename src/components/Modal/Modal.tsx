@@ -18,7 +18,7 @@ const Modal: React.FC<PropsWithChildren<any>> = ({ children, onClose }) => {
       onClick={handleClose}
     >
       <div
-        className="bg-white rounded-md relative mx-48 my-4 border border-gray-300 p-4 overflow-y-auto max-h-[96vh] modal w-full min-h-[50vh]"
+        className="bg-white rounded-md relative mx-40 my-4 border border-gray-300 p-4 overflow-y-auto max-h-[96vh] modal w-full min-h-[50vh]"
         onClick={stopPropagation}
       >
         {/* <button onClick={() => handleClose()} className="absolute top-2 left-2">

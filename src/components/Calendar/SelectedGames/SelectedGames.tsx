@@ -311,6 +311,8 @@ const SelectedGames = ({ onClose }) => {
     dispatch(setSelectedGames(gamesDuringSlots));
   };
 
+  console.log(selectedGames);
+
   return (
     <>
       <div className="mt-6">
@@ -359,6 +361,12 @@ const SelectedGames = ({ onClose }) => {
                             gameData.venue
                               ? gameData.venue
                               : game.venue}
+                            {game.homeTeam.location
+                              ? ` - ${game.homeTeam.location}`
+                              : null}
+                            {game.homeTeam.location
+                              ? ` - ${game.homeTeam.age_group}`
+                              : null}
                           </p>
                         )}
                         {editingGame && editingGame.id === game.id ? null : (
@@ -440,11 +448,15 @@ const SelectedGames = ({ onClose }) => {
                           <img
                             width={40}
                             height={40}
-                            src={game.visitingTeam.logo}
+                            src={
+                              game.visitingTeam.logo ??
+                              'https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_1280.png'
+                            }
                             alt="visiting team logo"
                           />
                           <p className="text-sm text-black text-center min-w-24">
-                            {game.visitingTeam.city}
+                            {game.visitingTeam.city ??
+                              game.visitingTeam.team_name}
                           </p>
                         </div>
                         <div className="flex flex-col items-center justify-center">
@@ -454,11 +466,14 @@ const SelectedGames = ({ onClose }) => {
                           <img
                             width={40}
                             height={40}
-                            src={game.homeTeam.logo}
+                            src={
+                              game.homeTeam.logo ??
+                              'https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_1280.png'
+                            }
                             alt="home team logo"
                           />
                           <p className="text-sm text-black text-center min-w-24">
-                            {game.homeTeam.city}
+                            {game.homeTeam.city ?? game.homeTeam.team_name}
                           </p>
                         </div>
                       </div>
