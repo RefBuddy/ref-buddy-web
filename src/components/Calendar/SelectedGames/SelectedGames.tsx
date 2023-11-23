@@ -22,6 +22,7 @@ import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import { Loading } from '../../../components/Loading';
 import { TextInput } from '../../../components/TextInput';
+import { current } from '@reduxjs/toolkit';
 
 const SelectedGames = ({ onClose }) => {
   const dispatch = useAppDispatch();
@@ -58,6 +59,12 @@ const SelectedGames = ({ onClose }) => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [showDeleteGameModal, setShowDeleteGameModal] =
     useState<boolean>(false);
+  const minorLogo =
+    currentLeague === 'somha'
+      ? 'https://i.etsystatic.com/17942801/r/il/3a3e5a/1634913575/il_1588xN.1634913575_56tq.jpg'
+      : currentLeague === 'lusa'
+      ? 'https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_1280.png'
+      : null; // Replace with a default logo URL if needed
 
   // Function for handling time changes
   const handleTimeChange = (value) => {
@@ -364,7 +371,7 @@ const SelectedGames = ({ onClose }) => {
                             {game.homeTeam.location
                               ? ` - ${game.homeTeam.location}`
                               : null}
-                            {game.homeTeam.location
+                            {game.homeTeam.age_group
                               ? ` - ${game.homeTeam.age_group}`
                               : null}
                           </p>
@@ -448,10 +455,7 @@ const SelectedGames = ({ onClose }) => {
                           <img
                             width={40}
                             height={40}
-                            src={
-                              game.visitingTeam.logo ??
-                              'https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_1280.png'
-                            }
+                            src={game.visitingTeam.logo ?? minorLogo}
                             alt="visiting team logo"
                           />
                           <p className="text-sm text-black text-center min-w-24">
@@ -466,10 +470,7 @@ const SelectedGames = ({ onClose }) => {
                           <img
                             width={40}
                             height={40}
-                            src={
-                              game.homeTeam.logo ??
-                              'https://cdn.pixabay.com/photo/2013/07/13/10/51/football-157930_1280.png'
-                            }
+                            src={game.homeTeam.logo ?? minorLogo}
                             alt="home team logo"
                           />
                           <p className="text-sm text-black text-center min-w-24">
