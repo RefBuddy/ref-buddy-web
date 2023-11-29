@@ -318,8 +318,6 @@ const SelectedGames = ({ onClose }) => {
     dispatch(setSelectedGames(gamesDuringSlots));
   };
 
-  console.log(selectedGames);
-
   return (
     <>
       <div className="mt-6">
