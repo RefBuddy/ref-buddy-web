@@ -19,7 +19,11 @@ const QueuedTable = () => {
     if (!events) return [];
     return Object.keys(events).flatMap((date) => {
       return events[date].filter((gameOnDate) => {
-        return gameOnDate.queue && gameOnDate.officials.length === 5; // Only include games with 5 officials in the queue
+        if (currentLeague == 'bchl') {
+          return gameOnDate.queue && gameOnDate.officials.length === 5; // Only include games with 5 officials in the queue
+        } else {
+          return gameOnDate.queue;
+        }
       });
     });
   }, [events]);
