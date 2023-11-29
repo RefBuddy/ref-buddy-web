@@ -15,18 +15,6 @@ import CustomToolbar from './CustomToolbar/CustomToolbar';
 import { SelectedGames } from '../../components/Calendar/SelectedGames';
 import Modal from '../../components/Modal/Modal';
 
-const locales = {
-  'en-US': require('date-fns/locale/en-US'),
-};
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
-
 const CustomEvent = ({ event }) => {
   const greenEvents = event.events.filter(
     (event) =>
@@ -46,31 +34,38 @@ const CustomEvent = ({ event }) => {
       event.officials.some((official) => official.status.declined === true),
   );
 
-  const renderEvents = (events, colorClass) => {
-    if (events.length > 7) {
-      return (
-        <span className={`text-${colorClass} text-xs`}>{events.length}</span>
-      );
-    }
-    return events.map((_) => (
-      <span className={`text-${colorClass} text-xs`}>●</span>
-    ));
-  };
-
   return (
     <div className="text-red-500 flex flex-col flex-wrap">
       <div className="flex flex-row gap-1">
-        {renderEvents(greenEvents, 'green-500')}
+        {greenEvents.map((_) => (
+          <span className="text-green-500 text-xs">●</span>
+        ))}
       </div>
       <div className="flex flex-row gap-1 flex-wrap">
-        {renderEvents(yellowEvents, 'warning-300')}
+        {yellowEvents.map((_) => (
+          <span className="text-warning-300 text-xs">●</span>
+        ))}
       </div>
       <div className="flex flex-row gap-1 flex-wrap">
-        {renderEvents(redEvents, 'error-500')}
+        {redEvents.map((_) => (
+          <span className="text-error-500 text-xs">●</span>
+        ))}
       </div>
     </div>
   );
 };
+
+const locales = {
+  'en-US': require('date-fns'),
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
 const convertEvents = (events: MonthGameData[]): CalendarEvent[] => {
   const groupedEvents: { [date: string]: CalendarEvent } = {};

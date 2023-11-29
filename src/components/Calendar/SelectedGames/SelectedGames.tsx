@@ -394,9 +394,11 @@ const SelectedGames = ({ onClose }) => {
                           </button>
                         )}
                       </div>
-                      {game.queue && game.officials.length === 5 ? (
+                      {(currentLeague !== 'bchl' && game.queue) ||
+                      (game.queue && game.officials.length === 5) ? (
                         <Button onClick={() => release(game)}>Release</Button>
-                      ) : !game.queue && game.officials.length === 5 ? (
+                      ) : (currentLeague !== 'bchl' && !game.queue) ||
+                        (!game.queue && game.officials.length === 5) ? (
                         <p>Released ✅</p>
                       ) : null}
                     </div>
