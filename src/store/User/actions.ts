@@ -20,20 +20,16 @@ export const getUserCalendarEvents = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {
         return rejectWithValue(
           `HTTP Error! Status: ${typedErr.response.status}`,
         );
-      } else {
-        return rejectWithValue(
-          `Unexpected error occurred: ${typedErr.message}`,
-        );
       }
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   },
 );
@@ -59,20 +55,16 @@ export const getAllOfficialsCalendarEvents = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {
         return rejectWithValue(
           `HTTP Error! Status: ${typedErr.response.status}`,
         );
-      } else {
-        return rejectWithValue(
-          `Unexpected error occurred: ${typedErr.message}`,
-        );
       }
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   },
 );
@@ -96,9 +88,8 @@ export const getOfficialsStats = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response.status !== 401) {
@@ -120,18 +111,15 @@ export const getUserLeagues = createAsyncThunk(
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          data: {
-            uid: uid,
-          },
+          data: { uid },
         }),
       });
 
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {
@@ -163,9 +151,8 @@ export const updateOfficialRole = createAsyncThunk(
         const json = await response.json();
         console.log('Server Response:', json);
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {

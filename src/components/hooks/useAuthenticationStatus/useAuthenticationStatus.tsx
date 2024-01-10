@@ -10,7 +10,6 @@ export default function useAuthenticationStatus(): [boolean, boolean] {
     (async () => {
       try {
         // check if user is authenticated
-
         if (auth) {
           auth.onAuthStateChanged((user) => {
             if (user) {
@@ -22,14 +21,6 @@ export default function useAuthenticationStatus(): [boolean, boolean] {
             }
           });
         }
-        if (auth && auth.currentUser) {
-          setIsAuthenticated(true);
-          setLoading(false);
-        } else {
-          setIsAuthenticated(false);
-          setLoading(false);
-        }
-        return;
       } catch (error) {
         // if at any point this fails then we are not authenticated
         setIsAuthenticated(false);

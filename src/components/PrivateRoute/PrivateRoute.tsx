@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useAuthenticationStatus } from '../hooks';
 import { navigate } from 'gatsby';
+import { useAuthenticationStatus } from '../hooks';
 
 interface PrivateRouteProps {
   component: React.ElementType;
