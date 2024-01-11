@@ -28,9 +28,8 @@ export const fetchGamesByMonth = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       // If its anything but a unauthorized error, throw it
@@ -64,9 +63,8 @@ export const fetchOfficialsProfiles = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response.status !== 401) {
@@ -97,9 +95,8 @@ export const editGameDate = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response.status !== 401) {
@@ -129,20 +126,16 @@ export const addToQueue = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {
         return rejectWithValue(
           `HTTP Error! Status: ${typedErr.response.status}`,
         );
-      } else {
-        return rejectWithValue(
-          `Unexpected error occurred: ${typedErr.message}`,
-        );
       }
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   },
 );
@@ -165,20 +158,16 @@ export const removeFromGame = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {
         return rejectWithValue(
           `HTTP Error! Status: ${typedErr.response.status}`,
         );
-      } else {
-        return rejectWithValue(
-          `Unexpected error occurred: ${typedErr.message}`,
-        );
       }
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   },
 );
@@ -201,20 +190,16 @@ export const addGame = createAsyncThunk(
       if (response.ok) {
         const json = await response.json();
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {
         return rejectWithValue(
           `HTTP Error! Status: ${typedErr.response.status}`,
         );
-      } else {
-        return rejectWithValue(
-          `Unexpected error occurred: ${typedErr.message}`,
-        );
       }
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   },
 );
@@ -238,20 +223,16 @@ export const deleteGame = createAsyncThunk(
         const json = await response.json();
 
         return json.data;
-      } else {
-        return rejectWithValue(`HTTP error! Status: ${response.status}`);
       }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
       const typedErr: any = err;
       if (typedErr.response && typedErr.response.status !== 401) {
         return rejectWithValue(
           `HTTP Error! Status: ${typedErr.response.status}`,
         );
-      } else {
-        return rejectWithValue(
-          `Unexpected error occurred: ${typedErr.message}`,
-        );
       }
+      return rejectWithValue(`Unexpected error occurred: ${typedErr.message}`);
     }
   },
 );

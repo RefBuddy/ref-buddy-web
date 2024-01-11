@@ -21,8 +21,8 @@ const Dashboard: React.FC<any> = () => {
 
   // store list of officials in redux
   useEffect(() => {
-    dispatch(getOfficialsList({ league: league }));
-  }, []);
+    dispatch(getOfficialsList({ league }));
+  }, [league]);
 
   useEffect(() => {
     if (refetchCalendarEvents) {
@@ -48,7 +48,7 @@ const Dashboard: React.FC<any> = () => {
           <div className="xl:w-3/5 w-full mb-4 lg:mb-0">
             {' '}
             {/* Add margin-bottom for smaller screens */}
-            <MyCalendar />
+            {league ? <MyCalendar /> : null}
           </div>
           <div className="xl:w-2/5 w-auto ml-0 lg:ml-4">
             {' '}

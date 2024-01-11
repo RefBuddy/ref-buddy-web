@@ -6,14 +6,14 @@ import {
 } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useAuthenticationStatus } from '../../components/hooks';
+import { useAuthenticationStatus } from '../hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchGamesByMonth } from '../../store/Games/actions';
 import { setSelectedGames } from '../../store/Games/reducer';
 import { setModalState } from '../../store/Modal/reducer';
 import CustomToolbar from './CustomToolbar/CustomToolbar';
-import { SelectedGames } from '../../components/Calendar/SelectedGames';
-import Modal from '../../components/Modal/Modal';
+import { SelectedGames } from './SelectedGames';
+import Modal from '../Modal/Modal';
 
 const CustomEvent = ({ event }) => {
   const greenEvents = event.events.filter(
@@ -97,6 +97,7 @@ const MyCalendar: FC = () => {
   const events = useAppSelector((state) => state.games.monthGameData);
   const currentDate = useAppSelector((state) => state.games.currentDate);
   const [showSelectedGames, setShowSelectedGames] = useState(false);
+  const league = useAppSelector((state) => state.user.currentLeague);
 
   const handleClick = () => {
     setShowSelectedGames(!showSelectedGames);
@@ -110,9 +111,11 @@ const MyCalendar: FC = () => {
   }, [isAuthenticated, loading, currentDate, showSelectedGames]);
 
   const selectSlot = (slotInfo: { slots: Date[] }) => {
-    if (!events) return;
+    if (!events) {
+      return;
+    }
 
-    const slots = slotInfo.slots;
+    const { slots } = slotInfo;
     const startTime = slots[0];
     const endTime = slots[slots.length - 1];
     const startKey = format(new Date(startTime), 'yyyy-MM-dd');
@@ -134,11 +137,9 @@ const MyCalendar: FC = () => {
     if (gamesDuringSlots.length > 0) {
       dispatch(setSelectedGames(gamesDuringSlots));
       handleClick();
-    } else {
-      if (showSelectedGames) {
-        // Hide the modal if it's already showing
-        handleClick();
-      }
+    } else if (showSelectedGames) {
+      // Hide the modal if it's already showing
+      handleClick();
     }
   };
 
@@ -163,7 +164,7 @@ const MyCalendar: FC = () => {
               eventWrapper: CustomEvent,
             }}
             eventPropGetter={(event) => {
-              let newStyle = {
+              const newStyle = {
                 backgroundColor: 'transparent',
                 color: '#10b981',
                 fontSize: '.5rem',
