@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { navigate } from 'gatsby';
 import { useAuthenticationStatus } from '../hooks';
+import { getUserLeagues } from '../../store/User/actions';
+import { useAppDispatch } from '../../store';
+import { auth } from '../../firebaseOptions';
 
 interface PrivateRouteProps {
   component: React.ElementType;
@@ -10,6 +13,7 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = (props: PrivateRouteProps) => {
+  const dispatch = useAppDispatch();
   const [isAuthenticated, loading] = useAuthenticationStatus();
   useEffect(() => {
     if (loading) {
@@ -21,6 +25,8 @@ const PrivateRoute = (props: PrivateRouteProps) => {
         navigate('/');
       }
     }
+    const uid = auth.currentUser?.uid || '';
+    dispatch(getUserLeagues(uid));
   }, [isAuthenticated, loading]);
 
   const { component: Component, ...rest } = props;

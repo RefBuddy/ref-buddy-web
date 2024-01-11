@@ -21,8 +21,8 @@ const Dashboard: React.FC<any> = () => {
 
   // store list of officials in redux
   useEffect(() => {
-    dispatch(getOfficialsList({ league: league }));
-  }, []);
+    dispatch(getOfficialsList({ league }));
+  }, [league]);
 
   useEffect(() => {
     if (refetchCalendarEvents) {
