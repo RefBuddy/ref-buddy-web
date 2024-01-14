@@ -1,58 +1,60 @@
-import React from 'react';
-import { useAppSelector } from '../../store';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store';
 import Navbar from '../../components/Navbar';
 import { Loading } from '../../components/Loading';
 
+import OfficialsTable from './components/OfficialsTable';
+import SupervisorsTable from './components/SupervisorsTable';
+import { getOfficialsList } from '../../store/OfficialsList/actions';
+
 const Admin: React.FC<any> = () => {
+  const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.officials.loading);
+  const league = useAppSelector((state) => state.user.currentLeague);
+
+  useEffect(() => {
+    if (league) {
+      dispatch(getOfficialsList({ league }));
+    }
+  }, [league]);
 
   const officials = useAppSelector((state) => state.officials.officialsList);
-  const supervisors = useAppSelector((state) => state.officials.supervisorsList);
+  const supervisors = useAppSelector(
+    (state) => state.officials.supervisorsList,
+  );
 
-  console.log("officials", officials);
+  const handleDelete = (id: string) => {
+    // Implement your delete logic here
+    console.log(`Deleting item with id: ${id}`);
+  };
+
   return (
     <div style={{ display: 'flex' }}>
       <Navbar />
-    <main className="flex flex-col items-center flex-1">
-        {loading ? <Loading /> : null}
-        <h2>Admin</h2>
+      {loading ? (
+        <Loading />
+      ) : (
+        <main className="flex flex-col items-center flex-1">
+          <h2>Admin</h2>
 
-        <h3>Officials</h3>
-        <table className="table-auto border-collapse border border-green-800">
-            <thead>
-                <tr>
-                    <th className="border border-green-600 px-4 py-2 text-green-800">Name</th>
-                    <th className="border border-green-600 px-4 py-2 text-green-800">Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {Object.values(officials).map((official) => (
-                    <tr key={official.uid}>
-                        <td className="border border-green-600 px-4 py-2">{official.firstName} {official.lastName}</td>
-                        <td className="border border-green-600 px-4 py-2">{official.email}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+          <h3>Officials</h3>
+          {officials ? (
+            <OfficialsTable officials={officials} handleDelete={handleDelete} />
+          ) : (
+            <p>No officials data</p>
+          )}
 
-        <h3>Supervisors</h3>
-        <table className="table-auto border-collapse border border-blue-800">
-            <thead>
-                <tr>
-                    <th className="border border-blue-600 px-4 py-2 text-blue-800">Name</th>
-                    <th className="border border-blue-600 px-4 py-2 text-blue-800">Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {Object.values(supervisors).map((supervisor) => (
-                    <tr key={supervisor.uid}>
-                        <td className="border border-blue-600 px-4 py-2">{supervisor.firstName} {supervisor.lastName}</td>
-                        <td className="border border-blue-600 px-4 py-2">{supervisor.email}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    </main>
+          <h3>Supervisors</h3>
+          {supervisors ? (
+            <SupervisorsTable
+              supervisors={supervisors}
+              handleDelete={handleDelete}
+            />
+          ) : (
+            <p>No supervisors data</p>
+          )}
+        </main>
+      )}
     </div>
   );
 };
