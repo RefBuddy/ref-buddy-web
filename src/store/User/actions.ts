@@ -163,3 +163,33 @@ export const updateOfficialRole = createAsyncThunk(
     }
   },
 );
+
+export const deleteUser = createAsyncThunk(
+  'user/deleteUser',
+  async (userData: DeleteUserRequestData, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${URL}/deleteUser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: { userData },
+        }),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        return json.data;
+      }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    } catch (err) {
+      const typedErr: any = err;
+      if (typedErr.response && typedErr.response.status !== 401) {
+        return rejectWithValue(
+          `HTTP Error! Status: ${typedErr.response.status}`,
+        );
+      }
+    }
+  },
+);
