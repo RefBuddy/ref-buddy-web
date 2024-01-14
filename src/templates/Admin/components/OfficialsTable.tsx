@@ -13,22 +13,27 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
   const [sortStatus, setSortStatus] = useState<'asc' | 'desc' | ''>('asc');
 
   const sortOfficials = (officials: { [uid: string]: OfficialData }) => {
-    return Object.values(officials).sort((a, b) => {
-      if (sortName !== '') {
-        const nameA = a.lastName.toUpperCase();
-        const nameB = b.lastName.toUpperCase();
-        if (nameA < nameB) return sortName === 'asc' ? -1 : 1;
-        if (nameA > nameB) return sortName === 'asc' ? 1 : -1;
-      }
+    return Object.values(officials)
+      .filter(
+        (official) =>
+          !(official.firstName === 'No' && official.lastName === 'Supervisor'),
+      )
+      .sort((a, b) => {
+        if (sortName !== '') {
+          const nameA = a.lastName.toUpperCase();
+          const nameB = b.lastName.toUpperCase();
+          if (nameA < nameB) return sortName === 'asc' ? -1 : 1;
+          if (nameA > nameB) return sortName === 'asc' ? 1 : -1;
+        }
 
-      if (sortStatus !== '') {
-        const statusA = a.firstName ? 1 : 0;
-        const statusB = b.firstName ? 1 : 0;
-        return sortStatus === 'asc' ? statusA - statusB : statusB - statusA;
-      }
+        if (sortStatus !== '') {
+          const statusA = a.firstName ? 1 : 0;
+          const statusB = b.firstName ? 1 : 0;
+          return sortStatus === 'asc' ? statusA - statusB : statusB - statusA;
+        }
 
-      return 0;
-    });
+        return 0;
+      });
   };
 
   return (
