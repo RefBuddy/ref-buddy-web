@@ -4,7 +4,7 @@ import { getOfficialsList } from './actions';
 const initialState = {
   officialsList: {},
   supervisorsList: {},
-  loading: false,
+  loading: true,
   error: undefined,
 } as OfficialsListState;
 
