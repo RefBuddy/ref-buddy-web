@@ -4,7 +4,6 @@ import Navbar from '../../components/Navbar';
 import { Loading } from '../../components/Loading';
 
 import OfficialsTable from './components/OfficialsTable';
-import SupervisorsTable from './components/SupervisorsTable';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
 
 const Admin: React.FC<any> = () => {
@@ -35,24 +34,11 @@ const Admin: React.FC<any> = () => {
         <Loading />
       ) : (
         <main className="flex flex-col items-center flex-1">
-          <h2>Admin</h2>
-
           <h3>Officials</h3>
-          {officials ? (
-            <OfficialsTable officials={officials} handleDelete={handleDelete} />
-          ) : (
-            <p>No officials data</p>
-          )}
+          <OfficialsTable officials={officials} handleDelete={handleDelete} />
 
           <h3>Supervisors</h3>
-          {supervisors ? (
-            <SupervisorsTable
-              supervisors={supervisors}
-              handleDelete={handleDelete}
-            />
-          ) : (
-            <p>No supervisors data</p>
-          )}
+          <OfficialsTable officials={supervisors} handleDelete={handleDelete} />
         </main>
       )}
     </div>
