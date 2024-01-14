@@ -33,12 +33,19 @@ const Admin: React.FC<any> = () => {
       {loading ? (
         <Loading />
       ) : (
-        <main className="flex flex-col items-center flex-1">
-          <h3>Officials</h3>
-          <OfficialsTable officials={officials} handleDelete={handleDelete} />
+        <main className="flex flex-row flex-1">
+          <div className="flex flex-col items-center flex-1">
+            <h3>Officials</h3>
+            <OfficialsTable officials={officials} handleDelete={handleDelete} />
+          </div>
 
-          <h3>Supervisors</h3>
-          <OfficialsTable officials={supervisors} handleDelete={handleDelete} />
+          <div className="flex flex-col items-center flex-1">
+            <h3>Supervisors</h3>
+            <OfficialsTable
+              officials={supervisors}
+              handleDelete={handleDelete}
+            />
+          </div>
         </main>
       )}
     </div>
