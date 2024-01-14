@@ -23,6 +23,7 @@ import { toast } from 'react-toastify';
 import { Loading } from '../../../components/Loading';
 import { TextInput } from '../../../components/TextInput';
 import { current } from '@reduxjs/toolkit';
+import { ConfirmationModal } from '../../ConfirmationModal';
 
 const SelectedGames = ({ onClose }) => {
   const dispatch = useAppDispatch();
@@ -487,63 +488,15 @@ const SelectedGames = ({ onClose }) => {
                   </div>
                 ))}
               {showDeleteGameModal && !isEditing && (
-                <div className="fixed z-10 inset-0 overflow-y-auto">
-                  <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                    <div
-                      className="fixed inset-0 transition-opacity"
-                      aria-hidden="true"
-                    >
-                      <div className="absolute inset-0 bg-black bg-opacity-70"></div>
-                    </div>
-                    <span
-                      className="hidden sm:inline-block sm:align-middle sm:h-screen"
-                      aria-hidden="true"
-                    ></span>
-                    &#8203;
-                    <div
-                      className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-1/4"
-                      role="dialog"
-                      aria-modal="true"
-                      aria-labelledby="modal-headline"
-                    >
-                      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div className="sm:flex sm:items-start">
-                          <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <h3
-                              className="text-lg leading-6 font-medium text-gray-900"
-                              id="modal-headline"
-                            >
-                              This action cannot be undone
-                            </h3>
-                            <div className="mt-2">
-                              <p className="text-sm text-gray-500">
-                                Everyone assigned to this game will be notified
-                                that they have been removed and the game will be
-                                deleted.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-gray-50 px-4 py-3 sm:px-6 flex justify-end">
-                        <button
-                          type="button"
-                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-error-400 hover:bg-error-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
-                          onClick={() => setShowDeleteGameModal(false)}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-success-400 hover:bg-success-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onClick={handleDeleteGameClick}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ConfirmationModal
+                  isOpen={showDeleteGameModal}
+                  title="This action cannot be undone"
+                  mainText="Everyone assigned to this game will be notified
+                  that they have been removed and the game will be
+                  deleted."
+                  onCancel={() => setShowDeleteGameModal(false)}
+                  onConfirm={handleDeleteGameClick}
+                />
               )}
             </div>
           </>
