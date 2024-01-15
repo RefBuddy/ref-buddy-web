@@ -13,7 +13,7 @@ export const statsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getLeagueStats.fulfilled, (state, { payload }) => {
-      state.stats = payload.stats;
+      state.stats = payload;
       state.error = null;
       state.loading = false;
     });
