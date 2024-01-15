@@ -174,7 +174,7 @@ export const deleteUser = createAsyncThunk(
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          data: { userData },
+          data: userData,
         }),
       });
 
