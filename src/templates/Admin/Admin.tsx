@@ -66,10 +66,10 @@ const Admin: React.FC<any> = () => {
           onConfirm={() => {
             setIsLoading(true);
             dispatch(deleteUser({ uid, league })).then(() => {
-              setIsLoading(false);
-              setisModalOpen(false);
-              toast.success('User deleted');
               dispatch(getOfficialsList({ league }));
+              setisModalOpen(false);
+              setIsLoading(false);
+              toast.success('User deleted');
             });
           }}
           title="This action is irreversible"
