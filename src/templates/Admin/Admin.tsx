@@ -46,7 +46,7 @@ const Admin: React.FC<any> = () => {
             <OfficialsTable officials={officials} handleDelete={handleDelete} />
           </div>
 
-          {supervisors ? (
+          {supervisors.length ? (
             <div className="flex flex-col items-center flex-1">
               <h3>Supervisors</h3>
               <OfficialsTable
