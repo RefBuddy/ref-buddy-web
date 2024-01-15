@@ -50,7 +50,7 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
           <th className="border border-green-600 px-4 py-2 text-green-800">
             Email
           </th>
-          <th className="border border-green-600 px-4 py-2 text-green-800">
+          <th className="border border-green-600 px-4 py-2 text-green-800 w-auto whitespace-nowrap">
             <button
               onClick={() =>
                 setSortStatus(sortStatus === 'asc' ? 'desc' : 'asc')
@@ -68,7 +68,7 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
       <tbody>
         {sortOfficials(officials).map((official) => (
           <tr key={official.uid}>
-            <td className="border border-green-600 px-4 py-2">
+            <td className="border border-green-600 px-4 py-2 w-auto whitespace-nowrap">
               {official.firstName} {official.lastName}
             </td>
             <td className="border border-green-600 px-4 py-2">
