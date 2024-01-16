@@ -11,7 +11,6 @@ const RoleDistribution = ({ data }) => {
     const onlyRefs = new Set([...refSet].filter((x) => !lineSet.has(x)));
     const onlyLines = new Set([...lineSet].filter((x) => !refSet.has(x)));
     const both = new Set([...refSet].filter((x) => lineSet.has(x)));
-    console.log(onlyRefs, onlyLines, both);
 
     return {
       onlyRefs: onlyRefs.size,
