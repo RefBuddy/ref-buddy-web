@@ -37,3 +37,35 @@ export const getOfficialsList = createAsyncThunk(
     }
   },
 );
+
+export const getInvitedUsers = createAsyncThunk(
+  'user/getInvitedUsers',
+  async (leagueData: { league: string }, { rejectWithValue }) => {
+    try {
+      const data = {
+        data: leagueData,
+      };
+
+      const response = await fetch(`${URL}/getInvitedUsers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        return json.data;
+      }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    } catch (err) {
+      const typedErr: any = err;
+      if (typedErr.response && typedErr.response.status !== 401) {
+        return rejectWithValue(
+          `HTTP Error! Status: ${typedErr.response.status}`,
+        );
+      }
+    }
+  },
+);

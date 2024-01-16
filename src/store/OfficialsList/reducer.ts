@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getOfficialsList } from './actions';
+import { getOfficialsList, getInvitedUsers } from './actions';
 
 const initialState = {
   officialsList: {},
   supervisorsList: {},
+  invitedUsers: {},
   loading: true,
   error: undefined,
 } as OfficialsListState;
@@ -50,6 +51,19 @@ export const officialsSlice = createSlice({
       state.officialsList = payload.officials;
       state.supervisorsList = payload.supervisors;
       state.error = null;
+      state.loading = false;
+    });
+    builder.addCase(getOfficialsList.rejected, (state, { error }) => {
+      state.error = error;
+      state.loading = false;
+    });
+    builder.addCase(getInvitedUsers.fulfilled, (state, { payload }) => {
+      state.invitedUsers = payload;
+      state.error = null;
+      state.loading = false;
+    });
+    builder.addCase(getInvitedUsers.rejected, (state, { error }) => {
+      state.error = error;
       state.loading = false;
     });
   },
