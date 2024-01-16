@@ -57,6 +57,15 @@ const RefereesAverageGoalsPerGame = ({ data }) => {
             },
           },
         },
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Average Goals Per Game',
+          },
+        },
       },
     });
     return () => chart.destroy();
@@ -64,7 +73,6 @@ const RefereesAverageGoalsPerGame = ({ data }) => {
 
   return (
     <div style={{ width: '600px' }}>
-      <h4>Average Goals Per Game</h4>
       <canvas id={chartId} />
     </div>
   );

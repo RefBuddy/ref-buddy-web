@@ -100,7 +100,7 @@ const RefereeAverageInfractionsPerGame = ({ data }) => {
           },
           title: {
             display: true,
-            text: 'Total Home Infractions by Referee',
+            text: 'Avg. Home vs Away Infractions per Game',
           },
         },
       },
@@ -111,7 +111,6 @@ const RefereeAverageInfractionsPerGame = ({ data }) => {
 
   return (
     <div style={{ width: '600px' }}>
-      <h4>Avg. Home vs Away Infractions per Game</h4>
       <canvas id={chartId} />
     </div>
   );

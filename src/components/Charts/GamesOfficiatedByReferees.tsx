@@ -53,6 +53,15 @@ const GamesOfficiatedByReferees = ({ data }) => {
             },
           },
         },
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Games officiated',
+          },
+        },
       },
     });
     return () => chart.destroy();
@@ -60,7 +69,6 @@ const GamesOfficiatedByReferees = ({ data }) => {
 
   return (
     <div style={{ width: '600px' }}>
-      <h4>Games Officiated</h4>
       <canvas id={chartId} />
     </div>
   );

@@ -34,22 +34,22 @@ const Stats: React.FC<any> = () => {
   }, [league, season]);
 
   const statsView = (
-    <div className="flex flex-col gap-4">
-      <div className="flex gap-4 justify-center items-center">
+    <div className="flex flex-col gap-10">
+      <div className="flex gap-12 justify-center items-center">
         <RoleDistribution data={stats} />
         <div className="mt-8">
           <PenaltyMinutesByTeam data={stats} />
         </div>
       </div>
       <div className="flex gap-4">
-        <div className="flex flex-col gap-4">
-          <h2 className="mt-8">Referees</h2>
+        <div className="flex flex-col gap-10">
+          <h2 className="text-center">Referees</h2>
           <RefereeAverageInfractionsPerGame data={stats} />
           <RefereesAverageGoalsPerGame data={stats} />
           <GamesOfficiatedByReferees data={stats} />
         </div>
-        <div className="flex flex-col gap-4">
-          <h2 className="mt-8">Linespeople</h2>
+        <div className="flex flex-col gap-10">
+          <h2 className="text-center">Linespeople</h2>
           <LinesmenAverageInfractionsPerGame data={stats} />
           <LinesmenAverageGoalsPerGame data={stats} />
           <GamesOfficiatedByLinesmen data={stats} />
@@ -61,7 +61,7 @@ const Stats: React.FC<any> = () => {
   return (
     <div style={{ display: 'flex' }}>
       <Navbar />
-      <main className="flex flex-wrap justify-center p-4 gap-12">
+      <main className="flex flex-wrap justify-center p-8 gap-8">
         {loading && <Loading />}
         {!loading && statsView}
       </main>

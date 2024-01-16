@@ -53,6 +53,15 @@ const GamesOfficiatedByLinesmen = ({ data }) => {
             },
           },
         },
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Games officiated',
+          },
+        },
       },
     });
     return () => chart.destroy();
@@ -60,7 +69,6 @@ const GamesOfficiatedByLinesmen = ({ data }) => {
 
   return (
     <div style={{ width: '600px' }}>
-      <h4>Games Officiated</h4>
       <canvas id={chartId} />
     </div>
   );
