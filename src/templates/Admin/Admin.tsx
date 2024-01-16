@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 
+import { toast } from 'react-toastify';
+
 import { deleteUser } from '../../store/User/actions';
-import { getOfficialsList } from '../../store/OfficialsList/actions';
+import {
+  getOfficialsList,
+  getInvitedUsers,
+} from '../../store/OfficialsList/actions';
 
 import Navbar from '../../components/Navbar';
 import { Loading } from '../../components/Loading';
@@ -10,8 +15,6 @@ import { ConfirmationModal } from '../../components/ConfirmationModal';
 
 import OfficialsTable from './components/OfficialsTable';
 import InviteUserCard from './components/InviteUserCard';
-
-import { toast } from 'react-toastify';
 
 const Admin: React.FC<any> = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +31,7 @@ const Admin: React.FC<any> = () => {
   useEffect(() => {
     if (league) {
       dispatch(getOfficialsList({ league }));
+      dispatch(getInvitedUsers({ league }));
     }
   }, [league]);
 
@@ -35,6 +39,9 @@ const Admin: React.FC<any> = () => {
   const supervisors = useAppSelector(
     (state) => state.officials.supervisorsList,
   );
+  const invitedUsers = useAppSelector((state) => state.officials.invitedUsers);
+
+  console.log(invitedUsers);
 
   const handleDelete = (uid: string) => {
     deleteUid(uid);
