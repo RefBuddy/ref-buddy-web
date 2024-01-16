@@ -193,3 +193,31 @@ export const deleteUser = createAsyncThunk(
     }
   },
 );
+
+export const inviteUser = createAsyncThunk(
+  'user/inviteUser',
+  async (inviteData: InviteUserRequestData, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${URL}/inviteUser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inviteData),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        return json.data;
+      }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    } catch (err) {
+      const typedErr: any = err;
+      if (typedErr.response && typedErr.response.status !== 401) {
+        return rejectWithValue(
+          `HTTP Error! Status: ${typedErr.response.status}`,
+        );
+      }
+    }
+  },
+);
