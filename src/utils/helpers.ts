@@ -1,8 +1,6 @@
 import { format } from 'date-fns';
 
-const formatDate = (date: Date): string => {
-  return format(date, 'yyyy-MM-dd');
-};
+const formatDate = (date: Date): string => format(date, 'yyyy-MM-dd');
 
 const formatTime = (time: string): string => {
   const date = new Date(time);
@@ -25,4 +23,7 @@ const format24HourTime = (time: string): string => {
   });
 };
 
-export { formatDate, formatTime, format24HourTime };
+const generateRandomString = (length = 12) =>
+  Math.random().toString(20).substring(2, length);
+
+export { formatDate, formatTime, format24HourTime, generateRandomString };
