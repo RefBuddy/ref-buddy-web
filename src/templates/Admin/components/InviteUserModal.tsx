@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 
+import { useAppDispatch, useAppSelector } from '../../../store';
+
+import { inviteUser } from '../../../store/User/actions';
+
 import { Button } from '../../../components/Button';
 
 interface InviteUserModalProps {
@@ -8,11 +12,13 @@ interface InviteUserModalProps {
 }
 
 const InviteUserModal = ({ onClose, onConfirm }: InviteUserModalProps) => {
+  const dispatch = useAppDispatch();
+  const league = useAppSelector((state) => state.user.currentLeague);
   const [email, setEmail] = useState('');
   const [isSupervisor, setIsSupervisor] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSend = () => {
+  const handleSend = async () => {
     // Check if email is empty
     if (!email) {
       setError('Email is required');
@@ -25,6 +31,17 @@ const InviteUserModal = ({ onClose, onConfirm }: InviteUserModalProps) => {
       setError('Please enter a valid email');
       return;
     }
+
+    const password = Math.random().toString(36).slice(-8);
+
+    await dispatch(
+      inviteUser({
+        email: email,
+        league: league,
+        supervisor: isSupervisor,
+        password: password,
+      }),
+    );
 
     onConfirm();
     onClose();
