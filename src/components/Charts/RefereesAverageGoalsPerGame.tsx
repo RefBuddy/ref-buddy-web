@@ -57,6 +57,15 @@ const RefereesAverageGoalsPerGame = ({ data }) => {
             },
           },
         },
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Average Goals Per Game',
+          },
+        },
       },
     });
     return () => chart.destroy();

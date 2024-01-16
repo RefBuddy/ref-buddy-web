@@ -100,7 +100,7 @@ const RefereeAverageInfractionsPerGame = ({ data }) => {
           },
           title: {
             display: true,
-            text: 'Total Home Infractions by Referee',
+            text: 'Avg. Home vs Away Infractions per Game',
           },
         },
       },
