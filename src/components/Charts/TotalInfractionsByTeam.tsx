@@ -50,8 +50,8 @@ const TotalInfractionsByTeam = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ width: '800px' }}>
-      <h4>Teams: Total Infractions by Team</h4>
+    <div style={{ width: '600px' }}>
+      <h4>Total Infractions by Team</h4>
       <canvas id={chartId} />
     </div>
   );

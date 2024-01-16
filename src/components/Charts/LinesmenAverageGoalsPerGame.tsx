@@ -63,8 +63,8 @@ const LinesmenAverageGoalsPerGame = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ width: '800px' }}>
-      <h4>Linesmen: Average Goals Per Game</h4>
+    <div style={{ width: '600px' }}>
+      <h4>Average Goals Per Game</h4>
       <canvas id={chartId} />
     </div>
   );

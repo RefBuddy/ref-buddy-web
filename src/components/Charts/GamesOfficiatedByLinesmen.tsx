@@ -59,8 +59,8 @@ const GamesOfficiatedByLinesmen = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ width: '800px' }}>
-      <h4>Linesmen: Games Officiated</h4>
+    <div style={{ width: '600px' }}>
+      <h4>Games Officiated</h4>
       <canvas id={chartId} />
     </div>
   );

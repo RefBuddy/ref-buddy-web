@@ -100,7 +100,7 @@ const LinesmenAverageInfractionsPerGame = ({ data }) => {
           },
           title: {
             display: true,
-            text: 'Total Home Infractions by Referee',
+            text: 'Total Home Infractions by Linesmen',
           },
         },
       },
@@ -110,8 +110,8 @@ const LinesmenAverageInfractionsPerGame = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ width: '800px' }}>
-      <h4>Referees: Avg. Home vs Away Infractions per Game</h4>
+    <div style={{ width: '600px' }}>
+      <h4>Avg. Home vs Away Infractions per Game</h4>
       <canvas id={chartId} />
     </div>
   );

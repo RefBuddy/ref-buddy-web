@@ -59,8 +59,8 @@ const GamesOfficiatedByReferees = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ width: '800px' }}>
-      <h4>Refereees: Games Officiated</h4>
+    <div style={{ width: '600px' }}>
+      <h4>Games Officiated</h4>
       <canvas id={chartId} />
     </div>
   );

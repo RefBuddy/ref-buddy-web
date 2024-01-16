@@ -54,7 +54,7 @@ const RoleDistribution = ({ data }) => {
 
   return (
     <div style={{ width: '400px' }}>
-      <h4>League: Role Distribution</h4>
+      <h4>Role Distribution</h4>
       <canvas id={chartId} />
     </div>
   );
