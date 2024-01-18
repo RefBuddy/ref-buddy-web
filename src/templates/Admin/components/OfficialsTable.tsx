@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface OfficialsTableProps {
-  officials: { [uid: string]: OfficialData };
+  officials: { [uid: string]: OfficialTableData };
   handleDelete: (uid: string) => void;
 }
 
@@ -12,7 +12,7 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
   const [sortName, setSortName] = useState<'asc' | 'desc' | ''>('asc');
   const [sortStatus, setSortStatus] = useState<'asc' | 'desc' | ''>('asc');
 
-  const sortOfficials = (officials: { [uid: string]: OfficialData }) => {
+  const sortOfficials = (officials: { [uid: string]: OfficialTableData }) => {
     return Object.values(officials)
       .filter(
         (official) =>
