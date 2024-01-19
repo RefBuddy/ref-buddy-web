@@ -7,9 +7,14 @@ import InviteUserModal from './InviteUserModal';
 interface InviteUserCardProps {
   openModal: boolean;
   onConfirm: () => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
-const InviteUserCard = ({ onConfirm, openModal }: InviteUserCardProps) => {
+const InviteUserCard = ({
+  onConfirm,
+  openModal,
+  setIsLoading,
+}: InviteUserCardProps) => {
   const [showInviteModal, setShowInviteModal] = useState<boolean>(openModal);
 
   const handleClick = () => {
@@ -37,7 +42,11 @@ const InviteUserCard = ({ onConfirm, openModal }: InviteUserCardProps) => {
       </div>
 
       {showInviteModal && (
-        <InviteUserModal onClose={closeModal} onConfirm={onConfirm} />
+        <InviteUserModal
+          onClose={closeModal}
+          onConfirm={onConfirm}
+          setIsLoading={setIsLoading}
+        />
       )}
     </div>
   );

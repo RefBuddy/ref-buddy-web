@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../store';
-
 import { inviteUser } from '../../../store/User/actions';
 
 import { Button } from '../../../components/Button';
@@ -9,9 +8,14 @@ import { Button } from '../../../components/Button';
 interface InviteUserModalProps {
   onClose: () => void;
   onConfirm: () => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
-const InviteUserModal = ({ onClose, onConfirm }: InviteUserModalProps) => {
+const InviteUserModal = ({
+  onClose,
+  onConfirm,
+  setIsLoading,
+}: InviteUserModalProps) => {
   const dispatch = useAppDispatch();
   const league = useAppSelector((state) => state.user.currentLeague);
   const [email, setEmail] = useState('');
@@ -31,6 +35,8 @@ const InviteUserModal = ({ onClose, onConfirm }: InviteUserModalProps) => {
       setError('Please enter a valid email');
       return;
     }
+
+    setIsLoading(true);
 
     const password = Math.random().toString(36).slice(-8);
 

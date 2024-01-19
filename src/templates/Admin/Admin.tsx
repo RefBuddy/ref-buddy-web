@@ -42,8 +42,6 @@ const Admin: React.FC<any> = () => {
   );
   const invited = useAppSelector((state) => state.officials.invitedUsers);
 
-  console.log(invited);
-
   const handleDelete = (uid: string) => {
     deleteUid(uid);
     setisConfirmationModalOpen(true);
@@ -51,7 +49,7 @@ const Admin: React.FC<any> = () => {
 
   const closeInviteUserModal = async () => {
     setIsLoading(true);
-    await dispatch(getOfficialsList({ league }));
+    await dispatch(getInvitedUsers({ league }));
     setIsInviteUserModalOpen(false);
     setIsLoading(false);
     toast.success('User invited');
@@ -73,7 +71,8 @@ const Admin: React.FC<any> = () => {
         <main className="flex flex-col items-center flex-1 px-4 pt-4">
           <div className="flex flex-row justify-between items-start w-full pt-1 pb-0">
             <InviteUserCard
-              onConfirm={() => closeInviteUserModal()}
+              onConfirm={closeInviteUserModal}
+              setIsLoading={setIsLoading}
               openModal={isInviteUserModalOpen}
             />
             {invited && invited.length > 0 && (
