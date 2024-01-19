@@ -15,6 +15,7 @@ import { ConfirmationModal } from '../../components/ConfirmationModal';
 
 import OfficialsTable from './components/OfficialsTable';
 import InviteUserCard from './components/InviteUserCard';
+import InvitedUsersTable from './components/InvitedUsersTable';
 
 const Admin: React.FC<any> = () => {
   const dispatch = useAppDispatch();
@@ -39,9 +40,9 @@ const Admin: React.FC<any> = () => {
   const supervisors = useAppSelector(
     (state) => state.officials.supervisorsList,
   );
-  const invitedUsers = useAppSelector((state) => state.officials.invitedUsers);
+  const invited = useAppSelector((state) => state.officials.invitedUsers);
 
-  console.log(invitedUsers);
+  console.log(invited);
 
   const handleDelete = (uid: string) => {
     deleteUid(uid);
@@ -89,6 +90,14 @@ const Admin: React.FC<any> = () => {
               <h3>Supervisors</h3>
               <OfficialsTable
                 officials={supervisors}
+                handleDelete={handleDelete}
+              />
+            </div>
+
+            <div className="flex flex-col items-center flex-1">
+              <h3>Invited Users</h3>
+              <InvitedUsersTable
+                invitedUsers={invited}
                 handleDelete={handleDelete}
               />
             </div>
