@@ -70,36 +70,43 @@ const Admin: React.FC<any> = () => {
       {loading ? (
         <Loading />
       ) : (
-        <main className="flex flex-col items-center flex-1">
-          <div className="flex justify-start items-start w-full p-5 pb-0">
+        <main className="flex flex-col items-center flex-1 px-4 pt-4">
+          <div className="flex flex-row justify-between items-start w-full pt-1 pb-0">
             <InviteUserCard
               onConfirm={() => closeInviteUserModal()}
               openModal={isInviteUserModalOpen}
             />
+            {invited && invited.length > 0 && (
+              <div className="flex flex-col">
+                <h3 className="pb-2">Invited Users</h3>
+                <div className="max-h-[160px] overflow-auto">
+                  <InvitedUsersTable
+                    invitedUsers={invited}
+                    handleDelete={handleDelete}
+                  />
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex flex-row flex-1 gap-12 pt-8">
             <div className="flex flex-col items-center flex-1">
-              <h3>Officials</h3>
-              <OfficialsTable
-                officials={officials}
-                handleDelete={handleDelete}
-              />
+              <h3 className="pb-2">Officials</h3>
+              <div className="max-h-[60vh] overflow-auto">
+                <OfficialsTable
+                  officials={officials}
+                  handleDelete={handleDelete}
+                />
+              </div>
             </div>
 
             <div className="flex flex-col items-center flex-1">
-              <h3>Supervisors</h3>
-              <OfficialsTable
-                officials={supervisors}
-                handleDelete={handleDelete}
-              />
-            </div>
-
-            <div className="flex flex-col items-center flex-1">
-              <h3>Invited Users</h3>
-              <InvitedUsersTable
-                invitedUsers={invited}
-                handleDelete={handleDelete}
-              />
+              <h3 className="pb-2">Supervisors</h3>
+              <div className="max-h-[60vh] overflow-auto">
+                <OfficialsTable
+                  officials={supervisors}
+                  handleDelete={handleDelete}
+                />
+              </div>
             </div>
           </div>
         </main>
