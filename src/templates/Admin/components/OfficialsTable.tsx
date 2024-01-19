@@ -50,15 +50,8 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
           <th className="border border-green-600 px-4 py-2 text-green-800">
             Email
           </th>
-          <th className="border border-green-600 px-4 py-2 text-green-800 w-auto whitespace-nowrap">
-            <button
-              onClick={() =>
-                setSortStatus(sortStatus === 'asc' ? 'desc' : 'asc')
-              }
-            >
-              Status{' '}
-              {sortStatus === 'asc' ? '↑' : sortStatus === 'desc' ? '↓' : ''}
-            </button>
+          <th className="border border-green-600 px-4 py-2 text-green-800">
+            Status
           </th>
           <th className="border border-green-600 px-4 py-2 text-green-800">
             Options
@@ -69,13 +62,13 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
         {sortOfficials(officials).map((official) => (
           <tr key={official.uid}>
             <td className="border border-green-600 px-4 py-2 w-auto whitespace-nowrap">
-              {official.firstName} {official.lastName}
+              <strong>{official.lastName}</strong>, {official.firstName}
             </td>
             <td className="border border-green-600 px-4 py-2">
               {official.email}
             </td>
             <td className="border border-green-600 px-4 py-2 text-center">
-              {official.firstName ? '✅' : 'Waiting to accept...'}
+              ✅
             </td>
             <td className="border border-green-600 px-4 py-2 text-center">
               <button onClick={() => handleDelete(official.uid)}>🗑️</button>
