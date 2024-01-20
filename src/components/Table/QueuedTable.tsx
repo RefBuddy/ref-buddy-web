@@ -55,7 +55,7 @@ const QueuedTable = () => {
     return idx % 2 === 0 ? 'bg-gray-200' : 'bg-white';
   };
 
-  const release = (game: GameData) => {
+  const release = async (game: GameData) => {
     const timezone =
       game.homeTeam && game.homeTeam.abbreviation === 'CRA'
         ? 'America/Denver'
@@ -68,7 +68,7 @@ const QueuedTable = () => {
       league: currentLeague,
       season: currentSeason,
     } as ReleaseGameRequestData;
-    dispatch(releaseGame(data));
+    await dispatch(releaseGame(data));
     dispatch(incrementAssignedCount(data.uids));
   };
 
@@ -83,8 +83,10 @@ const QueuedTable = () => {
     }, {});
   };
 
-  const releaseAll = (gamesOnDate) => {
-    gamesOnDate.forEach((game) => release(game));
+  const releaseAll = async (gamesOnDate) => {
+    for (const game of gamesOnDate) {
+      await release(game);
+    }
   };
 
   const groupedGames = groupByDate(queuedGames);
