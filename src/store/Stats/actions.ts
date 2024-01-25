@@ -7,9 +7,14 @@ interface StatsInput {
   season: string;
 }
 
+const cache = new Map();
+
 export const getLeagueStats = createAsyncThunk(
   'stats/getOfficialsStats',
   async (data: StatsInput, { rejectWithValue }) => {
+    if (cache.has(data)) {
+      return cache.get(data);
+    }
     try {
       const response = await fetch(`${URL}/getLeagueStats`, {
         method: 'POST',
@@ -20,7 +25,9 @@ export const getLeagueStats = createAsyncThunk(
       });
 
       if (response.ok) {
-        return await response.json();
+        const responseData = await response.json();
+        cache.set(data, responseData);
+        return responseData;
       }
       return rejectWithValue(`HTTP error! Status: ${response.status}`);
     } catch (err) {
