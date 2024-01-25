@@ -57,6 +57,7 @@ const Admin: React.FC<any> = () => {
 
   const closeConfirmationModal = async () => {
     await dispatch(getOfficialsList({ league }));
+    await dispatch(getInvitedUsers({ league }));
     setisConfirmationModalOpen(false);
     setIsLoading(false);
     toast.success('User deleted');
