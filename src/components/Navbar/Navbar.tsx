@@ -36,6 +36,13 @@ const Navbar: React.FC<any> = () => {
             <Link
               id="nav-link"
               className="text-white hover:text-orange-500 link-focus"
+              to={`/portal/${uid}/admin`}
+            >
+              Admin
+            </Link>
+            <Link
+              id="nav-link"
+              className="text-white hover:text-orange-500 link-focus"
               to={`/portal/${uid}/stats`}
             >
               Stats

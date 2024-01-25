@@ -99,7 +99,7 @@ const Admin: React.FC<any> = () => {
             </div>
             {invited && invited.length > 0 && (
               <div className="flex flex-col">
-                <h3 className="pb-2">Invited Users</h3>
+                <h3 className="pb-2">Invited</h3>
                 <div className="max-h-[160px] overflow-auto">
                   <InvitedUsersTable
                     invitedUsers={invited}
