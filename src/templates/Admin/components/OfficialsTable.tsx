@@ -37,41 +37,52 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
   };
 
   return (
-    <table className="table-auto border-collapse border border-green-800">
+    <table className="min-w-full leading-normal border border-green-800">
       <thead>
         <tr>
-          <th className="border border-green-600 px-4 py-2 text-green-800">
+          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             <button
+              className="focus:outline-none uppercase"
               onClick={() => setSortName(sortName === 'asc' ? 'desc' : 'asc')}
             >
               Name {sortName === 'asc' ? '↑' : sortName === 'desc' ? '↓' : ''}
             </button>
           </th>
-          <th className="border border-green-600 px-4 py-2 text-green-800">
+          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Email
           </th>
-          <th className="border border-green-600 px-4 py-2 text-green-800">
+          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Status
           </th>
-          <th className="border border-green-600 px-4 py-2 text-green-800">
+          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Options
           </th>
         </tr>
       </thead>
       <tbody>
         {sortOfficials(officials).map((official) => (
-          <tr key={official.uid}>
-            <td className="border border-green-600 px-4 py-2 w-auto whitespace-nowrap">
+          <tr key={official.uid} className="hover:bg-gray-100">
+            <td className="px-5 py-3 border-b border-gray-200 text-sm  w-auto whitespace-nowrap">
               <strong>{official.lastName}</strong>, {official.firstName}
             </td>
-            <td className="border border-green-600 px-4 py-2">
+            <td className="px-5 py-3 border-b border-gray-200 text-sm">
               {official.email}
             </td>
-            <td className="border border-green-600 px-4 py-2 text-center">
-              ✅
+            <td className="px-5 py-3 border-b border-gray-200 text-sm">
+              <span className="relative inline-block py-1 font-semibold text-green-900 leading-tight">
+                <span aria-hidden="true" className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                <span className="relative">Active</span>
+              </span>
             </td>
-            <td className="border border-green-600 px-4 py-2 text-center">
-              <button onClick={() => handleDelete(official.uid)}>🗑️</button>
+            <td className="px-5 py-3 border-b border-gray-200 text-sm text-center">
+              <button
+                className="focus:outline-none"
+                onClick={() => handleDelete(official.uid)}
+              >
+                <svg className="w-6 h-6 text-red-500" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                  <path d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
             </td>
           </tr>
         ))}

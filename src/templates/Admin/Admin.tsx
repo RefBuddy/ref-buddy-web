@@ -76,6 +76,27 @@ const Admin: React.FC<any> = () => {
               setIsLoading={setIsLoading}
               openModal={isInviteUserModalOpen}
             />
+          </div>
+          <div className="flex flex-row flex-1 gap-12 pt-8">
+            <div className="flex flex-col flex-1">
+              <h3 className="pb-2">Officials</h3>
+              <div className="max-h-[60vh] overflow-auto">
+                <OfficialsTable
+                  officials={officials}
+                  handleDelete={handleDelete}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col flex-1">
+              <h3 className="pb-2">Supervisors</h3>
+              <div className="max-h-[60vh] overflow-auto">
+                <OfficialsTable
+                  officials={supervisors}
+                  handleDelete={handleDelete}
+                />
+              </div>
+            </div>
             {invited && invited.length > 0 && (
               <div className="flex flex-col">
                 <h3 className="pb-2">Invited Users</h3>
@@ -87,27 +108,6 @@ const Admin: React.FC<any> = () => {
                 </div>
               </div>
             )}
-          </div>
-          <div className="flex flex-row flex-1 gap-12 pt-8">
-            <div className="flex flex-col items-center flex-1">
-              <h3 className="pb-2">Officials</h3>
-              <div className="max-h-[60vh] overflow-auto">
-                <OfficialsTable
-                  officials={officials}
-                  handleDelete={handleDelete}
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center flex-1">
-              <h3 className="pb-2">Supervisors</h3>
-              <div className="max-h-[60vh] overflow-auto">
-                <OfficialsTable
-                  officials={supervisors}
-                  handleDelete={handleDelete}
-                />
-              </div>
-            </div>
           </div>
         </main>
       )}
