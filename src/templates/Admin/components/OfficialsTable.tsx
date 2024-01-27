@@ -62,7 +62,7 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
             </td>
             <td className="px-5 py-3 border-b border-gray-200 text-sm">
               <span className="inline-block py-1 font-semibold text-green-900 leading-tight">
-                <span aria-hidden="true" className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                <span aria-hidden="true" className="bg-green-200 opacity-50 rounded-full"></span>
                 <span>Active</span>
               </span>
             </td>
