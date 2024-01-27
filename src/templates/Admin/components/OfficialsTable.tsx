@@ -61,9 +61,9 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
               {official.email}
             </td>
             <td className="px-5 py-3 border-b border-gray-200 text-sm">
-              <span className="relative inline-block py-1 font-semibold text-green-900 leading-tight">
+              <span className="inline-block py-1 font-semibold text-green-900 leading-tight">
                 <span aria-hidden="true" className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                <span className="relative">Active</span>
+                <span>Active</span>
               </span>
             </td>
             <td className="px-5 py-3 border-b border-gray-200 text-sm text-center">
