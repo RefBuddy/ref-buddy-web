@@ -10,7 +10,6 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
   handleDelete,
 }) => {
   const [sortName, setSortName] = useState<'asc' | 'desc' | ''>('asc');
-  const [sortStatus, setSortStatus] = useState<'asc' | 'desc' | ''>('asc');
 
   const sortOfficials = (officials: { [uid: string]: OfficialTableData }) => {
     return Object.values(officials)
@@ -25,13 +24,6 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
           if (nameA < nameB) return sortName === 'asc' ? -1 : 1;
           if (nameA > nameB) return sortName === 'asc' ? 1 : -1;
         }
-
-        if (sortStatus !== '') {
-          const statusA = a.firstName ? 1 : 0;
-          const statusB = b.firstName ? 1 : 0;
-          return sortStatus === 'asc' ? statusA - statusB : statusB - statusA;
-        }
-
         return 0;
       });
   };
@@ -75,14 +67,15 @@ const OfficialsTable: React.FC<OfficialsTableProps> = ({
               </span>
             </td>
             <td className="px-5 py-3 border-b border-gray-200 text-sm text-center">
-              <button
-                className="focus:outline-none"
-                onClick={() => handleDelete(official.uid)}
-              >
-                <svg className="w-6 h-6 text-red-500" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                  <path d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
+            <button
+              className="focus:outline-none"
+              onClick={() => handleDelete(official.uid)}
+            >
+              <svg className="w-6 h-6 text-red-500" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                <title>Delete user</title>
+                <path d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
             </td>
           </tr>
         ))}

@@ -69,7 +69,7 @@ const Admin: React.FC<any> = () => {
       {loading ? (
         <Loading />
       ) : (
-        <main className="flex flex-col items-center flex-1 px-4 pt-4">
+        <main className="flex flex-col items-center flex-1 px-5 pt-4">
           <div className="flex flex-row justify-between items-start w-full pt-1 pb-0">
             <InviteUserCard
               onConfirm={closeInviteUserModal}
