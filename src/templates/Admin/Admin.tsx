@@ -40,7 +40,9 @@ const Admin: React.FC<any> = () => {
   const supervisors = useAppSelector(
     (state) => state.officials.supervisorsList,
   );
-  const invited = useAppSelector((state) => state.officials.invitedUsers);
+
+  const invited = useAppSelector((state) => state.officials.invitedUsers)
+    .filter(user => user.league === league);
 
   const handleDelete = (uid: string) => {
     deleteUid(uid);
