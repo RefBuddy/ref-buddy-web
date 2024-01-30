@@ -9,7 +9,6 @@ const InvitedUsersTable: React.FC<InvitedUsersTableProps> = ({
   invitedUsers,
   handleDelete,
 }) => {
-  console.log(invitedUsers);
   return (
     <table className="min-w-full leading-normal border border-green-800">
       <thead>

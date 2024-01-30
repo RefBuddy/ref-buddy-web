@@ -105,7 +105,6 @@ const userSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateOfficialRole.fulfilled, (state, { payload }) => {
-      console.log('done');
       state.error = false;
       state.loading = false;
     });

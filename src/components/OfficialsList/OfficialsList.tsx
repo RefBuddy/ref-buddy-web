@@ -303,8 +303,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     const updatedRole = { ...officialsData?.role, [role]: e.target.checked };
     const updatedOfficialsData = { ...officialsData, role: updatedRole };
 
-    console.log('updatedOfficialsData', updatedOfficialsData);
-
     setOfficialsData(updatedOfficialsData);
 
     // Check if the state differs from the original state for either checkbox
@@ -361,7 +359,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
           league: currentLeague,
         }),
       );
-      console.log('Role updated successfully');
     } catch (error) {
       console.error('Error updating role:', error);
     }

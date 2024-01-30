@@ -135,8 +135,6 @@ export const updateOfficialRole = createAsyncThunk(
   'user/updateOfficialRole',
   async (updateData: UpdateOfficialRoleRequestData, { rejectWithValue }) => {
     try {
-      console.log('Sending data:', JSON.stringify({ data: updateData }));
-
       const response = await fetch(`${URL}/updateOfficialRole`, {
         method: 'POST',
         headers: {
@@ -149,7 +147,6 @@ export const updateOfficialRole = createAsyncThunk(
 
       if (response.ok) {
         const json = await response.json();
-        console.log('Server Response:', json);
         return json.data;
       }
       return rejectWithValue(`HTTP error! Status: ${response.status}`);
