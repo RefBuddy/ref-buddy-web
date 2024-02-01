@@ -26,7 +26,7 @@ const Admin: React.FC<any> = () => {
     useState<boolean>(false);
   const [isConfirmationModalOpen, setisConfirmationModalOpen] =
     useState<boolean>(false);
-  const [uid, deleteUid] = useState<string>('');
+  const [uidToDelete, setUidToDelete] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const Admin: React.FC<any> = () => {
   const invited = useAppSelector((state) => state.officials.invitedUsers);
 
   const handleDelete = (uid: string) => {
-    deleteUid(uid);
+    setUidToDelete(uid);
     setisConfirmationModalOpen(true);
   };
 
@@ -121,7 +121,7 @@ const Admin: React.FC<any> = () => {
           }}
           onConfirm={() => {
             setIsLoading(true);
-            dispatch(deleteUser({ uid, league })).then(() => {
+            dispatch(deleteUser({ uidToDelete, league })).then(() => {
               closeConfirmationModal();
             });
           }}

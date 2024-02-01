@@ -1,4 +1,4 @@
 interface DeleteUserRequestData {
-  uid: string;
+  uidToDelete: string;
   league: string;
 }
