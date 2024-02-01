@@ -38,7 +38,7 @@ const InviteUserModal = ({
 
     setIsLoading(true);
 
-    const password = Math.random().toString(36).slice(-8);
+    const password = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
 
     await dispatch(
       inviteUser({
