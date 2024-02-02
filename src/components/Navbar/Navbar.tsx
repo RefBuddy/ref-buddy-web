@@ -24,15 +24,22 @@ const Navbar: React.FC<any> = () => {
         <div className="flex items-center">
           <img src={Logo} alt="logo" className="h-16 w-16 mr-2" />
         </div>
-        {user.currentLeague === 'bchl' && (
-          <div className="flex flex-col text-lg mt-8 gap-2">
-            <Link
-              id="nav-link"
-              className="text-white hover:text-orange-500 link-focus"
-              to={`/portal/${uid}/dashboard`}
-            >
-              Dashboard
-            </Link>
+        <div className="flex flex-col text-lg mt-8 gap-2">
+          <Link
+            id="nav-link"
+            className="text-white hover:text-orange-500 link-focus"
+            to={`/portal/${uid}/dashboard`}
+          >
+            Dashboard
+          </Link>
+          <Link
+            id="nav-link"
+            className="text-white hover:text-orange-500 link-focus"
+            to={`/portal/${uid}/admin`}
+          >
+            Admin
+          </Link>
+          {user.currentLeague === 'bchl' && (
             <Link
               id="nav-link"
               className="text-white hover:text-orange-500 link-focus"
@@ -40,8 +47,8 @@ const Navbar: React.FC<any> = () => {
             >
               Stats
             </Link>
-          </div>
-        )}
+          )}
+        </div>
         <button
           onClick={handleLogout}
           className="border-white border bg-white text-black cursor-pointer px-1 mt-auto"

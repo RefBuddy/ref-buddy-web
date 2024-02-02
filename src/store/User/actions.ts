@@ -135,8 +135,6 @@ export const updateOfficialRole = createAsyncThunk(
   'user/updateOfficialRole',
   async (updateData: UpdateOfficialRoleRequestData, { rejectWithValue }) => {
     try {
-      console.log('Sending data:', JSON.stringify({ data: updateData }));
-
       const response = await fetch(`${URL}/updateOfficialRole`, {
         method: 'POST',
         headers: {
@@ -149,7 +147,64 @@ export const updateOfficialRole = createAsyncThunk(
 
       if (response.ok) {
         const json = await response.json();
-        console.log('Server Response:', json);
+        return json.data;
+      }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    } catch (err) {
+      const typedErr: any = err;
+      if (typedErr.response && typedErr.response.status !== 401) {
+        return rejectWithValue(
+          `HTTP Error! Status: ${typedErr.response.status}`,
+        );
+      }
+    }
+  },
+);
+
+export const deleteUser = createAsyncThunk(
+  'user/deleteUser',
+  async (userData: DeleteUserRequestData, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${URL}/deleteUser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: userData,
+        }),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        return json.data;
+      }
+      return rejectWithValue(`HTTP error! Status: ${response.status}`);
+    } catch (err) {
+      const typedErr: any = err;
+      if (typedErr.response && typedErr.response.status !== 401) {
+        return rejectWithValue(
+          `HTTP Error! Status: ${typedErr.response.status}`,
+        );
+      }
+    }
+  },
+);
+
+export const inviteUser = createAsyncThunk(
+  'user/inviteUser',
+  async (inviteData: InviteUserRequestData, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${URL}/inviteUser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inviteData),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
         return json.data;
       }
       return rejectWithValue(`HTTP error! Status: ${response.status}`);

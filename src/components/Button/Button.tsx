@@ -47,7 +47,7 @@ const Button: React.FC<ButtonProps> = ({
         className,
       )}
       disabled={disabled || loading}
-      onClick={onClick}
+      onClick={onClick as any}
       href={href}
       data-testid={props['data-testid'] ?? 'Button'}
       {...props}
