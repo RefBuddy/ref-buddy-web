@@ -83,24 +83,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     setShowLinesmen(e.target.checked);
   };
 
-  // Provide feedback via toast notifications
-  const toastFeedback = (uid) => {
-    if (isAssigned) {
-      toast.success(
-        `${officialsOrSupervisors[uid].firstName} ${officialsOrSupervisors[uid].lastName} replaced ${isAssigned.name}`,
-      );
-    } else if (
-      officialsOrSupervisors[uid].firstName === 'No' &&
-      officialsOrSupervisors[uid].lastName === 'Supervisor'
-    ) {
-      toast.success(`Game has no supervisor.`);
-    } else {
-      toast.success(
-        `${officialsOrSupervisors[uid].firstName} ${officialsOrSupervisors[uid].lastName} added to queue.`,
-      );
-    }
-  };
-
   const gatherOfficialCalendarDataById = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
       return null;
@@ -490,7 +472,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
                     <Button onClick={async (e) => {
                       await Utils.handleAssignClick(e, official.uid, isAssigned, date, gameNumber, role, dispatch, currentLeague, currentSeason);
-                      toastFeedback(official.uid);
+                      Utils.toastFeedback(official.uid, isAssigned, officialsOrSupervisors);
                       close();
                     }}>
                       {isAssigned && role != 'supervisor'
