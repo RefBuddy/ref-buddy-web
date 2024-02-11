@@ -2,11 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { parseISO } from 'date-fns';
 import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
-import { addToQueue, removeFromGame } from '../../store/Games/actions';
-import {
-  incrementQueueCount,
-  decrementCount,
-} from '../../store/OfficialsList/reducer';
 import { getOfficialsList } from '../../store/OfficialsList/actions';
 import { formatDate, format24HourTime } from '../../utils/helpers';
 import {
@@ -86,42 +81,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setShowLinesmen(e.target.checked);
-  };
-
-  // Handle assigning officials to games
-  const handleAssignClick = async (e, uid) => {
-    e.stopPropagation();
-
-    if (isAssigned) {
-      await dispatch(
-        removeFromGame({
-          uid: isAssigned.uid,
-          date: date,
-          gameNumber: gameNumber,
-          league: currentLeague,
-          season: currentSeason,
-        }),
-      );
-      dispatch(decrementCount(isAssigned.uid));
-    }
-
-    const gameData = {
-      uid: uid,
-      role: role,
-      date: date,
-      gameNumber: gameNumber,
-      league: currentLeague,
-      season: currentSeason,
-    };
-
-    await dispatch(addToQueue(gameData));
-    dispatch(incrementQueueCount(uid));
-
-    // Provide feedback to user
-    toastFeedback(uid);
-
-    // Close modal
-    close();
   };
 
   // Provide feedback via toast notifications
@@ -529,7 +488,11 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   {' '}
                   {/* Added justify-self-end */}
                   {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
-                    <Button onClick={(e) => handleAssignClick(e, official.uid)}>
+                    <Button onClick={async (e) => {
+                      await Utils.handleAssignClick(e, official.uid, isAssigned, date, gameNumber, role);
+                      toastFeedback(official.uid);
+                      close();
+                    }}>
                       {isAssigned && role != 'supervisor'
                         ? 'Replace Official'
                         : 'Assign + '}

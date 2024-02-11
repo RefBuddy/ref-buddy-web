@@ -5,4 +5,5 @@ export { getListOfSpecificRole } from './getListOfSpecificRole';
 export { getOfficialsArray } from './getOfficialsArray';
 export { getRoleDetails } from './getRoleDetails';
 export { getOfficialsOrSupervisors } from './getOfficialsOrSupervisors';
+export { handleAssignClick } from './handleAssignClick';
 export { sortOfficials } from './sortOfficials';
