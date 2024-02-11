@@ -68,44 +68,24 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     Utils.fetchOfficialsCalendarEvents(role, date, currentLeague, dispatch);
   }, [role, date, currentLeague, dispatch]);
 
-  // Handle search input change
-  const filterOfficials = (referees: boolean, linesmen: boolean) => {
-    const searchTermLowerCase = searchTerm.toLowerCase();
-    const officialsArray = Object.keys(officialsOrSupervisors).map((key) => officialsOrSupervisors[key]);
-
-    const filtered = officialsArray.filter(
-      (official) =>
-        ((referees && official.role.Referee) ||
-          (linesmen && official.role.Linesman)) &&
-        (official.firstName.toLowerCase().includes(searchTermLowerCase) ||
-          official.lastName.toLowerCase().includes(searchTermLowerCase) ||
-          official.city.toLowerCase().includes(searchTermLowerCase)),
-    );
-
-    const sortedOfficials = filtered.sort((a, b) =>
-      a.lastName.localeCompare(b.lastName),
-    );
-
-    setSortedData(sortedOfficials);
-  };
-
+  // Handle input change
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    filterOfficials(showReferees, showLinesmen);
+    const searchTerm = e.target.value;
+    setSearchTerm(searchTerm);
+    const sortedOfficials = Utils.filterAndSortOfficials(officialsOrSupervisors, showReferees, showLinesmen, searchTerm);
+    setSortedData(sortedOfficials);
   };
 
   const handleRefereeCheckboxChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setShowReferees(e.target.checked);
-    filterOfficials(e.target.checked, showLinesmen); // pass the updated state
   };
 
   const handleLinesmanCheckboxChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setShowLinesmen(e.target.checked);
-    filterOfficials(showReferees, e.target.checked); // pass the updated state
   };
 
   // Handle assigning officials to games
