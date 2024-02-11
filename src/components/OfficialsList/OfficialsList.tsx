@@ -489,7 +489,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   {/* Added justify-self-end */}
                   {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
                     <Button onClick={async (e) => {
-                      await Utils.handleAssignClick(e, official.uid, isAssigned, date, gameNumber, role);
+                      await Utils.handleAssignClick(e, official.uid, isAssigned, date, gameNumber, role, dispatch, currentLeague, currentSeason);
                       toastFeedback(official.uid);
                       close();
                     }}>
