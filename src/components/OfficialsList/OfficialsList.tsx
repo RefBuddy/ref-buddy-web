@@ -17,7 +17,7 @@ import {
 } from '../../store/User/actions';
 import { Button } from '../Button';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { getLabel, getRoleDetails, getOfficialsOrSupervisors } from './utils';
+import * as Utils from './utils';
 
 const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const dispatch = useAppDispatch();
@@ -43,9 +43,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
   const currentDate = useAppSelector((state) => state.games.currentDate);
-  const label = getLabel(isAssigned, role);
-  const roleDetails = getRoleDetails(role);
-  const officialsOrSupervisors = getOfficialsOrSupervisors(role);
+  const label = Utils.getLabel(isAssigned, role);
+  const roleDetails = Utils.getRoleDetails(role);
+  const officialsOrSupervisors = Utils.getOfficialsOrSupervisors(role);
 
   const [showReferees, setShowReferees] = useState(
     roleDetails === 'Referee' || role === 'dashboard',
@@ -54,40 +54,18 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     roleDetails === 'Linesman' || role === 'dashboard',
   );
 
+  // Sort and filter officials based on role
   useEffect(() => {
-    const officialsArray = Object.keys(officialsOrSupervisors).map((key) => officialsOrSupervisors[key]);
-
-    const filtered = officialsArray.filter(
-      (official) =>
-        (showReferees && official.role?.Referee) ||
-        (showLinesmen && official.role?.Linesman) ||
-        role === 'supervisor',
-    );
-
-    const sortedOfficials = filtered.sort((a, b) => {
-      if (a.lastName && b.lastName) {
-        return a.lastName.localeCompare(b.lastName);
-      } else if (a.lastName) {
-        return -1;
-      } else if (b.lastName) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-
+    const officialsArray = Utils.getOfficialsArray(officialsOrSupervisors);
+    const filteredOfficialsForRole = Utils.getListOfSpecificRole(officialsArray, showReferees, showLinesmen, role);
+    const sortedOfficials = Utils.sortOfficials(filteredOfficialsForRole);
     setSortedData(sortedOfficials);
   }, [officialsOrSupervisors, showReferees, showLinesmen]);
 
+  // This shows the calendar events beside the official's name
+  // We don't need this if we are just showing the list of officials and not assigning a game
   useEffect(() => {
-    if (role !== 'dashboard') {
-      dispatch(
-        getAllOfficialsCalendarEvents({
-          gameDate: date,
-          league: currentLeague,
-        }),
-      );
-    }
+    Utils.fetchOfficialsCalendarEvents(role, date, currentLeague, dispatch);
   }, [role, date, currentLeague, dispatch]);
 
   // Handle search input change
