@@ -1,6 +1,7 @@
 export { fetchOfficialsCalendarEvents } from './fetchOfficialsCalendarEvents';
 export { filterAndSortOfficials } from './filterAndSortOfficials';
 export { getOfficialCalendarData } from './getOfficialCalendarData';
+export { getOfficialsAssignedGames } from './getOfficialsAssignedGames';
 export { getLabel } from './getLabel';
 export { getListOfSpecificRole } from './getListOfSpecificRole';
 export { getOfficialsArray } from './getOfficialsArray';

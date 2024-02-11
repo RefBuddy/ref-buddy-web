@@ -6,8 +6,6 @@ import { getOfficialsList } from '../../store/OfficialsList/actions';
 import { formatDate, format24HourTime } from '../../utils/helpers';
 import {
   getUserCalendarEvents,
-  getAllOfficialsCalendarEvents,
-  getOfficialsStats,
   updateOfficialRole,
 } from '../../store/User/actions';
 import { Button } from '../Button';
@@ -31,7 +29,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     assignedGames,
     queuedGames,
     blockedOffTimes,
-    officialsStats,
     currentLeague,
     currentSeason,
   } = useAppSelector((state) => state.user);
@@ -81,30 +78,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setShowLinesmen(e.target.checked);
-  };
-
-  const assignedGamesOfOfficial = (uid: string) => {
-    if (!officialsCalendarData || !officialsCalendarData[uid]) {
-      return null;
-    }
-
-    let assignedGames = officialsCalendarData[uid].assignedGames || {};
-    const queuedGames = officialsCalendarData[uid].queuedGames || {};
-    const currentSelectedDate = parseISO(game.time);
-    const formattedTime = formatDate(currentSelectedDate);
-
-    // add queued games to assigned games
-    if (queuedGames && queuedGames[formattedTime]) {
-      // Create a copy of assignedGames to prevent mutation of the original data
-      assignedGames = { ...assignedGames };
-      assignedGames[formattedTime] = queuedGames[formattedTime];
-    }
-
-    try {
-      return assignedGames[formattedTime];
-    } catch (error) {
-      return null;
-    }
   };
 
   const isOfficialHovered = (uid) => officialHovered === uid;
@@ -342,7 +315,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
           />
         </div>
         {sortedData.map((official: any, index) => {
-          const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
+          const assignedGamesAlready = Utils.getOfficialsAssignedGames(official.uid, officialsCalendarData, game);
           const datesAlreadyblockedOff = Utils.getOfficialCalendarData(official.uid, officialsCalendarData, game);
           return (
             <div
