@@ -241,6 +241,11 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const isOfficialHovered = (uid) => officialHovered === uid;
 
   const handleClick = (e, uid) => {
+    // Check if the target of the click event is the checkbox
+    if (e.target.type === 'checkbox') {
+      return;
+    }
+
     e.stopPropagation();
 
     // Check if the clicked official is already being displayed
