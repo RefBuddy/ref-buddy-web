@@ -83,22 +83,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     setShowLinesmen(e.target.checked);
   };
 
-  const gatherOfficialCalendarDataById = (uid: string) => {
-    if (!officialsCalendarData || !officialsCalendarData[uid]) {
-      return null;
-    }
-
-    const blockedOffDates = officialsCalendarData[uid].blockedOffTimes;
-    const currentSelectedDate = parseISO(game.time);
-    const formattedTime = formatDate(currentSelectedDate);
-
-    try {
-      return blockedOffDates[formattedTime];
-    } catch (error) {
-      return null;
-    }
-  };
-
   const assignedGamesOfOfficial = (uid: string) => {
     if (!officialsCalendarData || !officialsCalendarData[uid]) {
       return null;
@@ -359,9 +343,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
         </div>
         {sortedData.map((official: any, index) => {
           const assignedGamesAlready = assignedGamesOfOfficial(official.uid);
-          const blockedOffDatesAlready = gatherOfficialCalendarDataById(
-            official.uid,
-          );
+          const datesAlreadyblockedOff = Utils.getOfficialCalendarData(official.uid, officialsCalendarData, game);
           return (
             <div
               key={`official-${official.uid}`}
@@ -426,12 +408,12 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 </div>
                 {/* Fourth column: blocked off dates */}
                 <div>
-                  {blockedOffDatesAlready &&
-                    blockedOffDatesAlready.length > 0 && (
+                  {datesAlreadyblockedOff &&
+                    datesAlreadyblockedOff.length > 0 && (
                       <div className="flex flex-col gap-2">
                         {' '}
                         {/* Use flex-column for vertical alignment */}
-                        {blockedOffDatesAlready.map((times, index) => (
+                        {datesAlreadyblockedOff.map((times, index) => (
                           <React.Fragment key={index}>
                             <div className="flex items-center gap-2">
                               {times.startTime === '00:00' &&
