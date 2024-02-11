@@ -17,6 +17,7 @@ import {
 } from '../../store/User/actions';
 import { Button } from '../Button';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import { getLabel, getRoleDetails, getOfficialsOrSupervisors } from './utils';
 
 const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const dispatch = useAppDispatch();
@@ -42,24 +43,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const date = game.time.slice(0, 10);
   const gameNumber = game.gameNumber;
   const currentDate = useAppSelector((state) => state.games.currentDate);
-  const label =
-    isAssigned !== false
-      ? isAssigned.name
-      : role === 'referee1' || role === 'referee2'
-      ? 'Referee'
-      : role === 'supervisor'
-      ? 'Supervisor'
-      : 'Linesman';
-  const roleDetails =
-    role === 'referee1' || role === 'referee2'
-      ? 'Referee'
-      : role === 'supervisor'
-      ? 'Supervisor'
-      : 'Linesman';
-  const officials =
-    role === 'supervisor'
-      ? useAppSelector((state) => state.officials.supervisorsList)
-      : useAppSelector((state) => state.officials.officialsList);
+  const label = getLabel(isAssigned, role);
+  const roleDetails = getRoleDetails(role);
+  const officialsOrSupervisors = getOfficialsOrSupervisors(role);
 
   const [showReferees, setShowReferees] = useState(
     roleDetails === 'Referee' || role === 'dashboard',
@@ -69,7 +55,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   );
 
   useEffect(() => {
-    const officialsArray = Object.keys(officials).map((key) => officials[key]);
+    const officialsArray = Object.keys(officialsOrSupervisors).map((key) => officialsOrSupervisors[key]);
 
     const filtered = officialsArray.filter(
       (official) =>
@@ -91,7 +77,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     });
 
     setSortedData(sortedOfficials);
-  }, [officials, showReferees, showLinesmen]);
+  }, [officialsOrSupervisors, showReferees, showLinesmen]);
 
   useEffect(() => {
     if (role !== 'dashboard') {
@@ -107,7 +93,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   // Handle search input change
   const filterOfficials = (referees: boolean, linesmen: boolean) => {
     const searchTermLowerCase = searchTerm.toLowerCase();
-    const officialsArray = Object.keys(officials).map((key) => officials[key]);
+    const officialsArray = Object.keys(officialsOrSupervisors).map((key) => officialsOrSupervisors[key]);
 
     const filtered = officialsArray.filter(
       (official) =>
@@ -184,16 +170,16 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const toastFeedback = (uid) => {
     if (isAssigned) {
       toast.success(
-        `${officials[uid].firstName} ${officials[uid].lastName} replaced ${isAssigned.name}`,
+        `${officialsOrSupervisors[uid].firstName} ${officialsOrSupervisors[uid].lastName} replaced ${isAssigned.name}`,
       );
     } else if (
-      officials[uid].firstName === 'No' &&
-      officials[uid].lastName === 'Supervisor'
+      officialsOrSupervisors[uid].firstName === 'No' &&
+      officialsOrSupervisors[uid].lastName === 'Supervisor'
     ) {
       toast.success(`Game has no supervisor.`);
     } else {
       toast.success(
-        `${officials[uid].firstName} ${officials[uid].lastName} added to queue.`,
+        `${officialsOrSupervisors[uid].firstName} ${officialsOrSupervisors[uid].lastName} added to queue.`,
       );
     }
   };
@@ -258,12 +244,12 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     }
 
     if (isOfficialHovered(uid)) {
-      const filteredOfficialProfileInfoKey = Object.keys(officials).filter(
+      const filteredOfficialProfileInfoKey = Object.keys(officialsOrSupervisors).filter(
         (key) => key === uid,
       );
       if (filteredOfficialProfileInfoKey.length > 0) {
         const filterOfficialProfile =
-          officials[filteredOfficialProfileInfoKey[0]];
+          officialsOrSupervisors[filteredOfficialProfileInfoKey[0]];
         setOfficialsData(filterOfficialProfile);
         setOfficialClicked(uid);
         dispatch(getUserCalendarEvents({ uid: uid }));
@@ -327,13 +313,13 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const updateUserRole = async (uid) => {
     if (!officialsData) return;
 
-    const filteredOfficialProfileInfoKey = Object.keys(officials).filter(
+    const filteredOfficialProfileInfoKey = Object.keys(officialsOrSupervisors).filter(
       (key) => key === uid,
     );
 
     if (filteredOfficialProfileInfoKey.length > 0) {
       const updatedOfficialProfile = {
-        ...officials[filteredOfficialProfileInfoKey[0]],
+        ...officialsOrSupervisors[filteredOfficialProfileInfoKey[0]],
       };
 
       // Ensure that the official's role is updated in the fetched data before dispatching the update action
