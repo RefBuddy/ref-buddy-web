@@ -112,27 +112,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
     }
   };
 
-  const getFormattedTime = (isoTime: string) => {
-    const date = new Date(isoTime);
-    const options: Intl.DateTimeFormatOptions = {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZoneName: 'short',
-    };
-    return date.toLocaleTimeString('en-US', options);
-  };
-
-  const extractMonthYear = (dateStr) => {
-    if (dateStr === '2021-10-10') {
-      dateStr = currentDate;
-    }
-    const dateObj = new Date(dateStr);
-    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
-      2,
-      '0',
-    )}`;
-  };
-
   const updateUserRole = async (uid) => {
     if (!officialsData) return;
 
@@ -218,7 +197,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               )}
               <div className="flex flex-col -mb-2">
                 <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1 w-40">
-                  {getFormattedTime(game.time)}
+                  {Utils.getFormattedTime(game.time)}
                 </div>
                 <div className="text-xs font-semibold text-gray-700 mb-2 -mt-1">
                   {game.date.slice(0, -6)}
@@ -484,8 +463,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                               Object.keys(blockedOffTimes)
                                 .filter(
                                   (dateKey) =>
-                                    extractMonthYear(dateKey) ===
-                                    extractMonthYear(date),
+                                    Utils.extractMonthYear(dateKey, currentDate) ===
+                                    Utils.extractMonthYear(date, currentDate),
                                 )
                                 .map((dateKey) => (
                                   <>
@@ -538,7 +517,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                             <label className="text-xs font-medium text-black">
                               R
                             </label>
-                          </div>  ``
+                          </div> 
                           <div className="flex flex-row gap-1 items-center">
                             <input
                               type="checkbox"

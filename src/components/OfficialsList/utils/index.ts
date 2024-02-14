@@ -1,5 +1,7 @@
+export { extractMonthYear } from './extractMonthYear';
 export { fetchOfficialsCalendarEvents } from './fetchOfficialsCalendarEvents';
 export { filterAndSortOfficials } from './filterAndSortOfficials';
+export { getFormattedTime } from './getFormattedTime';
 export { getOfficialCalendarData } from './getOfficialCalendarData';
 export { getOfficialsAssignedGames } from './getOfficialsAssignedGames';
 export { getLabel } from './getLabel';
