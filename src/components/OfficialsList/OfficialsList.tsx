@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store';
-import {  format24HourTime } from '../../utils/helpers';
+import { format24HourTime } from '../../utils/helpers';
 import { Button } from '../Button';
 import * as Utils from './utils';
-import { 
-  AssignedGameCard, 
-  CheckboxGroup, 
-  DarkDayCard, 
-  GameCountCard, 
-  GameDetails, 
-  OfficialCard, 
+import {
+  AssignedGameCard,
+  CheckboxGroup,
+  DarkDayCard,
+  GameCountCard,
+  GameDetails,
+  OfficialCard,
   ReplaceOrAssignButton,
-  RoleCard, 
-  SearchInput 
+  RoleCard,
+  SearchInput,
 } from './components';
 
 const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
@@ -52,7 +52,12 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   // Sort and filter officials based on role
   useEffect(() => {
     const officialsArray = Utils.getOfficialsArray(officialsOrSupervisors);
-    const filteredOfficialsForRole = Utils.getListOfSpecificRole(officialsArray, showReferees, showLinesmen, role);
+    const filteredOfficialsForRole = Utils.getListOfSpecificRole(
+      officialsArray,
+      showReferees,
+      showLinesmen,
+      role,
+    );
     const sortedOfficials = Utils.sortOfficials(filteredOfficialsForRole);
     setSortedData(sortedOfficials);
   }, [officialsOrSupervisors, showReferees, showLinesmen]);
@@ -67,7 +72,12 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
-    const sortedOfficials = Utils.filterAndSortOfficials(officialsOrSupervisors, showReferees, showLinesmen, searchTerm);
+    const sortedOfficials = Utils.filterAndSortOfficials(
+      officialsOrSupervisors,
+      showReferees,
+      showLinesmen,
+      searchTerm,
+    );
     setSortedData(sortedOfficials);
   };
 
@@ -94,12 +104,12 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
         ) : (
           <div className="w-full h-6 bg-white"></div>
         )}
-          <CheckboxGroup
-            showReferees={showReferees}
-            handleRefereeCheckboxChange={handleRefereeCheckboxChange}
-            showLinesmen={showLinesmen}
-            handleLinesmanCheckboxChange={handleLinesmanCheckboxChange}
-          />
+        <CheckboxGroup
+          showReferees={showReferees}
+          handleRefereeCheckboxChange={handleRefereeCheckboxChange}
+          showLinesmen={showLinesmen}
+          handleLinesmanCheckboxChange={handleLinesmanCheckboxChange}
+        />
         {role != 'dashboard' ? (
           <RoleCard roleDetails={roleDetails} label={label} />
         ) : (
@@ -113,52 +123,38 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
           <SearchInput searchTerm={searchTerm} handleSearch={handleSearch} />
         </div>
         {sortedData.map((official: any, index) => {
-          const assignedGamesAlready = Utils.getOfficialsAssignedGames(official.uid, officialsCalendarData, game);
-          const datesAlreadyblockedOff = Utils.getOfficialCalendarData(official.uid, officialsCalendarData, game);
+          const assignedGamesAlready = Utils.getOfficialsAssignedGames(
+            official.uid,
+            officialsCalendarData,
+            game,
+          );
+          const datesAlreadyblockedOff = Utils.getOfficialCalendarData(
+            official.uid,
+            officialsCalendarData,
+            game,
+          );
           return (
             <div
               key={`official-${official.uid}`}
               onMouseOver={() => setOfficialHovered(official.uid)}
-              onClick={(e) => Utils.expandOrCloseUserInformation(e, official.uid, officialClicked, setOfficialsData, setOfficialClicked, setShowSaveButton, isOfficialHovered, officialsOrSupervisors, dispatch)}
+              onClick={(e) =>
+                Utils.expandOrCloseUserInformation(
+                  e,
+                  official.uid,
+                  officialClicked,
+                  setOfficialsData,
+                  setOfficialClicked,
+                  setShowSaveButton,
+                  isOfficialHovered,
+                  officialsOrSupervisors,
+                  dispatch,
+                )
+              }
               className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${
                 index < sortedData.length - 1 ? 'border-b border-gray-200' : ''
               }`}
             >
-              <div className="grid grid-cols-[.65fr,.25fr,.35fr,1fr,1fr] gap-4 w-full items-center">
-                <OfficialCard official={official} />
-
-                <div>
-                  {assignedGamesAlready && assignedGamesAlready.length > 0 && (
-                    <AssignedGameCard assignedGamesAlready={assignedGamesAlready} />
-                  )}
-                </div>
-
-                <GameCountCard official={official} />
-
-                <div>
-                  {datesAlreadyblockedOff &&
-                    datesAlreadyblockedOff.length > 0 && (
-                      <DarkDayCard datesAlreadyblockedOff={datesAlreadyblockedOff} format24HourTime={format24HourTime} />
-                    )}
-                </div>
-
-                <div className="justify-self-end mr-4">
-                  {isOfficialHovered(official.uid) && (
-                    <ReplaceOrAssignButton 
-                      official={official} 
-                      isAssigned={isAssigned} 
-                      date={date} 
-                      gameNumber={gameNumber} 
-                      role={role} 
-                      dispatch={dispatch} 
-                      currentLeague={currentLeague} 
-                      currentSeason={currentSeason} 
-                      officialsOrSupervisors={officialsOrSupervisors} 
-                      close={close} 
-                    />
-                  )}
-                </div>
-              </div>
+              {_buildOfficialDetails()}
 
               {officialClicked === official.uid && officialsData && (
                 <div className="mt-4 flex flex-col">
@@ -239,7 +235,10 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                               Object.keys(blockedOffTimes)
                                 .filter(
                                   (dateKey) =>
-                                    Utils.extractMonthYear(dateKey, currentDate) ===
+                                    Utils.extractMonthYear(
+                                      dateKey,
+                                      currentDate,
+                                    ) ===
                                     Utils.extractMonthYear(date, currentDate),
                                 )
                                 .map((dateKey) => (
@@ -286,21 +285,33 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                               className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                               checked={officialsData?.role?.Referee || false}
                               onChange={(e) =>
-                                Utils.handleRoleCheckboxChange(e, 'Referee', officialsData, setOfficialsData, setShowSaveButton)
+                                Utils.handleRoleCheckboxChange(
+                                  e,
+                                  'Referee',
+                                  officialsData,
+                                  setOfficialsData,
+                                  setShowSaveButton,
+                                )
                               }
                             />
 
                             <label className="text-xs font-medium text-black">
                               R
                             </label>
-                          </div> 
+                          </div>
                           <div className="flex flex-row gap-1 items-center">
                             <input
                               type="checkbox"
                               className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                               checked={officialsData?.role?.Linesman || false}
                               onChange={(e) =>
-                                Utils.handleRoleCheckboxChange(e, 'Linesman', officialsData, setOfficialsData, setShowSaveButton)
+                                Utils.handleRoleCheckboxChange(
+                                  e,
+                                  'Linesman',
+                                  officialsData,
+                                  setOfficialsData,
+                                  setShowSaveButton,
+                                )
                               }
                             />
 
@@ -312,8 +323,15 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                         {showSaveButton && (
                           <Button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-md mt-2 ml-1 text-xs"
-                            onClick={() =>{
-                               Utils.updateUserRole(official.uid, officialsData, officialsOrSupervisors, currentLeague, dispatch, setOfficialsData);
+                            onClick={() => {
+                              Utils.updateUserRole(
+                                official.uid,
+                                officialsData,
+                                officialsOrSupervisors,
+                                currentLeague,
+                                dispatch,
+                                setOfficialsData,
+                              );
                             }}
                           >
                             Save
@@ -326,6 +344,51 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               )}
             </div>
           );
+
+          function _buildOfficialDetails() {
+            return (
+              <div className="grid grid-cols-[.65fr,.25fr,.35fr,1fr,1fr] gap-4 w-full items-center">
+                <OfficialCard official={official} />
+
+                <div>
+                  {assignedGamesAlready && assignedGamesAlready.length > 0 && (
+                    <AssignedGameCard
+                      assignedGamesAlready={assignedGamesAlready}
+                    />
+                  )}
+                </div>
+
+                <GameCountCard official={official} />
+
+                <div>
+                  {datesAlreadyblockedOff &&
+                    datesAlreadyblockedOff.length > 0 && (
+                      <DarkDayCard
+                        datesAlreadyblockedOff={datesAlreadyblockedOff}
+                        format24HourTime={format24HourTime}
+                      />
+                    )}
+                </div>
+
+                <div className="justify-self-end mr-4">
+                  {isOfficialHovered(official.uid) && (
+                    <ReplaceOrAssignButton
+                      official={official}
+                      isAssigned={isAssigned}
+                      date={date}
+                      gameNumber={gameNumber}
+                      role={role}
+                      dispatch={dispatch}
+                      currentLeague={currentLeague}
+                      currentSeason={currentSeason}
+                      officialsOrSupervisors={officialsOrSupervisors}
+                      close={close}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          }
         })}
       </div>
     </>
