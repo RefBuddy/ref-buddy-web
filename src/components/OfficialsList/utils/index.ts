@@ -13,3 +13,4 @@ export { handleAssignClick } from './handleAssignClick';
 export { handleRoleCheckboxChange } from './handleRoleCheckboxChange'; 
 export { sortOfficials } from './sortOfficials';
 export { toastFeedback } from './toastFeedback';
+export { updateUserRole } from './updateUserRole';

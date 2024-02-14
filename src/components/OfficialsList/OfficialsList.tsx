@@ -83,7 +83,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const isOfficialHovered = (uid) => officialHovered === uid;
 
   const expandOrCloseUserInformation = (e, uid) => {
-    if (e.target.type === 'checkbox') {
+    if (e.target.type === 'checkbox' || e.target.type === 'button') {
       return;
     }
 
@@ -111,51 +111,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       }
     }
   };
-
-  const updateUserRole = async (uid) => {
-    if (!officialsData) return;
-
-    const filteredOfficialProfileInfoKey = Object.keys(officialsOrSupervisors).filter(
-      (key) => key === uid,
-    );
-
-    if (filteredOfficialProfileInfoKey.length > 0) {
-      const updatedOfficialProfile = {
-        ...officialsOrSupervisors[filteredOfficialProfileInfoKey[0]],
-      };
-
-      // Ensure that the official's role is updated in the fetched data before dispatching the update action
-      updatedOfficialProfile.role = {
-        ...updatedOfficialProfile.role,
-        Linesman: officialsData.role.Linesman,
-        Referee: officialsData.role.Referee,
-      };
-
-      await handleRoleChange(uid, updatedOfficialProfile.role);
-
-      setOfficialsData(updatedOfficialProfile);
-
-      dispatch(getOfficialsList({ league: currentLeague }));
-
-      toast.success('Role updated successfully');
-    } else {
-      toast.error('Error updating role');
-    }
-  };
-
-  async function handleRoleChange(uid: string, role: any) {
-    try {
-      await dispatch(
-        updateOfficialRole({
-          uid: uid,
-          role: role,
-          league: currentLeague,
-        }),
-      );
-    } catch (error) {
-      console.error('Error updating role:', error);
-    }
-  }
 
   return (
     <>
@@ -536,8 +491,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                         {showSaveButton && (
                           <Button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-md mt-2 ml-1 text-xs"
-                            onClick={() => {
-                              updateUserRole(official.uid);
+                            onClick={() =>{
+                               Utils.updateUserRole(official.uid, officialsData, officialsOrSupervisors, currentLeague, dispatch, setOfficialsData);
                             }}
                           >
                             Save
