@@ -82,17 +82,15 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   const isOfficialHovered = (uid) => officialHovered === uid;
 
-  const handleClick = (e, uid) => {
-    // Check if the target of the click event is the checkbox
+  const expandOrCloseUserInformation = (e, uid) => {
     if (e.target.type === 'checkbox') {
       return;
     }
 
     e.stopPropagation();
 
-    // Check if the clicked official is already being displayed
+    // Close user information if the clicked user is already being displayed
     if (officialClicked === uid) {
-      // Clear the data
       setOfficialsData(undefined);
       setOfficialClicked('');
       setShowSaveButton(false);
@@ -110,12 +108,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
         setOfficialClicked(uid);
         dispatch(getUserCalendarEvents({ uid: uid }));
         setShowSaveButton(false);
-        // const statProps = {
-        //   league: 'bchl',
-        //   season: '2022-2023',
-        //   name: `${filterOfficialProfile.firstName} ${filterOfficialProfile.lastName}`
-        // }
-        // dispatch(getOfficialsStats(statProps));
       }
     }
   };
@@ -139,31 +131,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       2,
       '0',
     )}`;
-  };
-
-  const originalRefereeState = false;
-  const originalLinesmanState = false;
-
-  const handlePreferredSideChange = (e, role) => {
-    if (!officialsData) return;
-    // Directly updating the officialsData's role
-    const updatedRole = { ...officialsData?.role, [role]: e.target.checked };
-    const updatedOfficialsData = { ...officialsData, role: updatedRole };
-
-    setOfficialsData(updatedOfficialsData);
-
-    // Check if the state differs from the original state for either checkbox
-    if (
-      (role === 'Referee' && e.target.checked !== originalRefereeState) ||
-      (role === 'Linesman' && e.target.checked !== originalLinesmanState)
-    ) {
-      setShowSaveButton(true);
-    } else {
-      setShowSaveButton(
-        updatedOfficialsData.role.Referee !== originalRefereeState ||
-          updatedOfficialsData.role.Linesman !== originalLinesmanState,
-      );
-    }
   };
 
   const updateUserRole = async (uid) => {
@@ -321,7 +288,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
             <div
               key={`official-${official.uid}`}
               onMouseOver={() => setOfficialHovered(official.uid)}
-              onClick={(e) => handleClick(e, official.uid)}
+              onClick={(e) => expandOrCloseUserInformation(e, official.uid)}
               className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${
                 index < sortedData.length - 1 ? 'border-b border-gray-200' : ''
               }`}
@@ -564,21 +531,21 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                               className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                               checked={officialsData?.role?.Referee || false}
                               onChange={(e) =>
-                                handlePreferredSideChange(e, 'Referee')
+                                Utils.handleRoleCheckboxChange(e, 'Referee', officialsData, setOfficialsData, setShowSaveButton)
                               }
                             />
 
                             <label className="text-xs font-medium text-black">
                               R
                             </label>
-                          </div>
+                          </div>  ``
                           <div className="flex flex-row gap-1 items-center">
                             <input
                               type="checkbox"
                               className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                               checked={officialsData?.role?.Linesman || false}
                               onChange={(e) =>
-                                handlePreferredSideChange(e, 'Linesman')
+                                Utils.handleRoleCheckboxChange(e, 'Linesman', officialsData, setOfficialsData, setShowSaveButton)
                               }
                             />
 

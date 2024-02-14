@@ -8,5 +8,6 @@ export { getOfficialsArray } from './getOfficialsArray';
 export { getRoleDetails } from './getRoleDetails';
 export { getOfficialsOrSupervisors } from './getOfficialsOrSupervisors';
 export { handleAssignClick } from './handleAssignClick';
+export { handleRoleCheckboxChange } from './handleRoleCheckboxChange'; 
 export { sortOfficials } from './sortOfficials';
 export { toastFeedback } from './toastFeedback';
