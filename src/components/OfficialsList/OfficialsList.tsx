@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { parseISO } from 'date-fns';
-import { toast } from 'react-toastify';
 import { useAppSelector, useAppDispatch } from '../../store';
-import { getOfficialsList } from '../../store/OfficialsList/actions';
-import { formatDate, format24HourTime } from '../../utils/helpers';
-import {
-  getUserCalendarEvents,
-  updateOfficialRole,
-} from '../../store/User/actions';
+import {  format24HourTime } from '../../utils/helpers';
 import { Button } from '../Button';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import * as Utils from './utils';
@@ -81,36 +74,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   };
 
   const isOfficialHovered = (uid) => officialHovered === uid;
-
-  const expandOrCloseUserInformation = (e, uid) => {
-    if (e.target.type === 'checkbox' || e.target.type === 'button') {
-      return;
-    }
-
-    e.stopPropagation();
-
-    // Close user information if the clicked user is already being displayed
-    if (officialClicked === uid) {
-      setOfficialsData(undefined);
-      setOfficialClicked('');
-      setShowSaveButton(false);
-      return;
-    }
-
-    if (isOfficialHovered(uid)) {
-      const filteredOfficialProfileInfoKey = Object.keys(officialsOrSupervisors).filter(
-        (key) => key === uid,
-      );
-      if (filteredOfficialProfileInfoKey.length > 0) {
-        const filterOfficialProfile =
-          officialsOrSupervisors[filteredOfficialProfileInfoKey[0]];
-        setOfficialsData(filterOfficialProfile);
-        setOfficialClicked(uid);
-        dispatch(getUserCalendarEvents({ uid: uid }));
-        setShowSaveButton(false);
-      }
-    }
-  };
 
   return (
     <>
@@ -222,7 +185,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
             <div
               key={`official-${official.uid}`}
               onMouseOver={() => setOfficialHovered(official.uid)}
-              onClick={(e) => expandOrCloseUserInformation(e, official.uid)}
+              onClick={(e) => Utils.expandOrCloseUserInformation(e, official.uid, officialClicked, setOfficialsData, setOfficialClicked, setShowSaveButton, isOfficialHovered, officialsOrSupervisors, dispatch)}
               className={`cursor-pointer hover:bg-gray-100 flex flex-col items-start p-2 ${
                 index < sortedData.length - 1 ? 'border-b border-gray-200' : ''
               }`}

@@ -1,3 +1,4 @@
+export { expandOrCloseUserInformation } from './expandOrCloseUserInformation';
 export { extractMonthYear } from './extractMonthYear';
 export { fetchOfficialsCalendarEvents } from './fetchOfficialsCalendarEvents';
 export { filterAndSortOfficials } from './filterAndSortOfficials';
