@@ -4,7 +4,7 @@ import {  format24HourTime } from '../../utils/helpers';
 import { Button } from '../Button';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import * as Utils from './utils';
-import { GameDetails } from './components';
+import { CheckboxGroup, GameDetails, RoleCard } from './components';
 
 const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const dispatch = useAppDispatch();
@@ -78,46 +78,21 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
   return (
     <>
-      {/* teams, game time, checkboxes */}
+      {/* Modal header */}
       <div className="flex items-center justify-between w-full -mt-6 -mb-3">
         {role != 'dashboard' ? (
           <GameDetails game={game} currentLeague={currentLeague} />
         ) : (
           <div className="w-full h-6 bg-white"></div>
         )}
-        {/* Adding the R and L checkboxes here */}
-        <div className="flex flex-row gap-3 mr-16">
-          <div className="flex flex-row gap-1 items-center">
-            <input
-              type="checkbox"
-              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-              checked={showReferees}
-              onChange={handleRefereeCheckboxChange}
-            />
-            <label className="text-xs font-medium text-black">R</label>
-          </div>
-          <div className="flex flex-row gap-1 items-center">
-            <input
-              type="checkbox"
-              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-              checked={showLinesmen}
-              onChange={handleLinesmanCheckboxChange}
-            />
-            <label className="text-xs font-medium text-black">L</label>
-          </div>
-        </div>
+          <CheckboxGroup
+            showReferees={showReferees}
+            handleRefereeCheckboxChange={handleRefereeCheckboxChange}
+            showLinesmen={showLinesmen}
+            handleLinesmanCheckboxChange={handleLinesmanCheckboxChange}
+          />
         {role != 'dashboard' ? (
-          <div
-            className={`flex flex-col items-center justify-center border-2 rounded-md p-1 -mt-2 cursor-pointer relative min-h-12 flex-none w-36 shadow-md ${
-              roleDetails === 'Referee'
-                ? 'border-orange-500'
-                : roleDetails === 'Linesman'
-                ? 'border-black'
-                : ''
-            }`}
-          >
-            <div>{label}</div>
-          </div>
+          <RoleCard roleDetails={roleDetails} label={label} />
         ) : (
           <div className="mb-14 bg-white"></div>
         )}
