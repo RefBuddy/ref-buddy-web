@@ -2,9 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store';
 import {  format24HourTime } from '../../utils/helpers';
 import { Button } from '../Button';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import * as Utils from './utils';
-import { CheckboxGroup, GameDetails, RoleCard } from './components';
+import { 
+  AssignedGameCard, 
+  CheckboxGroup, 
+  DarkDayCard, 
+  GameCountCard, 
+  GameDetails, 
+  OfficialCard, 
+  ReplaceOrAssignButton,
+  RoleCard, 
+  SearchInput 
+} from './components';
 
 const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const dispatch = useAppDispatch();
@@ -101,13 +110,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
       {/* Main OfficialsList container */}
       <div className="w-full bg-white border border-gray-300 rounded-md max-h-[600px] overflow-y-auto">
         <div className="py-4 px-3">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-          />
+          <SearchInput searchTerm={searchTerm} handleSearch={handleSearch} />
         </div>
         {sortedData.map((official: any, index) => {
           const assignedGamesAlready = Utils.getOfficialsAssignedGames(official.uid, officialsCalendarData, game);
@@ -122,113 +125,37 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               }`}
             >
               <div className="grid grid-cols-[.65fr,.25fr,.35fr,1fr,1fr] gap-4 w-full items-center">
-                {' '}
-                {/* First column: official details */}
-                <div className="flex items-center gap-2">
-                  <img
-                    className="w-10 h-10 rounded-full"
-                    src={official.profilePictureUrl}
-                    alt="official"
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-600">
-                      {official.firstName} {official.lastName}
-                    </p>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-300">
-                      {official.city}
-                    </p>
-                  </div>
-                </div>
-                {/* Second column: @ already assigned abbreviation */}
+                <OfficialCard official={official} />
+
                 <div>
                   {assignedGamesAlready && assignedGamesAlready.length > 0 && (
-                    <div className="flex items-center">
-                      <p
-                        className={`text-sm font-normal ${
-                          assignedGamesAlready.length > 0
-                            ? 'text-error-500'
-                            : 'text-gray-900'
-                        }`}
-                      >
-                        <strong>
-                          @ {assignedGamesAlready[0].home_team.abbreviation}
-                        </strong>
-                      </p>
-                    </div>
+                    <AssignedGameCard assignedGamesAlready={assignedGamesAlready} />
                   )}
                 </div>
-                {/* Third column: counts */}
-                <div className="flex flex-col items-start gap-2">
-                  {' '}
-                  {/* Use flex-column for vertical alignment */}
-                  <div className="flex flex-row items-end gap-2">
-                    <p className="text-sm border border-green-500 rounded-md px-2 py-1">
-                      {official.assignedCount
-                        ? official.assignedCount.toString()
-                        : '0'}
-                    </p>
-                    <p className="text-sm border border-warning-300 rounded-md px-2 py-1">
-                      {official.queueCount
-                        ? official.queueCount.toString()
-                        : '0'}
-                    </p>
-                  </div>
-                </div>
-                {/* Fourth column: blocked off dates */}
+
+                <GameCountCard official={official} />
+
                 <div>
                   {datesAlreadyblockedOff &&
                     datesAlreadyblockedOff.length > 0 && (
-                      <div className="flex flex-col gap-2">
-                        {' '}
-                        {/* Use flex-column for vertical alignment */}
-                        {datesAlreadyblockedOff.map((times, index) => (
-                          <React.Fragment key={index}>
-                            <div className="flex items-center gap-2">
-                              {times.startTime === '00:00' &&
-                              times.endTime === '23:59' ? (
-                                <p className="h-6 w-6 text-warning-300">❌</p>
-                              ) : (
-                                <ExclamationTriangleIcon className="h-6 w-6 text-warning-300" />
-                              )}
-                              <div>
-                                <p className="text-sm font-medium text-black">
-                                  {times.startTime === '00:00' &&
-                                  times.endTime === '23:59' ? (
-                                    <span className="text-gray-700">
-                                      Not Available
-                                    </span>
-                                  ) : (
-                                    <span className="text-gray-700">
-                                      {format24HourTime(times.startTime)} -{' '}
-                                      {format24HourTime(times.endTime)}
-                                    </span>
-                                  )}
-                                  <br />
-                                  <span className="text-gray-700">
-                                    {times.notes}
-                                  </span>
-                                </p>
-                              </div>
-                            </div>
-                          </React.Fragment>
-                        ))}
-                      </div>
+                      <DarkDayCard datesAlreadyblockedOff={datesAlreadyblockedOff} format24HourTime={format24HourTime} />
                     )}
                 </div>
-                {/* Fifth column: assign button */}
+
                 <div className="justify-self-end mr-4">
-                  {' '}
-                  {/* Added justify-self-end */}
-                  {isOfficialHovered(official.uid) && date !== '2021-10-10' && (
-                    <Button onClick={async (e) => {
-                      await Utils.handleAssignClick(e, official.uid, isAssigned, date, gameNumber, role, dispatch, currentLeague, currentSeason);
-                      Utils.toastFeedback(official.uid, isAssigned, officialsOrSupervisors);
-                      close();
-                    }}>
-                      {isAssigned && role != 'supervisor'
-                        ? 'Replace Official'
-                        : 'Assign + '}
-                    </Button>
+                  {isOfficialHovered(official.uid) && (
+                    <ReplaceOrAssignButton 
+                      official={official} 
+                      isAssigned={isAssigned} 
+                      date={date} 
+                      gameNumber={gameNumber} 
+                      role={role} 
+                      dispatch={dispatch} 
+                      currentLeague={currentLeague} 
+                      currentSeason={currentSeason} 
+                      officialsOrSupervisors={officialsOrSupervisors} 
+                      close={close} 
+                    />
                   )}
                 </div>
               </div>
