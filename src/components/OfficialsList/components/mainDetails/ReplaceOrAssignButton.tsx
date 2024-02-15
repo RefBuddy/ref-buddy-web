@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '../../Button';
-import * as Utils from '../utils';
+import { Button } from '../../../Button';
+import * as Utils from '../../utils';
 
 const ReplaceOrAssignButton = ({ official, isAssigned, date, gameNumber, role, dispatch, currentLeague, currentSeason, officialsOrSupervisors, close }) => (
     <Button onClick={async (e) => {

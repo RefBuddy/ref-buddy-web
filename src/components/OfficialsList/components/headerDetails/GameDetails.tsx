@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Utils from '../utils';
+import * as Utils from '../../utils';
 
 const GameDetails = ({ game, currentLeague }) => (
     <div className="flex w-full items-center justify-start p-4">

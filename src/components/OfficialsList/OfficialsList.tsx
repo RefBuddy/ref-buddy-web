@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { format24HourTime } from '../../utils/helpers';
-import { Button } from '../Button';
 import * as Utils from './utils';
 import {
   AssignedGameCard,
+  AssignedGamesCard,
   CheckboxGroup,
   DarkDayCard,
+  DarkDaysCard,
   GameCountCard,
   GameDetails,
   OfficialCard,
+  QueuedGamesCard,
   ReplaceOrAssignButton,
   RoleCard,
   SearchInput,
+  UpdateRoleCheckboxGroup,
 } from './components';
 
 const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
@@ -24,7 +27,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
   const [officialHovered, setOfficialHovered] = useState('');
   const [officialClicked, setOfficialClicked] = useState('');
   const [officialsData, setOfficialsData] = useState<OfficialData>();
-  const [showSaveButton, setShowSaveButton] = useState(false);
 
   // Extract necessary data from global state
   const {
@@ -144,7 +146,6 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   officialClicked,
                   setOfficialsData,
                   setOfficialClicked,
-                  setShowSaveButton,
                   isOfficialHovered,
                   officialsOrSupervisors,
                   dispatch,
@@ -157,193 +158,32 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
               {_buildOfficialDetails()}
 
               {officialClicked === official.uid && officialsData && (
-                <div className="mt-4 flex flex-col">
-                  {assignedGames && (
-                    <div className="flex flex-row flex-1 justify-between items-start">
-                      <div className="h-auto w-52">
-                        <p className="text-xs mt-4 font-bold">Assigned Games</p>
-                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
-                          <thead>
-                            <tr className="text-xs font-medium text-black">
-                              <td>Date</td>
-                              <td>Game</td>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {assignedGames &&
-                              Object.keys(assignedGames).map((dateKey) => (
-                                <>
-                                  {assignedGames[dateKey].map((game) => (
-                                    <tr
-                                      key={`games-${dateKey}`}
-                                      className="text-xs font-body text-gray-700"
-                                    >
-                                      <td>{dateKey}</td>
-                                      <td>
-                                        {game.visiting_team.abbreviation} @{' '}
-                                        {game.home_team.abbreviation}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </>
-                              ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div className="h-auto w-52">
-                        <p className="text-xs mt-4 font-bold">Queued Games</p>
-                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-44">
-                          <thead>
-                            <tr className="text-xs font-medium text-black">
-                              <td>Date</td>
-                              <td>Game</td>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {queuedGames &&
-                              Object.keys(queuedGames).map((dateKey) => (
-                                <>
-                                  {queuedGames[dateKey].map((game) => (
-                                    <tr
-                                      key={`games-${dateKey}`}
-                                      className="text-xs font-body text-gray-700"
-                                    >
-                                      <td>{dateKey}</td>
-                                      <td>
-                                        {game.visiting_team.abbreviation} @{' '}
-                                        {game.home_team.abbreviation}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </>
-                              ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div className="h-auto">
-                        <p className="text-xs mt-4 font-bold">Dark Days</p>
-                        <table className="mt-2 max-h-[300px] h-auto overflow-y-auto w-full">
-                          <thead>
-                            <tr className="text-xs font-medium text-black">
-                              <td className="w-24">Date</td>
-                              <td className="w-16">Time</td>
-                              <td className="pl-4">Notes</td>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {blockedOffTimes &&
-                              Object.keys(blockedOffTimes)
-                                .filter(
-                                  (dateKey) =>
-                                    Utils.extractMonthYear(
-                                      dateKey,
-                                      currentDate,
-                                    ) ===
-                                    Utils.extractMonthYear(date, currentDate),
-                                )
-                                .map((dateKey) => (
-                                  <>
-                                    {blockedOffTimes[dateKey].map(
-                                      (block, index) => (
-                                        <tr
-                                          key={`block-${dateKey}-${index}`}
-                                          className="text-xs font-body text-gray-700"
-                                        >
-                                          <td>{dateKey}</td>
-                                          <td>
-                                            {block.startTime === '00:00' &&
-                                            block.endTime === '23:59' ? (
-                                              <p className="pl-4">❌</p>
-                                            ) : (
-                                              <span className="text-gray-700">
-                                                {format24HourTime(
-                                                  block.startTime,
-                                                )}{' '}
-                                                -{' '}
-                                                {format24HourTime(
-                                                  block.endTime,
-                                                )}
-                                              </span>
-                                            )}
-                                          </td>
-                                          <td className="pl-4">
-                                            {block.notes}
-                                          </td>
-                                        </tr>
-                                      ),
-                                    )}
-                                  </>
-                                ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div className="h-auto flex-shrink-0 ml-64 mt-2">
-                        <div className="mt-2 flex flex-row gap-3">
-                          <div className="flex flex-row gap-1 items-center">
-                            <input
-                              type="checkbox"
-                              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                              checked={officialsData?.role?.Referee || false}
-                              onChange={(e) =>
-                                Utils.handleRoleCheckboxChange(
-                                  e,
-                                  'Referee',
-                                  officialsData,
-                                  setOfficialsData,
-                                  setShowSaveButton,
-                                )
-                              }
-                            />
-
-                            <label className="text-xs font-medium text-black">
-                              R
-                            </label>
-                          </div>
-                          <div className="flex flex-row gap-1 items-center">
-                            <input
-                              type="checkbox"
-                              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                              checked={officialsData?.role?.Linesman || false}
-                              onChange={(e) =>
-                                Utils.handleRoleCheckboxChange(
-                                  e,
-                                  'Linesman',
-                                  officialsData,
-                                  setOfficialsData,
-                                  setShowSaveButton,
-                                )
-                              }
-                            />
-
-                            <label className="text-xs font-medium text-black">
-                              L
-                            </label>
-                          </div>
-                        </div>
-                        {showSaveButton && (
-                          <Button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-md mt-2 ml-1 text-xs"
-                            onClick={() => {
-                              Utils.updateUserRole(
-                                official.uid,
-                                officialsData,
-                                officialsOrSupervisors,
-                                currentLeague,
-                                dispatch,
-                                setOfficialsData,
-                              );
-                            }}
-                          >
-                            Save
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                _buildExpandedDetails()
               )}
             </div>
           );
+
+          function _buildExpandedDetails(): React.ReactNode {
+            return <div className="mt-4 flex flex-col">
+              {assignedGames && (
+                <div className="flex flex-row flex-1 justify-between items-start">
+                  <AssignedGamesCard assignedGames={assignedGames} />
+
+                  <QueuedGamesCard queuedGames={queuedGames} />
+
+                  <DarkDaysCard blockedOffTimes={blockedOffTimes} date={date} currentDate={currentDate} />
+
+                  <UpdateRoleCheckboxGroup
+                    official={official}
+                    officialsData={officialsData}
+                    setOfficialsData={setOfficialsData}
+                    officialsOrSupervisors={officialsOrSupervisors}
+                    currentLeague={currentLeague}
+                    dispatch={dispatch} />
+                </div>
+              )}
+            </div>;
+          }
 
           function _buildOfficialDetails() {
             return (
@@ -371,7 +211,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 </div>
 
                 <div className="justify-self-end mr-4">
-                  {isOfficialHovered(official.uid) && (
+                  {isOfficialHovered(official.uid) && role != 'dashboard' ? (
                     <ReplaceOrAssignButton
                       official={official}
                       isAssigned={isAssigned}
@@ -384,6 +224,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                       officialsOrSupervisors={officialsOrSupervisors}
                       close={close}
                     />
+                  ) : (
+                    <div></div>
                   )}
                 </div>
               </div>

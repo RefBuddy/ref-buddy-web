@@ -1,6 +1,6 @@
 import { getUserCalendarEvents } from '../../../store/User/actions';
 
-export const expandOrCloseUserInformation = (e, uid, officialClicked, setOfficialsData, setOfficialClicked, setShowSaveButton, isOfficialHovered, officialsOrSupervisors, dispatch) => {
+export const expandOrCloseUserInformation = (e, uid, officialClicked, setOfficialsData, setOfficialClicked, isOfficialHovered, officialsOrSupervisors, dispatch) => {
         if (e.target.type === 'checkbox' || e.target.type === 'button') {
             return;
         }
@@ -11,7 +11,6 @@ export const expandOrCloseUserInformation = (e, uid, officialClicked, setOfficia
         if (officialClicked === uid) {
             setOfficialsData(undefined);
             setOfficialClicked('');
-            setShowSaveButton(false);
             return;
         }
 
@@ -25,7 +24,6 @@ export const expandOrCloseUserInformation = (e, uid, officialClicked, setOfficia
                 setOfficialsData(filterOfficialProfile);
                 setOfficialClicked(uid);
                 dispatch(getUserCalendarEvents({ uid: uid }));
-                setShowSaveButton(false);
             }
         }
 };
