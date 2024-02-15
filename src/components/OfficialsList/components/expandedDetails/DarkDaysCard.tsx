@@ -16,6 +16,7 @@ const DarkDaysCard = ({ blockedOffTimes, date, currentDate }) => (
       <tbody>
         {blockedOffTimes &&
           Object.keys(blockedOffTimes)
+            // This filter is used to only show the blocked off times for the current month
             .filter(
               (dateKey) =>
                 Utils.extractMonthYear(dateKey, currentDate) ===

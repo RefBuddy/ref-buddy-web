@@ -13,6 +13,7 @@ export const getOfficialCalendarData = (uid: string, officialsCalendarData, game
         try {
             return blockedOffDates[formattedTime];
         } catch (error) {
+            console.error('Error getting blocked off times for official', error);
             return null;
         }
 };
