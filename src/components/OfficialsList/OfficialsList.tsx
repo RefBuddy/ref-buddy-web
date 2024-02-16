@@ -191,10 +191,8 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                 <OfficialCard official={official} />
 
                 <div>
-                  {assignedGamesAlready && assignedGamesAlready.length > 0 && (
-                    <AssignedGameCard
-                      assignedGamesAlready={assignedGamesAlready}
-                    />
+                  {assignedGamesAlready?.length > 0 && (
+                    <AssignedGameCard homeTeamAbbreviation={assignedGamesAlready[0].home_team.abbreviation} />
                   )}
                 </div>
 
