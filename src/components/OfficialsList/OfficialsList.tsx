@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '../../store';
 import { format24HourTime } from '../../utils/helpers';
 import * as Utils from './utils';
 import {
-  AssignedGameCard,
+  AlreadyAssignedGameTodayCard,
   AssignedGamesCard,
   CheckboxGroup,
   DarkDayCard,
@@ -192,7 +192,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
                 <div>
                   {assignedGamesAlready?.length > 0 && (
-                    <AssignedGameCard homeTeamAbbreviation={assignedGamesAlready[0].home_team.abbreviation} />
+                    <AlreadyAssignedGameTodayCard homeTeamAbbreviation={assignedGamesAlready[0].home_team.abbreviation} />
                   )}
                 </div>
 
