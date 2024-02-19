@@ -157,32 +157,39 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
             >
               {_buildOfficialDetails()}
 
-              {officialClicked === official.uid && officialsData && (
-                _buildExpandedDetails()
-              )}
+              {officialClicked === official.uid &&
+                officialsData &&
+                _buildExpandedDetails()}
             </div>
           );
 
           function _buildExpandedDetails(): React.ReactNode {
-            return <div className="mt-4 flex flex-col">
-              {assignedGames && (
-                <div className="flex flex-row flex-1 justify-between items-start">
-                  <AssignedGamesCard assignedGames={assignedGames} />
+            return (
+              <div className="mt-4 flex flex-col">
+                {assignedGames && (
+                  <div className="flex flex-row flex-1 justify-between items-start">
+                    <AssignedGamesCard assignedGames={assignedGames} />
 
-                  <QueuedGamesCard queuedGames={queuedGames} />
+                    <QueuedGamesCard queuedGames={queuedGames} />
 
-                  <DarkDaysCard blockedOffTimes={blockedOffTimes} date={date} currentDate={currentDate} />
+                    <DarkDaysCard
+                      blockedOffTimes={blockedOffTimes}
+                      date={date}
+                      currentDate={currentDate}
+                    />
 
-                  <UpdateRoleCheckboxGroup
-                    official={official}
-                    officialsData={officialsData}
-                    setOfficialsData={setOfficialsData}
-                    officialsOrSupervisors={officialsOrSupervisors}
-                    currentLeague={currentLeague}
-                    dispatch={dispatch} />
-                </div>
-              )}
-            </div>;
+                    <UpdateRoleCheckboxGroup
+                      official={official}
+                      officialsData={officialsData}
+                      setOfficialsData={setOfficialsData}
+                      officialsOrSupervisors={officialsOrSupervisors}
+                      currentLeague={currentLeague}
+                      dispatch={dispatch}
+                    />
+                  </div>
+                )}
+              </div>
+            );
           }
 
           function _buildOfficialDetails() {
@@ -192,7 +199,11 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
 
                 <div>
                   {assignedGamesAlready?.length > 0 && (
-                    <AlreadyAssignedGameTodayCard homeTeamAbbreviation={assignedGamesAlready[0].home_team.abbreviation} />
+                    <AlreadyAssignedGameTodayCard
+                      homeTeamAbbreviation={
+                        assignedGamesAlready[0].home_team.abbreviation
+                      }
+                    />
                   )}
                 </div>
 
@@ -221,6 +232,9 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                       currentSeason={currentSeason}
                       officialsOrSupervisors={officialsOrSupervisors}
                       close={close}
+                      alreadyWorkingAGameToday={
+                        assignedGamesAlready?.length > 0
+                      }
                     />
                   ) : (
                     <div></div>
