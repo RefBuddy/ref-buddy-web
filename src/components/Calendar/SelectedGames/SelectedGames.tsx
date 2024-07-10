@@ -198,8 +198,8 @@ const SelectedGames = ({ onClose }) => {
     autoHide: true,
     todayBtn: false,
     clearBtn: false,
-    maxDate: new Date('2024-03-31'),
-    minDate: new Date('2023-07-01'),
+    maxDate: new Date('2024-07-01'),
+    minDate: new Date('2025-07-01'),
     theme: {
       // background: "bg-gray-700 dark:bg-gray-800",
       background: 'bg-white',

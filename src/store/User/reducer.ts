@@ -21,7 +21,7 @@ interface BlockedTimes {
 }
 
 const league = '';
-const season = '2023-2024';
+const season = '2024-2025';
 
 const initialState = {
   user: undefined,
