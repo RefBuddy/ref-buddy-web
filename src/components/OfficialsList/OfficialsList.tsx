@@ -201,7 +201,7 @@ const OfficialsList = ({ game, role, isAssigned, close = () => {} }) => {
                   {assignedGamesAlready?.length > 0 && (
                     <AlreadyAssignedGameTodayCard
                       homeTeamAbbreviation={
-                        assignedGamesAlready[0].home_team.abbreviation
+                        assignedGamesAlready[0].home_team.city
                       }
                     />
                   )}
